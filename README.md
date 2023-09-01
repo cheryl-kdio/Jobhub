@@ -27,6 +27,7 @@ de motivation…).
 compétences...
 
 _Tuteur :_ Mansor GUEYE
+
 _Membres du groupe :_
 - Benjamin Guéraud
 - Beedi Goua
