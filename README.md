@@ -1,4 +1,4 @@
-### [JobHub](https://foad-moodle.ensai.fr/course/view.php?id=33), Simplifier la Recherche d’Emploi dans le Secteur de la Tech
+# [JobHub](https://foad-moodle.ensai.fr/course/view.php?id=33), Simplifier la Recherche d’Emploi dans le Secteur de la Tech
 
 ## Description 
 Ce projet a pour objectif de créer une application qui facilite la recherche d’emploi dans le secteur de la technologie en utilisant l’API REST gratuite de [Adzuna](https://developer.adzuna.com/) , qui fournit des informations sur les offres d’emploi dans divers secteurs à travers le monde. L’application permettra aux utilisateurs de rechercher des emplois, de filtrer les résultats, de suivre leur progression dans leurs candidatures et de recevoir des alertes pour les nouvelles offres correspondant à leurs compétences.
@@ -26,6 +26,7 @@ de motivation…).
 - [ ] Envoyer des alertes aux utilisateurs pour les nouvelles offres correspondant à leurs
 compétences...
 
+#### Informations
 _Tuteur :_ Mansor GUEYE
 
 _Membres du groupe :_
