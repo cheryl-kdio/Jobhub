@@ -2,16 +2,19 @@ import requests
 from tabulate import tabulate
 
 
-class AdzunaJobSearch:
-    def __init__(self, api_key, api_id, country="gb", page_number=1):
-        self.api_key = api_key
-        self.api_id = api_id
+class Recherche:
+    def __init__(
+        self, country: str
+    ):  # Certains attributs sont potentiellement à mettre en privé/protection
+        self.api_key = "172efa229f7dfce6a99b4bf26b538ed7"
+        self.api_id = "37f68c4e"
         self.country = country
-        self.page_number = page_number
+        self.page_number = 1
         self.base_url = "https://api.adzuna.com/v1/api/"
-        self.endpoint = f"jobs/{country}/search/{page_number}"
+        self.endpoint = f"jobs/{self.country}/search/{self.page_number}"
+        self.liste_recherches = {}
 
-    def make_request(self, query_params):
+    def requeter_via_api(self, query_params: dict) -> dict:
         params = {"app_id": self.api_id, "app_key": self.api_key, **query_params}
 
         response = requests.get(f"{self.base_url}{self.endpoint}", params=params)
@@ -20,37 +23,40 @@ class AdzunaJobSearch:
             data = response.json()
             return data.get("results", [])
         else:
-            print(
-                f"Request failed with status code {response.status_code}: {response.text}"
-            )
+            print(f"Echec de la requête - code {response.status_code}: {response.text}")
             return []
 
-    def search_jobs(self, query_params):
-        jobs = self.make_request(query_params)
+    def afficher_resultats(self, query_params: dict) -> str:
+        jobs = self.requeter_via_api(query_params)
 
-        table_data = [
+        output = [
             {
                 "id": i + 1,
                 "Title": job.get("title", ""),
-                "Company": job.get("company", {}).get("display_name", ""),
+                "Entreprise": job.get("company", {}).get("display_name", ""),
                 "Location": job.get("location", {}).get("display_name", ""),
                 "Minimum salary": job.get("salary_min", ""),
                 "Maximum salary": job.get("salary_max", ""),
                 "Category": job.get("category", {}).get("label", ""),
-                "redirect_url": job.get("redirect_url", ""),
+                # "redirect_url": job.get("redirect_url", ""),
             }
             for i, job in enumerate(jobs)
         ]
 
-        print(tabulate(table_data, headers="keys", tablefmt="pretty"))
+        print(tabulate(output, headers="keys", tablefmt="pretty"))
+
+    def sauvegarder_recherche(self, nom_recherche: str, query_params: dict):
+        self.liste_recherches[nom_recherche] = query_params
+
+    def supprimer_recherche(self, nom_recherche: str):
+        if nom_recherche in self.liste_recherches:
+            del self.liste_recherches[nom_recherche]
 
 
 # Example usage:
 if __name__ == "__main__":
-    api_key = "172efa229f7dfce6a99b4bf26b538ed7"
-    api_id = "37f68c4e"
-
-    job_search = AdzunaJobSearch(api_key, api_id)
+    country = "fr"
+    job_search = Recherche(country)
 
     query_params = {
         "results_per_page": 20,
@@ -69,4 +75,4 @@ if __name__ == "__main__":
         # "contract": "0",
     }
 
-    job_search.search_jobs(query_params)
+    job_search.afficher_resultats(query_params)
