@@ -1,0 +1,32 @@
+@startuml
+left to right direction
+:Internaute:
+:Client:
+rectangle JobHub{
+   usecase "Rechercher" as r 
+   usecase "Créer un compte" as cc 
+   usecase "Se connecter" as sc
+   usecase "Favoris" as f 
+   usecase "Offre en détail" as o 
+   usecase "Alerter" as a 
+   usecase "Profil" as p 
+   usecase "Se déconnecter" as deco
+   usecase "Modifier" as m
+   usecase "Mdp oublié" as mdp
+}
+
+cc .> sc : inclusion
+r <.. o : extends 
+r <.. f : extends (si client)
+f ..> a : inclusion 
+o <. f : extends (si client) 
+Internaute --> sc
+Internaute --> cc 
+Internaute --> r
+Client --> r
+sc --> Client
+Client --> p 
+Client --> deco 
+p <.. m : extends
+sc <.. mdp : extends
+@enduml
