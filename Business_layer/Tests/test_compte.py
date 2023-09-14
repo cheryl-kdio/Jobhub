@@ -1,4 +1,4 @@
-from Business_layer.CompteUtilisateur import CompteUtilisateur
+from Business_layer.Service_layer.compte import CompteUtilisateur
 
 # Création d'une instance de CompteUtilisateur
 
@@ -12,6 +12,12 @@ utilisateur1 = CompteUtilisateur(
     ville="Villeville",
     code_postal=12345,
 )
+
+# Vérification de l'état de connexion
+if utilisateur1._connexion:
+    print("L'utilisateur est connecté.")
+else:
+    print("L'utilisateur est déconnecté.")
 
 # Accès aux attributs de l'utilisateur
 print(f"ID de l'utilisateur : {utilisateur1.id}")

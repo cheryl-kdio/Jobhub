@@ -2,7 +2,7 @@ from datetime import datetime
 from Business_layer.Service_layer.utilisateur import Utilisateur
 
 
-class CompteUtilisateur(Utilisateur):
+class CompteUtilisateur:
     """
     Classe représentant un compte utilisateur
 

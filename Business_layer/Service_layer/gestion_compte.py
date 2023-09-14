@@ -26,7 +26,6 @@ class GestionCompte:  # relation de composition avec classe compte utilisateur
     def voir_mdp(self):
         return self.compte_utilisateur.__mdp
 
-    @voir_mdp.setter
     def changer_mdp(self, nouveau_mdp):
         self.compte_utilisateur.__mdp = nouveau_mdp
 

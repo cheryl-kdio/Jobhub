@@ -1,16 +1,19 @@
 import requests
 from tabulate import tabulate
+import os
+import dotenv
 
 
 class Recherche:
     def __init__(
         self, country: str
     ):  # Certains attributs sont potentiellement à mettre en privé/protection
-        self.api_key = "172efa229f7dfce6a99b4bf26b538ed7"
-        self.api_id = "37f68c4e"
+        dotenv.load_dotenv(override=True)
+        self.api_key = os.environ["API_KEY"]
+        self.api_id = os.environ["API_ID"]
         self.country = country
         self.page_number = 1
-        self.base_url = "https://api.adzuna.com/v1/api/"
+        self.base_url = os.environ["HOST_WEBSERVICE"]
         self.endpoint = f"jobs/{self.country}/search/{self.page_number}"
         self.liste_recherches = {}
 
@@ -32,12 +35,12 @@ class Recherche:
         output = [
             {
                 "id": i + 1,
-                "Title": job.get("title", ""),
+                "Titre": job.get("title", ""),
                 "Entreprise": job.get("company", {}).get("display_name", ""),
-                "Location": job.get("location", {}).get("display_name", ""),
-                "Minimum salary": job.get("salary_min", ""),
-                "Maximum salary": job.get("salary_max", ""),
-                "Category": job.get("category", {}).get("label", ""),
+                "Lieu": job.get("location", {}).get("display_name", ""),
+                "Salaire min": job.get("salary_min", ""),
+                "Salaire max": job.get("salary_max", ""),
+                "Categorie": job.get("category", {}).get("label", ""),
                 # "redirect_url": job.get("redirect_url", ""),
             }
             for i, job in enumerate(jobs)
