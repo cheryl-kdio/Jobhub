@@ -21,7 +21,7 @@ class CompteUtilisateurDao(metaclass=Singleton):
                 with connection.cursor() as cursor:
                     # Supprimer le compte d'un utilisateur
                     cursor.execute(
-                        "DELETE FROM database.compte_utilisateur           "
+                        "DELETE FROM projet2A.compte_utilisateur           "
                         " WHERE id_compte_utilisateur=%(id_compte_utilisateur)s      ",  # creer db compte_utilisateur ou changer le nom...
                         {"id_compte_utilisateur": user.id_compte_utilisateur},
                     )
@@ -52,7 +52,7 @@ class CompteUtilisateurDao(metaclass=Singleton):
                 with connection.cursor() as cursor:
                     # Supprimer le compte d'un utilisateur
                     cursor.execute(
-                        "UPDATE database.compte_utilisateur           "
+                        "UPDATE projet2A.compte_utilisateur           "
                         " SET %(attribut)s=%(attribut_contenu)s      "
                         " WHERE id_compte_utilisateur=%(id_compte_utilisateur)s     ",  # creer db compte_utilisateur ou changer le nom...
                         {
