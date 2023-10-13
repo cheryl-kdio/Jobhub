@@ -1,32 +1,34 @@
-import os
-
-import dotenv
-import psycopg2
-from psycopg2.extras import RealDictCursor
-from business.singleton import Singleton
+from utils.singleton import Singleton
+from dao.db_connection import DBConnection
 
 
-class DBConnection(metaclass=Singleton):
+class ResetDatabase(metaclass=Singleton):
     """
-    Technical class to open only one connection to the DB.
+    Reinitialisation de la base de données
     """
 
-    def __init__(self):
-        dotenv.load_dotenv(override=True)
+    def lancer(self):
+        print("Ré-initialisation de la base de données")
 
-        # Open the connection.
-        self.__connection = psycopg2.connect(
-            host=os.environ["HOST"],
-            port=os.environ["PORT"],
-            database=os.environ["DATABASE"],
-            user=os.environ["USER"],
-            password=os.environ["PASSWORD"],
-            cursor_factory=RealDictCursor,
-        )
+        init_db = open("data/init_db.sql", encoding="utf-8")
+        init_db_as_string = init_db.read()
 
-    @property
-    def connection(self):
-        """
-        :return: the opened connection.
-        """
-        return self.__connection
+        pop_db = open("data/pop_db.sql", encoding="utf-8")
+        pop_db_as_string = pop_db.read()
+
+        try:
+            with DBConnection().connection as connection:
+                with connection.cursor() as cursor:
+                    cursor.execute(init_db_as_string)
+                    cursor.execute(pop_db_as_string)
+        except Exception as e:
+            print(e)
+            raise
+
+        print("Ré-initialisation de la base de données - Terminée")
+
+        return True
+
+
+if __name__ == "__main__":
+    ResetDatabase().lancer()
