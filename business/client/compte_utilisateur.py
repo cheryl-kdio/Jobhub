@@ -29,7 +29,7 @@ class CompteUtilisateur:
         id_compte_utilisateur: int,
         mdp: str,
         nom: str,
-        age: int,
+        age: int = None,
         mail: str = None,
         tel: int = None,
         ville: str = None,
@@ -45,5 +45,3 @@ class CompteUtilisateur:
         self.code_postal = code_postal
         self._connexion = True
 
-    def alerte_candidature(self):
-        pass
