@@ -30,3 +30,5 @@ CREATE TABLE projet2A.recherche (
     utilisateur_id INT,
     FOREIGN KEY (utilisateur_id) REFERENCES projet2A.compte_utilisateur(id_compte_utilisateur)
 );
+
+-- A completer avec les autres tables
