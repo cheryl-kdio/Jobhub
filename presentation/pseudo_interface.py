@@ -107,6 +107,7 @@ def make_api_request():
         "results_per_page": 10,
         "what": search_what,
         "where": search_where,
+        
     }
 
     # Make the API request

@@ -4,6 +4,42 @@ from business.client.compte_utilisateur import CompteUtilisateur
 
 
 class CompteUtilisateurDao(metaclass=Singleton):
+    def creer_compte(self, user: CompteUtilisateur) -> bool:
+        """
+        Add an attack to the database
+        """
+        created = False
+
+        # # Get the id type
+        # id_attack_type = TypeAttackDAO().find_id_by_label(attack.type)
+        # if id_attack_type is None:
+        #     return created
+
+        with DBConnection().connection as connection:
+            with connection.cursor() as cursor:
+                cursor.execute(
+                    "INSERT INTO projet2A.compte_utilisateur (id_compte_utilisateur, nom,        "
+                    " mdp, age, mail, tel, ville, code_postal)             "
+                    "VALUES                                                     "
+                    "(%(id_compte_utilisateur)s, %(nom)s, %(mdp)s, %(age)s,    "
+                    " %(mail)s, %(tel)s),%(ville)s,%(code_postal)s                             "
+                    "RETURNING id_attack;",
+                    {
+                        "id_compte_utilisateur": user.id,
+                        "nom": attack.name,
+                        "mdp": attack.power,
+                        "age": attack.accuracy,
+                        "element": attack.element,
+                        "description": attack.description,
+                    },
+                )
+                res = cursor.fetchone()
+        if res:
+            attack.id = res["id_attack"]
+            created = True
+
+        return created
+
     def supprimer(self, user) -> bool:
         """Suppression d'un utilisateur dans la base de données
 
