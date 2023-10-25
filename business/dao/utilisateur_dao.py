@@ -86,11 +86,7 @@ class UtilisateurDao(metaclass=Singleton):
             print("Le mot de passe est invalide.")
             return False
 
-<<<<<<< HEAD
-    def add_perso(  # A discuter ## Pratique car mets None par défaut aux attributs non enregistrés
-=======
     def modifier_perso(  # A discuter
->>>>>>> f49a1ad8d849fc38ac42d7a20db8d46ce55f9d69
         self,
         id,
         nom=None,
@@ -102,13 +98,8 @@ class UtilisateurDao(metaclass=Singleton):
     ):
         with DBConnection().connection as connection:
             with connection.cursor() as cur:
-<<<<<<< HEAD
-                update = """UPDATE projet2A.compte_utilisateur 
-                SET nom=COALESCE(%s,nom), date_naissance =COALESCE(%s,date_naissance),
-=======
                 update = """UPDATE projet2A.compte_utilisateur
                 SET nom=COALESCE(%s,nom),
->>>>>>> f49a1ad8d849fc38ac42d7a20db8d46ce55f9d69
                     age = COALESCE(%s,age), mail = COALESCE(%s,mail),
                     tel = COALESCE(%s,tel), ville = COALESCE(%s,ville), code_postal=COALESCE(%s,code_postal)
                 WHERE id = %s """ 
