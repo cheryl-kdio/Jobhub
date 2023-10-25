@@ -1,28 +1,35 @@
 from business.dao.db_connection import DBConnection
 from business import Singleton
+from business.client.compte_utilisateur import CompteUtilisateur
+from business.client.recherche import Recherche
 
 
 class RechercheDao(metaclass=Singleton):
-    def supprimer_recherche(self, recherche) -> bool:
-        """Suppression d'un utilisateur dans la base de données
+    def supprimer_recherche(
+        self, recherche: Recherche, utilisateur: CompteUtilisateur
+    ) -> bool:
+        """Suppression d'une recherche sauvegardé dans la base de données
 
         Parameters
         ----------
-        user : CompteUtilisateur
-            utilisateur à supprimer de la base de données
+        user : id_recherche
+            recherche à supprimer des sauvegardes
 
         Returns
         -------
-            True si l'utilisateur a bien été supprimé
+            True si la recherche a bien été supprimé
         """
         try:
             with DBConnection().connection as connection:
                 with connection.cursor() as cursor:
                     # Supprimer la recherche d'un utilisateur
                     cursor.execute(
-                        "DELETE FROM projet2A.recherche           "
-                        " WHERE id_recherche=%(id_recherche)s      ",  # creer db compte_utilisateur ou changer le nom...
-                        {"id_recherche": recherche.id_recherche},
+                        "DELETE FROM projet2A.recherche "
+                        " WHERE id_recherche=%(id_recherche)s and id_utilisateur=%(id_utilisateur)s ",  ## Demander des infos
+                        {
+                            "id_recherche": recherche.id_recherche,
+                            "id_utilisateur": utilisateur.id,
+                        },
                     )
                     res = cursor.rowcount
         except Exception as e:

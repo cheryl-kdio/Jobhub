@@ -1,3 +1,5 @@
+--- modifier avec de 'vraies' données 
+---- completer avec les insertions dans les autres tables
 INSERT INTO projet2A.compte_utilisateur (mdp, nom, age, mail, tel, ville, code_postal)
 VALUES
     ('mot_de_passe1', 'NomUtilisateur1', 25, 'email1@example.com', 1234567890, 'Paris', 75000),

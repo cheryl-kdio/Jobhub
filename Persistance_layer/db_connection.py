@@ -3,7 +3,7 @@ import os
 import dotenv
 import psycopg2
 from psycopg2.extras import RealDictCursor
-from business.singleton import Singleton
+from Persistance_layer.singleton import Singleton
 
 
 class DBConnection(metaclass=Singleton):
