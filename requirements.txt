@@ -5,3 +5,4 @@ dataclasses
 python-dotenv
 fastapi
 inquirerPy
+argon2-cffi

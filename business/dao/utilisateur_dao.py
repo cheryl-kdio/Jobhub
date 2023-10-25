@@ -1,6 +1,6 @@
 from business.dao.db_connection import DBConnection
 from business.singleton import Singleton
-
+from business.client.compte_utilisateur import CompteUtilisateur
 from argon2 import PasswordHasher
 
 ph = PasswordHasher()
@@ -9,7 +9,7 @@ from getpass import getpass
 
 
 class UtilisateurDao(metaclass=Singleton):
-    def add_db(self, name_user, mail, password, sel):
+    def add_db(self, compte_utilisateur, sel):
         """
         Ajoute un nouvel utilisateur à la base de données.
 
@@ -21,9 +21,17 @@ class UtilisateurDao(metaclass=Singleton):
         """
         with DBConnection().connection as connection:
             with connection.cursor() as cur:
-                insert_sql = "insert into projet2A.compte_utilisateur (nom,mail, mdp, sel) values(%s, %s, %s, %s)"
-                values = (name_user, mail, password, sel)
+                insert_sql = "insert into projet2A.compte_utilisateur (nom,mail, mdp, sel) values(%s, %s, %s, %s) returning id_compte_utilisateur;"
+                values = (
+                    compte_utilisateur.nom,
+                    compte_utilisateur.mail,
+                    compte_utilisateur.mdp,
+                    sel,
+                )
                 cur.execute(insert_sql, values)
+                res = cur.fetchone()
+        if res:
+            compte_utilisateur.id = res["id_compte_utilisateur"]
 
     def get_mail(self):
         """
