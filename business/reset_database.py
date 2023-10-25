@@ -10,10 +10,10 @@ class ResetDatabase(metaclass=Singleton):
     def lancer(self):
         print("Ré-initialisation de la base de données")
 
-        init_db = open("data/init_db.sql", encoding="utf-8")
+        init_db = open("persistance/init_db.sql", encoding="utf-8")
         init_db_as_string = init_db.read()
 
-        pop_db = open("data/pop_db.sql", encoding="utf-8")
+        pop_db = open("persistance/pop_db.sql", encoding="utf-8")
         pop_db_as_string = pop_db.read()
 
         try:
