@@ -52,8 +52,7 @@ class OffreDao(metaclass=Singleton):
                     )
 
     ## Besoin de finir cette fonction en fonction de ce qu'on affiche
-    def ajouter_offre(
-        self, nom_offre: str, offre: Offre, utilisateur: CompteUtilisateur
+    def ajouter_offre( self, nom_offre: str, offre: Offre, utilisateur: CompteUtilisateur
     ):
         """
         Sauvegarde l'offre dans la base de données
