@@ -10,12 +10,23 @@ from getpass import getpass
 
 
 class UtilisateurDao(metaclass=Singleton):
-    def add_db(self, id, name_user, mail, password):
+    def add_db(self, name_user, mail, password, sel):
         with DBConnection().connection as connection:
             with connection.cursor() as cur:
-                insert_sql = "insert into projet2A.compte_utilisateur (nom,mail, mdp) values(%s, %s, %s)"
-                values = (name_user, mail, password)
+                insert_sql = "insert into projet2A.compte_utilisateur (nom,mail, mdp, sel) values(%s, %s, %s, %s)"
+                values = (name_user, mail, password, sel)
                 cur.execute(insert_sql, values)
+
+    def get_salt_mdp(self, mail):
+        with DBConnection().connection as connection:
+            with connection.cursor() as cur:
+                requete = (
+                    "SELECT mdp, sel FROM projet2A.compte_utilisateur WHERE mail= %s;"
+                )
+                cur.execute(requete, (mail,))
+                mdp_salt = cur.fetchone()
+                print(mdp_salt)
+        return mdp_salt
 
     def drop_id(self, id):
         with DBConnection().connection as connection:
@@ -62,18 +73,18 @@ class UtilisateurDao(metaclass=Singleton):
 
     def verif_connexion(self, mail):  # Voir comment l'ajuster avec notre DAO
         passw = getpass("Mot de passe : ")
-        password = ph.hash(passw)
-        with DBConnection().connection as connection:
-            with connection.cursor() as cur:
-                requete = "SELECT mdp FROM projet2A.compte_utilisateur WHERE mail =%s"
-                cur.execute(requete, (mail))
-                mdp_to_check = cur.fetchone()
+        mdp_db_salt = UtilisateurDao().get_salt_mdp(mail)
+        salt_db = mdp_db_salt["sel"]
+        print(salt_db)
+        mdp_db = mdp_db_salt["mdp"]
 
         try:
-            ph.verify(password, mdp_to_check)
+            ph.verify(mdp_db, salt_db + passw)
             print("Le mot de passe est valide.")
+            return True
         except:
             print("Le mot de passe est invalide.")
+            return False
 
     def modifier_perso(  # A discuter
         self,
