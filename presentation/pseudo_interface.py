@@ -8,7 +8,7 @@ app = tk.Tk()
 app.title("JobHub")
 
 # My API key and ID
-api_key = "172efa229f7dfce6a99b4bf26b538ed7"
+api_key = "5e0f5d600717da86140a3a377681078a"
 api_id = "37f68c4e"
 
 # Create and pack a frame for search parameters
@@ -107,7 +107,6 @@ def make_api_request():
         "results_per_page": 10,
         "what": search_what,
         "where": search_where,
-        
     }
 
     # Make the API request
@@ -138,8 +137,7 @@ def make_api_request():
         error_message = (
             f"Request failed with status code {response.status_code}: {response.text}"
         )
-        # Display the error message in a popup dialog (you can customize this)
-        tk.messagebox.showerror("Error", error_message)
+        print(error_message)
 
 
 # Create and pack a button to trigger the API request
