@@ -10,7 +10,6 @@ class Recherche:
         query_params: dict,
     ):  # Certains attributs sont potentiellement à mettre en privé/protection
         dotenv.load_dotenv(override=True)
-        self.page_number = 1
         self.base_url = os.environ["HOST_WEBSERVICE"]
         self.query_params = query_params
         self.params = {
