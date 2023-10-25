@@ -4,8 +4,7 @@ class CompteUtilisateur:
 
     Attributes
     ----------
-    id : int
-        L'identifiant unique du compte utilisateur.
+
     mdp : str
         Le mot de passe du compte utilisateur.
     nom : str
@@ -26,7 +25,6 @@ class CompteUtilisateur:
 
     def __init__(
         self,
-        id_compte_utilisateur: int,
         mdp: str,
         nom: str,
         age: int = None,
@@ -35,7 +33,6 @@ class CompteUtilisateur:
         ville: str = None,
         code_postal: int = None,
     ):
-        self.id_compte_utilisateur = id_compte_utilisateur
         self.mdp = mdp
         self.nom = nom
         self.age = age
@@ -43,5 +40,4 @@ class CompteUtilisateur:
         self.tel = tel
         self.ville = ville
         self.code_postal = code_postal
-        self._connexion = True
-
+        self._connexion = False

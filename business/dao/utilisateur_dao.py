@@ -86,15 +86,8 @@ class UtilisateurDao(metaclass=Singleton):
             print("Le mot de passe est invalide.")
             return False
 
-    def modifier_perso(  # A discuter
-        self,
-        id,
-        nom=None,
-        age=None,
-        mail=None,
-        tel=None,
-        ville=None,
-        code_postal=None,
+    def update(
+        self, id, nom=None, age=None, mail=None, tel=None, ville=None, code_postal=None
     ):
         with DBConnection().connection as connection:
             with connection.cursor() as cur:
@@ -102,8 +95,37 @@ class UtilisateurDao(metaclass=Singleton):
                 SET nom=COALESCE(%s,nom),
                     age = COALESCE(%s,age), mail = COALESCE(%s,mail),
                     tel = COALESCE(%s,tel), ville = COALESCE(%s,ville), code_postal=COALESCE(%s,code_postal)
-                WHERE id = %s """ 
+                WHERE id_compte_utilisateur = %s """
+
                 cur.execute(
                     update,
                     (nom, age, mail, tel, ville, code_postal, id),
                 )
+
+        def supprimer(self, user) -> bool:
+            """Suppression d'un utilisateur dans la base de données
+
+            Parameters
+            ----------
+            user : CompteUtilisateur
+                utilisateur à supprimer de la base de données
+
+            Returns
+            -------
+                True si l'utilisateur a bien été supprimé
+            """
+            try:
+                with DBConnection().connection as connection:
+                    with connection.cursor() as cursor:
+                        # Supprimer le compte d'un utilisateur
+                        cursor.execute(
+                            "DELETE FROM projet2A.compte_utilisateur           "
+                            " WHERE id_compte_utilisateur=%(id_compte_utilisateur)s      ",  # creer db compte_utilisateur ou changer le nom...
+                            {"id_compte_utilisateur": user.id_compte_utilisateur},
+                        )
+                        res = cursor.rowcount
+            except Exception as e:
+                print(e)
+                raise
+
+            return res > 0

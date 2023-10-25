@@ -1,4 +1,4 @@
-from Business_layer.Service_layer.compte import CompteUtilisateur
+from business.services.utilisateur_service import CompteUtilisateur
 
 # Création d'une instance de CompteUtilisateur
 
