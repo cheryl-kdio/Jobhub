@@ -88,4 +88,5 @@ query_params = {
 }
 
 a = Recherche(query_params=query_params)
-RechercheService().afficher_offres(a)
+b = RechercheService().obtenir_resultats(a)
+print(b)
