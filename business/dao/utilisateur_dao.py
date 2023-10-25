@@ -9,7 +9,6 @@ from getpass import getpass
 
 
 class UtilisateurDao(metaclass=Singleton):
-
     def add_db(self, name_user, mail, password, sel):
         """
         Ajoute un nouvel utilisateur à la base de données.
@@ -123,7 +122,8 @@ class UtilisateurDao(metaclass=Singleton):
 
         Returns:
             List[Dict[str, Any]]: Liste contenant les données de l'utilisateur.
-        """        with DBConnection().connection as connection:
+        """
+        with DBConnection().connection as connection:
             with connection.cursor() as cur:
                 get_user = f"SELECT * FROM projet2A.compte_utilisateur WHERE id_compte_utilisateur= %s;"
                 cur.execute(get_user, (id,))
