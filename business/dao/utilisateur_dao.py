@@ -67,7 +67,7 @@ class UtilisateurDao(metaclass=Singleton):
 
         return utilisateur
 
-    def add_perso(  # A discuter
+    def add_perso(  # A discuter ## Pratique car mets None par défaut aux attributs non enregistrés
         self,
         id,
         nom=None,
@@ -80,11 +80,11 @@ class UtilisateurDao(metaclass=Singleton):
     ):
         with DBConnection().connection as connection:
             with connection.cursor() as cur:
-                update = """UPDATE projet2A.compte_utilisateur
+                update = """UPDATE projet2A.compte_utilisateur 
                 SET nom=COALESCE(%s,nom), date_naissance =COALESCE(%s,date_naissance),
                     age = COALESCE(%s,age), mail = COALESCE(%s,mail),
                     tel = COALESCE(%s,tel), ville = COALESCE(%s,ville), code_postal=COALESCE(%s,code_postal)
-                WHERE id = %s """
+                WHERE id = %s """ 
                 cur.execute(
                     update,
                     (nom, date_naissance, age, mail, tel, ville, code_postal, id),
