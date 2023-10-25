@@ -50,7 +50,7 @@ class OffreDao(metaclass=Singleton):
                     "type_contrat": offre.type_contrat,
                     "lien_offre": offre.lien_offre,
                     "salaire_minimum": offre.salaire_minimum,
-                    "etre_en_favoris": offre.etre_en_favoris,
+                    "etre_en_favoris": offre._etre_en_favoris,
                     "utilisateur_id": utilisateur.id,
                 }
                 cursor.execute(query, params)
@@ -82,13 +82,12 @@ class OffreDao(metaclass=Singleton):
         id_utilisateur = UtilisateurDao().get_value_from_mail(
             utilisateur.mail, "id_compte_utilisateur"
         )
-        utilisateur.mail
 
         with DBConnection().connection as connection:
             with connection.cursor() as cursor:
                 # Sauvegarder l'offre d'un utilisateur
                 cursor.execute(
-                    "INSERT INTO projet2A.offre(titre, domaine, lieu, type_contrat, lien_offre, salaire minimum, etre_en_favoris, utilisateur_id) "
+                    "INSERT INTO projet2A.offre(titre, domaine, lieu, type_contrat, lien_offre, salaire_minimum, etre_en_favoris, utilisateur_id) "
                     " VALUES (%(titre)s, %(domaine)s, %(lieu)s, %(type_contrat)s, %(lien_offre)s, %(salaire_minimum)s, %(etre_en_favoris)s, %(utilisateur_id)s)  "
                     "RETURNING id_offre",
                     {
@@ -108,6 +107,51 @@ class OffreDao(metaclass=Singleton):
             created = True
         return created
 
+        def voir_favoris(self,utilisateur):
+            """
+            Voir les offres favoris de la base de données
+
+            Parameters
+            ----------
+            utilisateur : CompteUtilisateur
+                Utilisateur qui sauvegarde l'offre
+
+            Returns
+            -------
+                True si l'offre a bien été sauvegardée
+            """
+            id_utilisateur = UtilisateurDao().get_value_from_mail(
+                utilisateur.mail, "id_compte_utilisateur"
+            )
+
+            with DBConnection().connection as connection:
+                with connection.cursor() as cursor:
+                    # Sauvegarder l'offre d'un utilisateur
+                    cursor.execute(
+                        "SELECT * "
+                        "FROM projet2A.offre "
+                        "WHERE utilisateur_id=%(id_utilisateur)s"
+                        "RETURNING id_offre",
+                        {
+                            "id_utilisateur":id_utilisateur
+                        },
+                    )
+                    res = cursor.fetchall()
+            offres = []
+            attack_factory = AttackFactory()
+
+            if res:
+                for row in res:
+                    offre = Offre(
+                        titre=row["titre"],
+                        domaine=row["domaine"],
+                        lieu=row["lieu"],
+                        type_contrat=row["type_contrat"],
+                        lien_offre=row["lien_offre"],
+                        salaire_minimum=row["salaire_minimum"],
+                    )
+                    offres.append(offre)
+        return offres
 
 query_params = {
     "results_per_page": 20,
@@ -125,8 +169,11 @@ query_params = {
     # "contract": "0",
 }
 
-cheryl = CompteUtilisateur(mail="cherylkouadio18", mdp="patate", nom="kouadio")
-print(cheryl)
+#cheryl = CompteUtilisateur(mail="cherylkouadio18", mdp="patate", nom="kouadio")
+#print(cheryl)
+#sel='test'
+#UtilisateurDao().add_db(cheryl,sel)
 
-a = Recherche(query_params=query_params)
-b = RechercheService().obtenir_resultats(a)
+#a = Recherche(query_params=query_params)
+#b = RechercheService().obtenir_resultats(a)
+#OffreDao().ajouter_offre(b[0],cheryl)

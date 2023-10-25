@@ -34,21 +34,7 @@ class RechercheService:
                     offres.append(offre)
 
             return offres
-
-            # output = [
-            #     {
-            #         "Titre": job.get("title", ""),
-            #         "Entreprise": job.get("company", {}).get("display_name", ""),
-            #         "Lieu": job.get("location", {}).get("display_name", ""),
-            #         "Salaire min": job.get("salary_min", ""),
-            #         "Categorie": job.get("category", {}).get("label", ""),
-            #         "redirect_url": job.get("redirect_url", ""),
-            #     }
-            #     for i, job in enumerate(jobs)
-            # ]
-
-            # print(tabulate(output, headers="keys", tablefmt="pretty"))
-
+            
         else:
             print("Votre recherche ne peut pas être effectuée.")
 
