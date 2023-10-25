@@ -1,5 +1,8 @@
 from business.dao.utilisateur_dao import UtilisateurDao
-import argon2
+from business.client.compte_utilisateur import CompteUtilisateur
+
+# from services.compte_utilisateur_service import CompteUtilisateurService
+
 
 from getpass import getpass
 from argon2 import PasswordHasher
@@ -49,6 +52,7 @@ class Utilisateur(UtilisateurDao):  # Création classe Utilisateur
                 print(
                     "Connexion réussie ! Bienvenue,"
                 )  # Supposons que le nom de l'utilisateur est dans la deuxième colonne
+                CompteUtilisateur.compte_utilisateur()._connexion = True
             else:
                 print("Identifiant ou mot de passe incorrect. Veuillez réessayer.")
 
@@ -58,6 +62,11 @@ class Utilisateur(UtilisateurDao):  # Création classe Utilisateur
 
 # Appeler la fonction se_connecter
 if __name__ == "__main__":
-    u1 = Utilisateur()
-    UtilisateurDao().drop_id(17)
-    u1.se_connecter()
+    # u2 = CompteUtilisateurService()
+    # u2.modifierInfo()
+
+    UtilisateurDao().update(id=22, mail="pascal@gmail.com")
+
+    # u1 = Utilisateur()
+    UtilisateurDao().afficher_db()
+    # u1.se_connecter()
