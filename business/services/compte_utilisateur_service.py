@@ -1,5 +1,5 @@
 from business.client.compte_utilisateur import CompteUtilisateur
-from dao.Utilisateur_dao import UtilisateurDao
+from business.dao.utilisateur_dao import UtilisateurDao
 
 
 class CompteUtilisateurService:
@@ -9,13 +9,9 @@ class CompteUtilisateurService:
 
     def deconnexion(self, compte_utilisateur: CompteUtilisateur) -> bool:
         "Déconnecter un CompteUtilisateur"
-        compte_utilisateur()._connexion = False
-
-    # def modifierInfo(
-    #    self, compte_utilisateur: CompteUtilisateur, type_info, nouvelle_valeur
-    # ) -> bool:
-    #    "Modifier le nom d'un CompteUtilisateur"
-    #    UtilisateurDao().update(type_info, nouvelle_valeur, compte_utilisateur)
+        name = compte_utilisateur.nom
+        print(f"A bientôt {name}")
+        compte_utilisateur._connexion = False
 
     def modifierInfo(
         self,
@@ -28,7 +24,7 @@ class CompteUtilisateurService:
         code_postal=None,
     ) -> bool:
         "Modifier le nom d'un CompteUtilisateur"
-        id = compte_utilisateur.id_compte_utilisateur
+        id = compte_utilisateur.id
 
         UtilisateurDao().update(
             id,

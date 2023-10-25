@@ -25,6 +25,7 @@ class CompteUtilisateur:
 
     def __init__(
         self,
+        id,
         mdp: str,
         nom: str,
         age: int = None,
@@ -33,6 +34,7 @@ class CompteUtilisateur:
         ville: str = None,
         code_postal: int = None,
     ):
+        self.id = (id,)
         self.mdp = mdp
         self.nom = nom
         self.age = age
