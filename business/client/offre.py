@@ -1,14 +1,5 @@
 class Offre:
-    def __init__(
-        self,
-        titre,
-        domaine,
-        lieu,
-        type_contrat,
-        lien_offre,
-        salaire_minimum,
-        etre_en_favoris=False,
-    ):
+    def __init__(self, titre, domaine, lieu, type_contrat, lien_offre, salaire_minimum):
         self.id = None
         self.titre = titre
         self.domaine = domaine
@@ -16,7 +7,7 @@ class Offre:
         self.type_contrat = type_contrat
         self.lien_offre = lien_offre
         self.salaire_minimum = salaire_minimum
-        self.etre_en_favoris = etre_en_favoris
+        self._etre_en_favoris = False
 
     def mettre_en_favoris(self):
-        self.etre_en_favoris = True
+        self._etre_en_favoris = True

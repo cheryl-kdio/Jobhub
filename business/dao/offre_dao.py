@@ -1,15 +1,11 @@
 from business.dao.db_connection import DBConnection
 from business.singleton import Singleton
-
-import requests
-from tabulate import tabulate
-import os
-import dotenv
 from business.client.offre import Offre
 from business.client.recherche import Recherche
 from business.client.compte_utilisateur import CompteUtilisateur
 from business.dao.recherche_dao import RechercheDao
 from business.services.recherche_service import RechercheService
+
 
 class OffreDao(metaclass=Singleton):
     def supprimer_recherche(self, recherche) -> bool:
@@ -56,20 +52,20 @@ class OffreDao(metaclass=Singleton):
                         "lien_offre": offre.lien_offre,
                         "salaire_minimum": offre.salaire_minimum,
                         "etre_en_favoris": offre.etre_en_favoris,
-                        "utilisateur_id": utilisateur.id 
+                        "utilisateur_id": utilisateur.id,
                     },
                 )
                 res = cursor.fetchone()
 
         return res > 0
 
-    def ajouter_offre(self, offre, utilisateur ):
+    def ajouter_offre(self, offre, utilisateur):
         """
         Sauvegarde l'offre dans la base de données
 
         Parameters
         ----------
-        
+
         offre : Offre
             Offre à sauvegarder
         utilisateur : CompteUtilisateur
@@ -85,29 +81,29 @@ class OffreDao(metaclass=Singleton):
         if id_offre is None:
             return created
 
-        
         with DBConnection().connection as connection:
             with connection.cursor() as cursor:
                 # Sauvegarder l'offre d'un utilisateur
                 cursor.execute(
-                        "INSERT INTO projet2A.offre(titre, domaine, lieu, type_contrat, lien_offre, salaire minimum, etre_en_favoris, utilisateur_id) "
-                        " VALUES (%(titre)s, %(domaine)s, %(lieu)s, %(type_contrat)s, %(lien_offre)s, %(salaire_minimum)s, %(etre_en_favoris)s, %(utilisateur_id)s)  "
-                        "RETURNING id_offre",
-                        {
-                            "titre": offre.titre,
+                    "INSERT INTO projet2A.offre(titre, domaine, lieu, type_contrat, lien_offre, salaire minimum, etre_en_favoris, utilisateur_id) "
+                    " VALUES (%(titre)s, %(domaine)s, %(lieu)s, %(type_contrat)s, %(lien_offre)s, %(salaire_minimum)s, %(etre_en_favoris)s, %(utilisateur_id)s)  "
+                    "RETURNING id_offre",
+                    {
+                        "titre": offre.titre,
                         "domaine": offre.domaine,
                         "lieu": offre.lieu,
                         "type_contrat": offre.type_contrat,
                         "lien_offre": offre.lien_offre,
                         "salaire_minimum": offre.salaire_minimum,
-                        "etre_en_favoris": offre.etre_en_favoris,
-                        "utilisateur_id": utilisateur.id
-                        },
-                    )
+                        "etre_en_favoris": offre._etre_en_favoris,
+                        "utilisateur_id": utilisateur.id,
+                    },
+                )
                 res = cursor.fetchone()
         if res:
             offre.id = res["id_offre"]
-            created = True 
+            created = True
+
 
 query_params = {
     "results_per_page": 20,
@@ -128,4 +124,3 @@ query_params = {
 a = Recherche(query_params=query_params)
 b = RechercheService().obtenir_resultats(a)
 print(b)
-
