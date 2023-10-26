@@ -31,9 +31,28 @@ class OffreDao(metaclass=Singleton):
 
         return res > 0
 
+
+    def deja_favoris(self, offre):
+        try:
+            with DBConnection().connection as connection:
+                with connection.cursor() as cursor:
+                    cursor.execute(
+                        "SELECT id_offre FROM projet2A.offre"
+                        "WHERE titre=%(titre)s, domaine =%(domaine)s, lieu =%(lieu)s,"
+                        "type_contrat = %(type_contrat)s, lien_offre =%(lien_offre)s,"
+                        "salaire_minimum = %(salaire_minimum)s, etre_en_favoris= %(etre_en_favoris)s",
+                        {"titre": offre.titre, 
+                        "domaine": offre.domaine, 
+                        "lieu": offre.lieu,
+                        "type_contrat": offre.type_contrat, 
+                        "lien_offre": offre.lien_offre,
+                        "salaire_minimum": offre.salaire_minimum,
+                        "etre_en_favoris": offre.etre_en_favoris},
+
+                    )
+
     ## Besoin de finir cette fonction en fonction de ce qu'on affiche
-    def sauvegarder_offre(
-        self, nom_offre: str, offre: Offre, utilisateur: CompteUtilisateur
+    def ajouter_offre( self, nom_offre: str, offre: Offre, utilisateur: CompteUtilisateur
     ):
         """
         Sauvegarde l'offre dans la base de données
@@ -51,6 +70,8 @@ class OffreDao(metaclass=Singleton):
         -------
             True si l'offre a bien été sauvegardée
         """
+        created = False 
+
         try:
             with DBConnection().connection as connection:
                 with connection.cursor() as cursor:

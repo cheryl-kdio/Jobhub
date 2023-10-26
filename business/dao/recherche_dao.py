@@ -1,7 +1,7 @@
 from business.dao.db_connection import DBConnection
-from business import Singleton
-from business.client.compte_utilisateur import CompteUtilisateur
+from business.singleton import Singleton
 from business.client.recherche import Recherche
+from business.client.compte_utilisateur import CompteUtilisateur
 
 
 class RechercheDao(metaclass=Singleton):
