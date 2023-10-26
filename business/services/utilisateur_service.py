@@ -82,44 +82,56 @@ class Utilisateur(UtilisateurDao):
             CompteUtilisateur: Un objet CompteUtilisateur contenant les informations de l'utilisateur
                               connecté si la connexion réussit. None sinon.
         """
-        try:
-            # Demander à l'utilisateur de saisir son identifiant et son mot de passe
-            mail = input("Adresse e-mail : ")
+        max_attempts = 3  # Nombre maximum de tentatives
+        attempts = 0  # Compteur de tentatives
 
-            utilisateur = UtilisateurDao().verif_connexion(mail=mail)
+        while attempts < max_attempts:
+            try:
+                # Demander à l'utilisateur de saisir son identifiant et son mot de passe
+                mail = input("Adresse e-mail : ")
 
-            # Vérifier si l'utilisateur a été trouvé dans la base de données
-            if utilisateur:
-                name = UtilisateurDao.get_value_from_mail(self, mail=mail, value="nom")
-                print(f"Connexion réussie ! Bienvenue {name}")
-                CompteUtilisateur._connexion = True
+                utilisateur = UtilisateurDao().verif_connexion(mail=mail)
 
-                CompteUtilisateur.id = UtilisateurDao.get_value_from_mail(
-                    self, mail=mail, value="id_compte_utilisateur"
-                )
+                # Vérifier si l'utilisateur a été trouvé dans la base de données
+                if utilisateur:
+                    name = UtilisateurDao.get_value_from_mail(
+                        self, mail=mail, value="nom"
+                    )
+                    print(f"Connexion réussie ! Bienvenue,{name}")
+                    CompteUtilisateur._connexion = True
 
-                CompteUtilisateur.nom = UtilisateurDao.get_value_from_mail(
-                    self, mail=mail, value="nom"
-                )
-                CompteUtilisateur.age = UtilisateurDao.get_value_from_mail(
-                    self, mail=mail, value="age"
-                )
-                CompteUtilisateur.code_postal = UtilisateurDao.get_value_from_mail(
-                    self, mail=mail, value="code_postal"
-                )
-                CompteUtilisateur.tel = UtilisateurDao.get_value_from_mail(
-                    self, mail=mail, value="tel"
-                )
-                CompteUtilisateur.ville = UtilisateurDao.get_value_from_mail(
-                    self, mail=mail, value="ville"
-                )
-                return CompteUtilisateur
-            else:
-                print("Identifiant ou mot de passe incorrect. Veuillez réessayer.")
-                return None
+                    CompteUtilisateur.id = UtilisateurDao.get_value_from_mail(
+                        self, mail=mail, value="id_compte_utilisateur"
+                    )
 
-        except Exception as e:
-            print("Erreur lors de la connexion à la base de données :", e)
+                    CompteUtilisateur.nom = UtilisateurDao.get_value_from_mail(
+                        self, mail=mail, value="nom"
+                    )
+                    CompteUtilisateur.age = UtilisateurDao.get_value_from_mail(
+                        self, mail=mail, value="age"
+                    )
+                    CompteUtilisateur.code_postal = UtilisateurDao.get_value_from_mail(
+                        self, mail=mail, value="code_postal"
+                    )
+                    CompteUtilisateur.tel = UtilisateurDao.get_value_from_mail(
+                        self, mail=mail, value="tel"
+                    )
+                    CompteUtilisateur.ville = UtilisateurDao.get_value_from_mail(
+                        self, mail=mail, value="ville"
+                    )
+                    return CompteUtilisateur
+                else:
+                    print(
+                        "Identifiant ou mot de passe incorrect. Vous avez encore",
+                        max_attempts - attempts - 1,
+                        "tentatives.",
+                    )
+                    attempts += 1
+
+            except Exception as e:
+                print("Erreur lors de la connexion à la base de données :", e)
+        print("Trop de tentatives infructueuses. La connexion est bloquée.")
+        return None
 
 
 # Appeler la fonction se_connecter
