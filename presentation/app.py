@@ -43,6 +43,12 @@ def offre(offre_id):
     # Cette fonction pourrait récupérer des détails supplémentaires sur l'offre sélectionnée
     return f"Détails de l'offre {offre_id}"
 
+@app.route("/se_connecter")
+def se_connecter():
+    # Cette fonction pourrait récupérer des détails supplémentaires sur l'offre sélectionnée
+    return render_template("connexion.html")
+
+
 
 if __name__ == "__main__":
     app.run(debug=True)
