@@ -6,6 +6,7 @@ from business.client.compte_utilisateur import CompteUtilisateur
 from business.dao.recherche_dao import RechercheDao
 from business.services.recherche_service import RechercheService
 from business.dao.utilisateur_dao import UtilisateurDao
+from business.dao.utilisateur_dao import UtilisateurDao
 
 
 class OffreDao(metaclass=Singleton):
@@ -105,53 +106,7 @@ class OffreDao(metaclass=Singleton):
         if res:
             offre.id = res["id_offre"]
             created = True
-        return created
 
-        def voir_favoris(self,utilisateur):
-            """
-            Voir les offres favoris de la base de données
-
-            Parameters
-            ----------
-            utilisateur : CompteUtilisateur
-                Utilisateur qui sauvegarde l'offre
-
-            Returns
-            -------
-                True si l'offre a bien été sauvegardée
-            """
-            id_utilisateur = UtilisateurDao().get_value_from_mail(
-                utilisateur.mail, "id_compte_utilisateur"
-            )
-
-            with DBConnection().connection as connection:
-                with connection.cursor() as cursor:
-                    # Sauvegarder l'offre d'un utilisateur
-                    cursor.execute(
-                        "SELECT * "
-                        "FROM projet2A.offre "
-                        "WHERE utilisateur_id=%(id_utilisateur)s"
-                        "RETURNING id_offre",
-                        {
-                            "id_utilisateur":id_utilisateur
-                        },
-                    )
-                    res = cursor.fetchall()
-            offres = []
-            attack_factory = AttackFactory()
-
-            if res:
-                for row in res:
-                    offre = Offre(
-                        titre=row["titre"],
-                        domaine=row["domaine"],
-                        lieu=row["lieu"],
-                        type_contrat=row["type_contrat"],
-                        lien_offre=row["lien_offre"],
-                        salaire_minimum=row["salaire_minimum"],
-                    )
-                    offres.append(offre)
-        return offres
 
 query_params = {
     "results_per_page": 20,
@@ -169,11 +124,6 @@ query_params = {
     # "contract": "0",
 }
 
-#cheryl = CompteUtilisateur(mail="cherylkouadio18", mdp="patate", nom="kouadio")
-#print(cheryl)
-#sel='test'
-#UtilisateurDao().add_db(cheryl,sel)
-
-#a = Recherche(query_params=query_params)
-#b = RechercheService().obtenir_resultats(a)
-#OffreDao().ajouter_offre(b[0],cheryl)
+a = Recherche(query_params=query_params)
+b = RechercheService().obtenir_resultats(a)
+print(b)
