@@ -5,4 +5,9 @@ dataclasses
 python-dotenv
 fastapi
 inquirerPy
+<<<<<<< HEAD
 argon2-cffi
+=======
+argon2-cffi
+Flask
+>>>>>>> main

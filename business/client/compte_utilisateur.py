@@ -25,16 +25,26 @@ class CompteUtilisateur:
 
     def __init__(
         self,
+<<<<<<< HEAD
         mail: str,
         mdp: str,
         nom: str,
         id: int = None,
+=======
+        mdp: str,
+        nom: str,
+        id= None,
+>>>>>>> main
         age: int = None,
         tel: int = None,
         ville: str = None,
         code_postal: int = None,
     ):
+<<<<<<< HEAD
         self.id = id
+=======
+        self.id = (id)
+>>>>>>> main
         self.mdp = mdp
         self.nom = nom
         self.age = age
