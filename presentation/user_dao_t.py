@@ -1,5 +1,6 @@
 from business.dao.db_connection import DBConnection
 from business.singleton import Singleton
+from business.client.compte_utilisateur import CompteUtilisateur
 
 from argon2 import PasswordHasher
 
@@ -127,8 +128,9 @@ class UtilisateurDao(metaclass=Singleton):
             with connection.cursor() as cur:
                 get_user = f"SELECT * FROM projet2A.compte_utilisateur WHERE id_compte_utilisateur= %s;"
                 cur.execute(get_user, (id,))
-                user = cur.fetchall()
-        return user
+                res=cur.fetchone()
+
+        return res
 
     def afficher_db(self):  # Affiche l'ensemble de la base de données
         """
