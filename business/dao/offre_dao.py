@@ -103,6 +103,7 @@ class OffreDao(metaclass=Singleton):
             created = True
         return created
 
+        #### SOUCIS D'IDENTATION
         def voir_favoris(self, utilisateur):
             """
             Voir les offres favoris de la base de données

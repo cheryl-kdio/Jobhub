@@ -28,26 +28,12 @@ class RechercheService:
                     lieu=job.get("location", {}).get("display_name", ""),
                     type_contrat=job.get("contract_type", ""),
                     lien_offre=job.get("redirect_url", ""),
-                    salaire_minimum=job.get("salary_min", "")
+                    salaire_minimum=job.get("salary_min", ""),
                 )
                 if offre:
                     offres.append(offre)
 
             return offres
-
-            # output = [
-            #     {
-            #         "Titre": job.get("title", ""),
-            #         "Entreprise": job.get("company", {}).get("display_name", ""),
-            #         "Lieu": job.get("location", {}).get("display_name", ""),
-            #         "Salaire min": job.get("salary_min", ""),
-            #         "Categorie": job.get("category", {}).get("label", ""),
-            #         "redirect_url": job.get("redirect_url", ""),
-            #     }
-            #     for i, job in enumerate(jobs)
-            # ]
-
-            # print(tabulate(output, headers="keys", tablefmt="pretty"))
 
         else:
             print("Votre recherche ne peut pas être effectuée.")
@@ -68,24 +54,3 @@ class RechercheService:
             print(tabulate(data, headers="keys", tablefmt="pretty"))
         else:
             print("Aucune offre trouvée.")
-
-
-query_params = {
-    "results_per_page": 20,
-    "what": "python dev",
-    # "where": "london",
-    # "sort_direction": "up",
-    # "sort_by": "relevance",
-    # "category": "IT Jobs",
-    # "distance": 10,
-    # "salary_min": 50000,
-    # "salary_max": 100000,
-    # "permanent": "1",
-    # "part_time": "0",
-    # "full_time": "1",
-    # "contract": "0",
-}
-
-a = Recherche(query_params=query_params)
-b = RechercheService().obtenir_resultats(a)
-print(b)
