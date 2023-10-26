@@ -15,5 +15,9 @@
 
         <input type="submit" value="Se connecter">
     </form>
+
+    {% if erreur %}
+        <p>{{ erreur }}</p>
+    {% endif %}
 </body>
 </html>

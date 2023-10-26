@@ -1,8 +1,7 @@
-from business.dao.utilisateur_dao import UtilisateurDao
+from presentation.user_dao_t import UtilisateurDao
 from business.client.compte_utilisateur import CompteUtilisateur
 
 from business.services.compte_utilisateur_service import CompteUtilisateurService
-
 
 from getpass import getpass
 from argon2 import PasswordHasher
@@ -75,7 +74,7 @@ class Utilisateur(UtilisateurDao):
 
         UtilisateurDao().add_db(name_user, mail, password, sel)
 
-    def se_connecter(self):
+    def se_connecter(self, mail, passw):
         """Permet à un utilisateur de se connecter en saisissant son adresse e-mail et son mot de passe.
 
         Returns:
@@ -87,17 +86,13 @@ class Utilisateur(UtilisateurDao):
 
         while attempts < max_attempts:
             try:
-                # Demander à l'utilisateur de saisir son identifiant et son mot de passe
-                mail = input("Adresse e-mail : ")
-
-                utilisateur = UtilisateurDao().verif_connexion(mail=mail)
+                utilisateur = UtilisateurDao().verif_connexion(mail=mail, passw=passw)
 
                 # Vérifier si l'utilisateur a été trouvé dans la base de données
                 if utilisateur:
                     name = UtilisateurDao.get_value_from_mail(
                         self, mail=mail, value="nom"
                     )
-                    print(f"Connexion réussie ! Bienvenue,{name}")
                     CompteUtilisateur._connexion = True
 
                     CompteUtilisateur.id = UtilisateurDao.get_value_from_mail(
