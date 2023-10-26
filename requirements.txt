@@ -6,3 +6,5 @@ python-dotenv
 fastapi
 inquirerPy
 argon2
+argon2-cffi
+Flask

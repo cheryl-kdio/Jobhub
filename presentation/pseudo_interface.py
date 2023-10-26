@@ -8,8 +8,13 @@ app = tk.Tk()
 app.title("JobHub")
 
 # My API key and ID
+<<<<<<< HEAD
 api_key = "5e0f5d600717da86140a3a377681078a"
 api_id = "37f68c4e"
+=======
+api_key = "6beb9a3e95cede40d2a6a7c58bb22764"
+api_id = "9b48e28e"
+>>>>>>> 5502180deb60d318e597957b47299f874722f390
 
 # Create and pack a frame for search parameters
 search_frame = ttk.LabelFrame(app, text="Search Parameters")
