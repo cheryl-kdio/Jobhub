@@ -28,8 +28,7 @@ class RechercheService:
                     lieu=job.get("location", {}).get("display_name", ""),
                     type_contrat=job.get("contract_type", ""),
                     lien_offre=job.get("redirect_url", ""),
-                    salaire_minimum=job.get("salary_min", ""),
-                    etre_en_favoris=False,
+                    salaire_minimum=job.get("salary_min", "")
                 )
                 if offre:
                     offres.append(offre)

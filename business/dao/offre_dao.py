@@ -34,7 +34,7 @@ class OffreDao(metaclass=Singleton):
 
         return res is not None
 
-    def deja_favoris(self, offre, utilisateur):
+    def deja_favoris(self, offre, id_utilisateur):
         with DBConnection().connection as connection:
             with connection.cursor() as cursor:
                 query = (
@@ -51,13 +51,13 @@ class OffreDao(metaclass=Singleton):
                     "lien_offre": offre.lien_offre,
                     "salaire_minimum": offre.salaire_minimum,
                     "etre_en_favoris": offre._etre_en_favoris,
-                    "utilisateur_id": utilisateur.id,
+                    "utilisateur_id": id_utilisateur,
                 }
                 cursor.execute(query, params)
                 res = cursor.fetchone()
         return res is not None
 
-    def ajouter_offre(self, offre, utilisateur):
+    def ajouter_offre(self, offre, id_utilisateur):
         """
         Sauvegarde l'offre dans la base de données
 
@@ -75,13 +75,9 @@ class OffreDao(metaclass=Singleton):
         """
         created = False
 
-        deja_favoris = self.deja_favoris(offre, utilisateur)
+        deja_favoris = self.deja_favoris(offre, id_utilisateur)
         if deja_favoris is None:
             return created
-
-        id_utilisateur = UtilisateurDao().get_value_from_mail(
-            utilisateur.mail, "id_compte_utilisateur"
-        )
 
         with DBConnection().connection as connection:
             with connection.cursor() as cursor:
