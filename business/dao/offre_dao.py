@@ -5,59 +5,57 @@ from business.client.recherche import Recherche
 from business.client.compte_utilisateur import CompteUtilisateur
 from business.dao.recherche_dao import RechercheDao
 from business.services.recherche_service import RechercheService
+from business.dao.utilisateur_dao import UtilisateurDao
 
 
 class OffreDao(metaclass=Singleton):
-    def supprimer_recherche(self, recherche) -> bool:
-        """Suppression d'une offre sauvegardé par un utilisateur dans la base de données
+    def supprimer_offre(self, offre) -> bool:
+        """
+        Suppression d'une offre sauvegardé par un utilisateur dans la base de données
 
         Parameters
         ----------
-        user : Offre
+        offre : Offre
             Offre sauvegardé par un utilisateur à supprimer de la base de données
 
         Returns
         -------
             True si l'offre a bien été supprimé
         """
-        try:
-            with DBConnection().connection as connection:
-                with connection.cursor() as cursor:
-                    # Supprimer l'offre sauvegardé d'un utilisateur
-                    cursor.execute(
-                        "DELETE FROM projet2A.offre           "
-                        " WHERE id_offre=%(id_offre)s      ",  # creer db compte_utilisateur ou changer le nom...
-                        {"id_offre": recherche.id_offre},
-                    )
-                    res = cursor.rowcount
-        except Exception as e:
-            print(e)
-            raise
+        with DBConnection().connection as connection:
+            with connection.cursor() as cursor:
+                # Supprimer l'offre sauvegardé d'un utilisateur
+                cursor.execute(
+                    "DELETE FROM projet2A.offre        "
+                    " WHERE id_offre = %(id_offre)s      ",
+                    {"id_offre": offre.id_offre},
+                )
+                res = cursor.fetchone()
 
-        return res > 0
+        return res is not None
 
     def deja_favoris(self, offre, utilisateur):
         with DBConnection().connection as connection:
             with connection.cursor() as cursor:
-                cursor.execute(
-                    "SELECT id_offre FROM projet2A.offre"
-                    "WHERE titre=%(titre)s, domaine =%(domaine)s, lieu =%(lieu)s,"
-                    "type_contrat = %(type_contrat)s, lien_offre =%(lien_offre)s,"
-                    "salaire_minimum = %(salaire_minimum)s, etre_en_favoris= %(etre_en_favoris)s, utilisateur_id= %(utilisateur_id)s",
-                    {
-                        "titre": offre.titre,
-                        "domaine": offre.domaine,
-                        "lieu": offre.lieu,
-                        "type_contrat": offre.type_contrat,
-                        "lien_offre": offre.lien_offre,
-                        "salaire_minimum": offre.salaire_minimum,
-                        "etre_en_favoris": offre.etre_en_favoris,
-                        "utilisateur_id": utilisateur.id,
-                    },
+                query = (
+                    "SELECT id_offre FROM projet2A.offre o "
+                    "WHERE o.titre=%(titre)s AND o.domaine = %(domaine)s AND o.lieu =%(lieu)s AND "
+                    "o.type_contrat = %(type_contrat)s AND o.lien_offre =%(lien_offre)s AND "
+                    "o.salaire_minimum = %(salaire_minimum)s AND o.etre_en_favoris= %(etre_en_favoris)s AND o.utilisateur_id= %(utilisateur_id)s"
                 )
+                params = {
+                    "titre": offre.titre,
+                    "domaine": offre.domaine,
+                    "lieu": offre.lieu,
+                    "type_contrat": offre.type_contrat,
+                    "lien_offre": offre.lien_offre,
+                    "salaire_minimum": offre.salaire_minimum,
+                    "etre_en_favoris": offre._etre_en_favoris,
+                    "utilisateur_id": utilisateur.id,
+                }
+                cursor.execute(query, params)
                 res = cursor.fetchone()
-
-        return res > 0
+        return res is not None
 
     def ajouter_offre(self, offre, utilisateur):
         """
@@ -77,15 +75,19 @@ class OffreDao(metaclass=Singleton):
         """
         created = False
 
-        id_offre = self.deja_favoris(offre, utilisateur)
-        if id_offre is None:
+        deja_favoris = self.deja_favoris(offre, utilisateur)
+        if deja_favoris is None:
             return created
+
+        id_utilisateur = UtilisateurDao().get_value_from_mail(
+            utilisateur.mail, "id_compte_utilisateur"
+        )
 
         with DBConnection().connection as connection:
             with connection.cursor() as cursor:
                 # Sauvegarder l'offre d'un utilisateur
                 cursor.execute(
-                    "INSERT INTO projet2A.offre(titre, domaine, lieu, type_contrat, lien_offre, salaire minimum, etre_en_favoris, utilisateur_id) "
+                    "INSERT INTO projet2A.offre(titre, domaine, lieu, type_contrat, lien_offre, salaire_minimum, etre_en_favoris, utilisateur_id) "
                     " VALUES (%(titre)s, %(domaine)s, %(lieu)s, %(type_contrat)s, %(lien_offre)s, %(salaire_minimum)s, %(etre_en_favoris)s, %(utilisateur_id)s)  "
                     "RETURNING id_offre",
                     {
@@ -96,13 +98,58 @@ class OffreDao(metaclass=Singleton):
                         "lien_offre": offre.lien_offre,
                         "salaire_minimum": offre.salaire_minimum,
                         "etre_en_favoris": offre._etre_en_favoris,
-                        "utilisateur_id": utilisateur.id,
+                        "utilisateur_id": id_utilisateur,
                     },
                 )
                 res = cursor.fetchone()
         if res:
             offre.id = res["id_offre"]
             created = True
+        return created
+
+        def voir_favoris(self, utilisateur):
+            """
+            Voir les offres favoris de la base de données
+
+            Parameters
+            ----------
+            utilisateur : CompteUtilisateur
+                Utilisateur qui sauvegarde l'offre
+
+            Returns
+            -------
+                True si l'offre a bien été sauvegardée
+            """
+            id_utilisateur = UtilisateurDao().get_value_from_mail(
+                utilisateur.mail, "id_compte_utilisateur"
+            )
+
+            with DBConnection().connection as connection:
+                with connection.cursor() as cursor:
+                    # Sauvegarder l'offre d'un utilisateur
+                    cursor.execute(
+                        "SELECT * "
+                        "FROM projet2A.offre "
+                        "WHERE utilisateur_id=%(id_utilisateur)s"
+                        "RETURNING id_offre",
+                        {"id_utilisateur": id_utilisateur},
+                    )
+                    res = cursor.fetchall()
+            offres = []
+
+            if res:
+                for row in res:
+                    offre = Offre(
+                        titre=row["titre"],
+                        domaine=row["domaine"],
+                        lieu=row["lieu"],
+                        type_contrat=row["type_contrat"],
+                        lien_offre=row["lien_offre"],
+                        salaire_minimum=row["salaire_minimum"],
+                    )
+                    offres.append(offre)
+
+        return offres
 
 
 query_params = {
@@ -121,6 +168,11 @@ query_params = {
     # "contract": "0",
 }
 
-a = Recherche(query_params=query_params)
-b = RechercheService().obtenir_resultats(a)
-print(b)
+# cheryl = CompteUtilisateur(mail="cherylkouadio18", mdp="patate", nom="kouadio")
+# print(cheryl)
+# sel='test'
+# UtilisateurDao().add_db(cheryl,sel)
+
+# a = Recherche(query_params=query_params)
+# b = RechercheService().obtenir_resultats(a)
+# OffreDao().ajouter_offre(b[0],cheryl)
