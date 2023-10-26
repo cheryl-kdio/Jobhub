@@ -8,14 +8,13 @@ DROP TABLE IF EXISTS projet2A.compte_utilisateur CASCADE ;
 
 CREATE TABLE projet2A.compte_utilisateur (
     id_compte_utilisateur SERIAL PRIMARY KEY,
-    nom VARCHAR(255),
-    mail VARCHAR(255),
     mdp VARCHAR(255),
+    nom VARCHAR(255),
     age INTEGER,
+    mail VARCHAR(255),  #mettre mail en unique
     tel BIGINT,
     ville VARCHAR(255), 
-    code_postal INT,
-    sel VARCHAR(255)
+    code_postal INT
 );
 
 

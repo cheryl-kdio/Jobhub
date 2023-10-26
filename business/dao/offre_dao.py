@@ -31,9 +31,9 @@ class OffreDao(metaclass=Singleton):
                     " WHERE id_offre = %(id_offre)s      ",
                     {"id_offre": offre.id_offre},
                 )
-                res = cursor.fetchone()
+                res = cursor.rowcount()
 
-        return res is not None
+        return res > 0
 
     def deja_favoris(self, offre, id_utilisateur):
         with DBConnection().connection as connection:
@@ -55,8 +55,8 @@ class OffreDao(metaclass=Singleton):
                     "utilisateur_id": id_utilisateur,
                 }
                 cursor.execute(query, params)
-                res = cursor.fetchone()
-        return res is not None
+                res = cursor.rowcount()
+        return res > 0
 
     def ajouter_offre(self, offre, id_utilisateur):
         """
@@ -102,24 +102,25 @@ class OffreDao(metaclass=Singleton):
         if res:
             offre.id = res["id_offre"]
             created = True
+        return created
 
 
-query_params = {
-    "results_per_page": 20,
-    "what": "python dev",
-    # "where": "london",
-    # "sort_direction": "up",
-    # "sort_by": "relevance",
-    # "category": "IT Jobs",
-    # "distance": 10,
-    # "salary_min": 50000,
-    # "salary_max": 100000,
-    # "permanent": "1",
-    # "part_time": "0",
-    # "full_time": "1",
-    # "contract": "0",
-}
+# query_params = {
+#     "results_per_page": 20,
+#     "what": "python dev",
+#     # "where": "london",
+#     # "sort_direction": "up",
+#     # "sort_by": "relevance",
+#     # "category": "IT Jobs",
+#     # "distance": 10,
+#     # "salary_min": 50000,
+#     # "salary_max": 100000,
+#     # "permanent": "1",
+#     # "part_time": "0",
+#     # "full_time": "1",
+#     # "contract": "0",
+# }
 
-a = Recherche(query_params=query_params)
-b = RechercheService().obtenir_resultats(a)
-print(b)
+# a = Recherche(query_params=query_params)
+# b = RechercheService().obtenir_resultats(a)
+# print(b)

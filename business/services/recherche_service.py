@@ -28,17 +28,13 @@ class RechercheService:
                     lieu=job.get("location", {}).get("display_name", ""),
                     type_contrat=job.get("contract_type", ""),
                     lien_offre=job.get("redirect_url", ""),
-<<<<<<< HEAD
                     salaire_minimum=job.get("salary_min", ""),
-=======
-                    salaire_minimum=job.get("salary_min", "")
->>>>>>> main
                 )
                 if offre:
                     offres.append(offre)
 
             return offres
-            
+
         else:
             print("Votre recherche ne peut pas être effectuée.")
 
@@ -53,7 +49,7 @@ class RechercheService:
                 "Type de Contrat": [offre.type_contrat for offre in offres],
                 "Lien Offre": [offre.lien_offre for offre in offres],
                 "Salaire Minimum": [offre.salaire_minimum for offre in offres],
-                "Favoris": [offre.etre_en_favoris for offre in offres],
+                "Favoris": [offre._etre_en_favoris for offre in offres],
             }
             print(tabulate(data, headers="keys", tablefmt="pretty"))
         else:

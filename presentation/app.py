@@ -51,7 +51,7 @@ def se_connecter():
         mail = request.form.get(mail)
         mdp = request.form.get(mdp)
 
-        utilisateur = Utilisateur().se_connecter()
+        utilisateur = Utilisateur().se_connecter(mail, mdp)
 
     return render_template("connexion.html")
 
