@@ -14,7 +14,7 @@ import re
 
 
 class Utilisateur(UtilisateurDao):
-    def create_account(self, nom, mail, mdp):
+    def create_account(self, nom, mail, mdp, mdp_verif):
         """
         Création d'un compte et ajout d'un utilisateur à la base de données
 
@@ -26,31 +26,28 @@ class Utilisateur(UtilisateurDao):
 
         """
         name_user = nom
+        utilisateurdao = UtilisateurDao()
 
         while True:
-            mail = mail
-            if not mail or not re.match(
-                r"\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,7}\b", mail
-            ):
+            # mail = Utilisateur.get_user_info(self, info="mail")
+            if not utilisateurdao.check_email_valide(mail=mail):
                 print("Adresse e-mail invalide. Veuillez réessayer.")
                 continue
 
-            if not UtilisateurDao().check_mail(mail):
+            if not utilisateurdao.check_email_unique(mail=mail):
                 print("Adresse e-mail déjà existante. Veuillez en choisir une autre.")
+                continue
             else:
                 print("Adresse mail valide")
                 break
 
         while True:
-            passw = mdp
-            if (
-                not len(passw) >= 6
-                or not any(c.isupper() for c in passw)
-                or not any(c.isdigit() for c in passw)
-            ):
+            # passw = UtilisateurDao.get_user_info(self, info="mdp")
+            if not utilisateurdao.check_mdp_valide(mdp=mdp):
                 print(
                     "Le mot de passe ne remplit pas les conditions. Veuillez réessayer."
                 )
+                continue
             else:
                 print("Le mot de passe est conforme")
                 break
@@ -59,19 +56,20 @@ class Utilisateur(UtilisateurDao):
             random.choice(string.ascii_letters + string.digits) for _ in range(16)
         )
 
-        mot_de_passe_concatene = sel + passw
+        mot_de_passe_concatene = sel + mdp
 
         password = ph.hash(mot_de_passe_concatene)
 
         while True:
-            password_to_check = getpass("Vérification du mot de passe : ")
-            mot_de_passe_concatene_to_check = sel + password_to_check
-            try:
-                ph.verify(password, mot_de_passe_concatene_to_check)
+            password_to_check = UtilisateurDao.get_user_info(self, info="mdp_to_check")
+            if not utilisateurdao.check_mdp_egal(
+                mdp=password, mdp_to_check=sel + password_to_check
+            ):
+                print("Le mot de passe est invalide. Veuillez réessayer.")
+                continue
+            else:
                 print("Le mot de passe est valide.")
                 break
-            except:
-                print("Le mot de passe est invalide. Veuillez réessayer.")
 
         UtilisateurDao().add_db(name_user, mail, password, sel)
 
@@ -140,7 +138,12 @@ class Utilisateur(UtilisateurDao):
 # Appeler la fonction se_connecter
 if __name__ == "__main__":
     u1 = Utilisateur()
-    u3 = u1.create_account(nom="jeanne", mail="jeanne.jeanne@gmail.com", mdp="Jeanne01")
+    u3 = u1.create_account(
+        nom="tom",
+        mail="tom.t@gmail.com",
+        mdp="Tom0001",
+        mdp_verif="Tom0001",
+    )
     # CompteUtilisateurService().deconnexion(u3)
 
     # CompteUtilisateurService().modifierInfo(u3, mail="pascal@gmail")

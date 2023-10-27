@@ -5,7 +5,9 @@ from argon2 import PasswordHasher
 
 ph = PasswordHasher()
 
-from getpass import getpass
+import getpass
+import re
+import string
 
 
 class UtilisateurDao(metaclass=Singleton):
@@ -247,3 +249,46 @@ class UtilisateurDao(metaclass=Singleton):
         except Exception as e:
             print("Une erreur s'est produite :", str(e))
             return False
+
+    def check_email_valide(self, mail):
+        if not mail or not re.match(
+            r"\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,7}\b", mail
+        ):
+            return False
+        else:
+            return True
+
+    def check_email_unique(self, mail):
+        if not UtilisateurDao.check_mail(self, mail=mail):
+            return False
+        else:
+            return True
+
+    def check_mdp_valide(self, mdp):
+        if (
+            not len(mdp) >= 6
+            or not any(c.isupper() for c in mdp)
+            or not any(c.isdigit() for c in mdp)
+        ):
+            return False
+        else:
+            return True
+
+    def check_mdp_egal(self, mdp, mdp_to_check):
+        try:
+            ph.verify(mdp, mdp_to_check)
+            return True
+        except:
+            return False
+
+    def get_user_info(self, info):
+        if info == "mail":
+            info = input("Veuillez saisir votre adresse e-mail : ")
+        if info == "name_user":
+            info = input("Veuillez saisir votre nom : ")
+        if info == "mdp":
+            info = getpass.getpass("Veuillez saisir votre mot de passe : ")
+        if info == "mdp_to_check":
+            info = getpass.getpass("Veuillez confirmer votre mot de passe : ")
+
+        return info
