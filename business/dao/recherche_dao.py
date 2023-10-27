@@ -79,10 +79,13 @@ class RechercheDao(metaclass=Singleton):
                     )
                     res = cursor.fetchone()
 
-        if res:
-            recherche.id = res["id_recherche"]
-            created = True
-        return created
+            if res:
+                recherche.id = res["id_recherche"]
+                created = True
+
+            return created
+        except Exception as e:
+            raise e
 
     def deja_favoris(self, recherche, id_utilisateur):
         with DBConnection().connection as connection:
@@ -124,8 +127,7 @@ class RechercheDao(metaclass=Singleton):
                         query_params=row["query_params"],
                     )
                     recherches.append(recherche)
-
-        return recherches
+            return recherches
 
 
 

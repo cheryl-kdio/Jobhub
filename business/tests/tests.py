@@ -9,7 +9,10 @@ from business.services.utilisateur_service import Utilisateur
 from business.dao.offre_dao import OffreDao
 from business.dao.recherche_dao import RechercheDao
 
-Pierre = Utilisateur().create_account()
+print("creation compte")
+Utilisateur().create_account()
+print("se connecter au compte")
+
 pierre = Utilisateur().se_connecter()
 
 query_params = {
