@@ -26,7 +26,7 @@ class RechercheDao(metaclass=Singleton):
                     # Supprimer la recherche d'un utilisateur
                     cursor.execute(
                         "DELETE FROM projet2A.recherche "
-                        " WHERE id_recherche=%(id_recherche)s and id_utilisateur=%(id_utilisateur)s ",
+                        " WHERE id_recherche=%(id_recherche)s and utilisateur_id=%(id_utilisateur)s ",
                         {
                             "id_recherche": recherche.id_recherche,
                             "id_utilisateur": utilisateur.id,
