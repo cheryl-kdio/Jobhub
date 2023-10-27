@@ -31,8 +31,8 @@ query_params = {
 a = Recherche(query_params=query_params)
 b = RechercheService().obtenir_resultats(a)
 # print(b[0])
-print(str(query_params))
-OffreDao().ajouter_offre(b[0], pierre.id)
+# print(str(query_params))
+# OffreDao().ajouter_offre(b[0], pierre.id)
 
 ##Pierre sauvegarde les paramètres de sa recherche
 
@@ -41,4 +41,4 @@ RechercheDao().sauvegarder_recherche(a, pierre)
 
 ### Pierre supprime sa recherche de ses favoris
 
-RechercheDao().supprimer_recherche(a.id_recherche, pierre)
+RechercheDao().supprimer_recherche(a, pierre)

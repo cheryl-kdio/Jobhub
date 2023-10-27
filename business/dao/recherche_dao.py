@@ -73,6 +73,7 @@ class RechercheDao(metaclass=Singleton):
                         "utilisateur_id": utilisateur.id,
                     },
                 )
+                res = cursor.fetchone()
 
         if res:
             recherche.id_recherche = res["id_recherche"]
