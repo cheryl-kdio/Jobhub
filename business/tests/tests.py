@@ -10,7 +10,7 @@ from business.dao.offre_dao import OffreDao
 from business.dao.recherche_dao import RechercheDao
 
 print("creation compte")
-Utilisateur().create_account()
+# Utilisateur().create_account()
 print("se connecter au compte")
 
 pierre = Utilisateur().se_connecter()
@@ -38,9 +38,9 @@ b = RechercheService().obtenir_resultats(a)
 
 ##Pierre sauvegarde les paramètres de sa recherche
 
-RechercheDao().sauvegarder_recherche(a.query_params, pierre.id)
+RechercheDao().sauvegarder_recherche(a, pierre)
 
 
 ### Pierre supprime sa recherche de ses favoris
 
-RechercheDao().supprimer_recherche(a.id_recherche, pierre.id)
+RechercheDao().supprimer_recherche(a.id_recherche, pierre)
