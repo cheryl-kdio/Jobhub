@@ -66,14 +66,13 @@ class RechercheDao(metaclass=Singleton):
                 # Sauvegarder la recherche d'un utilisateur
                 cursor.execute(
                     "INSERT INTO projet2A.recherche(query_params, utilisateur_id) "
-                    " VALUES (%(parametre)s), %(utilisateur_id)s)",
+                    "VALUES (%(parametre)s, %(utilisateur_id)s) "
                     "RETURNING id_recherche",
                     {
                         "parametre": str(recherche.query_params),
                         "utilisateur_id": utilisateur.id,
                     },
                 )
-                res = cursor.fetchone()
 
         if res:
             recherche.id_recherche = res["id_recherche"]
