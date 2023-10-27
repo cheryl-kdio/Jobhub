@@ -9,8 +9,8 @@ from business.services.utilisateur_service import Utilisateur
 from business.dao.offre_dao import OffreDao
 from business.dao.recherche_dao import RechercheDao
 
-Pierre = Utilisateur().create_account()
-pierre = Utilisateur().se_connecter()
+# Pierre = Utilisateur().create_account("antoine", "antoine@gmail.com", "toinevroum12L") ##Attention a la boucle
+pierre = Utilisateur().se_connecter("antoine@gmail.com")
 
 query_params = {
     "results_per_page": 20,
@@ -31,7 +31,8 @@ query_params = {
 a = Recherche(query_params=query_params)
 b = RechercheService().obtenir_resultats(a)
 # print(b[0])
-# OffreDao().ajouter_offre(b[0], pierre.id)
+print(str(query_params))
+OffreDao().ajouter_offre(b[0], pierre.id)
 
 ##Pierre sauvegarde les paramètres de sa recherche
 

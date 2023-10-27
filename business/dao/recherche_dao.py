@@ -61,42 +61,37 @@ class RechercheDao(metaclass=Singleton):
         deja_favoris = self.deja_favoris(recherche, utilisateur.id)
         if deja_favoris is None:
             return created
-        try:
-            with DBConnection().connection as connection:
-                with connection.cursor() as cursor:
-                    # Sauvegarder la recherche d'un utilisateur
-                    cursor.execute(
-                        "INSERT INTO projet2A.recherche(query_params, utilisateur_id) "
-                        " VALUES (%(parametre)s), %(utilisateur_id)s)",
-                        "RETURNING id_recherche",
-                        {
-                            "parametre": recherche.query_params,
-                            "utilisateur_id": utilisateur.id,
-                        },
-                    )
-                    res = cursor.fetchone()
+        with DBConnection().connection as connection:
+            with connection.cursor() as cursor:
+                # Sauvegarder la recherche d'un utilisateur
+                cursor.execute(
+                    "INSERT INTO projet2A.recherche(query_params, utilisateur_id) "
+                    " VALUES (%(parametre)s), %(utilisateur_id)s)",
+                    "RETURNING id_recherche",
+                    {
+                        "parametre": str(recherche.query_params),
+                        "utilisateur_id": utilisateur.id,
+                    },
+                )
+                res = cursor.fetchone()
 
-            if res:
-                recherche.id_recherche = res["id_recherche"]
-                created = True
+        if res:
+            recherche.id_recherche = res["id_recherche"]
+            created = True
 
-            return created
-        except Exception as e:
-            raise e
+        return created
 
     def deja_favoris(self, recherche, id_utilisateur):
         with DBConnection().connection as connection:
             with connection.cursor() as cursor:
                 query = (
-                    "SELECT id FROM projet2A.recherche r "
+                    "SELECT id_recherche FROM projet2A.recherche r "
                     "WHERE r.query_params=%(query_params)s AND r.utilisateur_id= %(utilisateur_id)s "
-                    " RETURNING id_recherche"
                 )
                 params = {
                     "query_params": str(recherche.query_params),
                     "utilisateur_id": id_utilisateur,
                 }
-                # json_params = json.dumps(params)
                 cursor.execute(query, params)
                 res = cursor.fetchone()
         return res is not None

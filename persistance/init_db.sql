@@ -14,7 +14,8 @@ CREATE TABLE projet2A.compte_utilisateur (
     age INTEGER,
     tel BIGINT,
     ville VARCHAR(255), 
-    code_postal INT
+    code_postal INT,
+    sel TEXT
 );
 
 
