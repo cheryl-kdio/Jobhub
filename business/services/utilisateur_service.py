@@ -97,7 +97,7 @@ class Utilisateur(UtilisateurDao):
                     name = UtilisateurDao.get_value_from_mail(
                         self, mail=mail, value="nom"
                     )
-                    print(f"Connexion réussie ! Bienvenue,{name}")
+                    print(f"Connexion réussie ! Bienvenue {name}")
                     CompteUtilisateur._connexion = True
 
                     CompteUtilisateur.id = UtilisateurDao.get_value_from_mail(
