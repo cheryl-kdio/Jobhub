@@ -24,9 +24,8 @@ CREATE TABLE projet2A.compte_utilisateur (
 DROP TABLE IF EXISTS projet2A.recherche CASCADE ;
 
 CREATE TABLE projet2A.recherche (
-    id SERIAL PRIMARY KEY,
-    requete VARCHAR(255),
-    reponse TEXT,
+    id_recherche SERIAL PRIMARY KEY,
+    query_params VARCHAR(255),
     utilisateur_id INT,
     FOREIGN KEY (utilisateur_id) REFERENCES projet2A.compte_utilisateur(id_compte_utilisateur)
 );

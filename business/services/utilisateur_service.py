@@ -14,7 +14,7 @@ import re
 
 
 class Utilisateur(UtilisateurDao):
-    def create_account(self):
+    def create_account(self, nom, mail, mdp):
         """
         Création d'un compte et ajout d'un utilisateur à la base de données
 
@@ -25,10 +25,10 @@ class Utilisateur(UtilisateurDao):
         ----------
 
         """
-        name_user = input("nom utilisateur :")
+        name_user = nom
 
         while True:
-            mail = input("Adresse e-mail : ")
+            mail = mail
             if not mail or not re.match(
                 r"\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,7}\b", mail
             ):
@@ -42,7 +42,7 @@ class Utilisateur(UtilisateurDao):
                 break
 
         while True:
-            passw = getpass("Mot de passe : ")
+            passw = mdp
             if (
                 not len(passw) >= 6
                 or not any(c.isupper() for c in passw)
@@ -75,7 +75,10 @@ class Utilisateur(UtilisateurDao):
 
         UtilisateurDao().add_db(name_user, mail, password, sel)
 
-    def se_connecter(self):
+    def se_connecter(
+        self,
+        mail,
+    ):
         """Permet à un utilisateur de se connecter en saisissant son adresse e-mail et son mot de passe.
 
         Returns:
@@ -88,7 +91,7 @@ class Utilisateur(UtilisateurDao):
         while attempts < max_attempts:
             try:
                 # Demander à l'utilisateur de saisir son identifiant et son mot de passe
-                mail = input("Adresse e-mail : ")
+                mail = mail
 
                 utilisateur = UtilisateurDao().verif_connexion(mail=mail)
 
@@ -97,7 +100,7 @@ class Utilisateur(UtilisateurDao):
                     name = UtilisateurDao.get_value_from_mail(
                         self, mail=mail, value="nom"
                     )
-                    print(f"Connexion réussie ! Bienvenue,{name}")
+                    print(f"Connexion réussie ! Bienvenue {name}")
                     CompteUtilisateur._connexion = True
 
                     CompteUtilisateur.id = UtilisateurDao.get_value_from_mail(
@@ -137,8 +140,8 @@ class Utilisateur(UtilisateurDao):
 # Appeler la fonction se_connecter
 if __name__ == "__main__":
     u1 = Utilisateur()
-    u3 = u1.se_connecter()
-    CompteUtilisateurService().deconnexion(u3)
+    u3 = u1.create_account(nom="jeanne", mail="jeanne.jeanne@gmail.com", mdp="Jeanne01")
+    # CompteUtilisateurService().deconnexion(u3)
 
     # CompteUtilisateurService().modifierInfo(u3, mail="pascal@gmail")
-    # UtilisateurDao().afficher_db()
+    UtilisateurDao().afficher_db()
