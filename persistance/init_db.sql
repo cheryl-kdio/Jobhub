@@ -14,7 +14,8 @@ CREATE TABLE projet2A.compte_utilisateur (
     age INTEGER,
     tel BIGINT,
     ville VARCHAR(255), 
-    code_postal INT
+    code_postal INT,
+    sel TEXT
 );
 
 
@@ -24,9 +25,8 @@ CREATE TABLE projet2A.compte_utilisateur (
 DROP TABLE IF EXISTS projet2A.recherche CASCADE ;
 
 CREATE TABLE projet2A.recherche (
-    id SERIAL PRIMARY KEY,
-    requete VARCHAR(255),
-    reponse TEXT,
+    id_recherche SERIAL PRIMARY KEY,
+    query_params VARCHAR(255),
     utilisateur_id INT,
     FOREIGN KEY (utilisateur_id) REFERENCES projet2A.compte_utilisateur(id_compte_utilisateur)
 );
@@ -46,7 +46,7 @@ CREATE TABLE projet2A.offre (
     salaire_minimum INTEGER,
     etre_en_favoris BOOLEAN,
     utilisateur_id INT,
-    date_ajout DATE DEFAULT CURRENT_DATE
+    date_ajout DATE DEFAULT CURRENT_DATE,
     FOREIGN KEY (utilisateur_id) REFERENCES projet2A.compte_utilisateur(id_compte_utilisateur)
 );
 -- A completer avec les autres tables

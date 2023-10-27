@@ -13,15 +13,15 @@ VALUES
     ('mot_de_passe9', 'NomUtilisateur9', 23, 'email9@example.com', 2222222222, 'Nantes', 44000),
     ('mot_de_passe10', 'NomUtilisateur10', 26, 'email10@example.com', 1111111111, 'Rennes', 35000);
 
-INSERT INTO projet2A.recherche (requete, reponse, utilisateur_id)
+INSERT INTO projet2A.recherche (query_params, utilisateur_id)
 VALUES
-    ('Recherche 1', 'Réponse 1', 1),
-    ('Recherche 2', 'Réponse 2', 2),
-    ('Recherche 3', 'Réponse 3', 3),
-    ('Recherche 4', 'Réponse 4', 4),
-    ('Recherche 5', 'Réponse 5', 5),
-    ('Recherche 6', 'Réponse 6', 6),
-    ('Recherche 7', 'Réponse 7', 7),
-    ('Recherche 8', 'Réponse 8', 8),
-    ('Recherche 9', 'Réponse 9', 9),
-    ('Recherche 10', 'Réponse 10', 10);
+    ('Recherche 1', 1),
+    ('Recherche 2', 2),
+    ('Recherche 3', 3),
+    ('Recherche 4', 4),
+    ('Recherche 5', 5),
+    ('Recherche 6', 6),
+    ('Recherche 7', 7),
+    ('Recherche 8', 8),
+    ('Recherche 9', 9),
+    ('Recherche 10', 10);

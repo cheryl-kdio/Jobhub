@@ -9,7 +9,7 @@ from business.dao.utilisateur_dao import UtilisateurDao
 
 
 class OffreDao(metaclass=Singleton):
-    def supprimer_offre(self, offre) -> bool:
+    def supprimer_offre(self, id_offre) -> bool:
         """
         Suppression d'une offre sauvegardé par un utilisateur dans la base de données
 
@@ -28,11 +28,11 @@ class OffreDao(metaclass=Singleton):
                 cursor.execute(
                     "DELETE FROM projet2A.offre        "
                     " WHERE id_offre = %(id_offre)s      ",
-                    {"id_offre": offre.id_offre},
+                    {"id_offre": id_offre},
                 )
-                res = cursor.fetchone()
+                res = cursor.rowcount
 
-        return res is not None
+        return res >0
 
     def deja_favoris(self, offre, id_utilisateur):
         with DBConnection().connection as connection:
@@ -99,7 +99,7 @@ class OffreDao(metaclass=Singleton):
                 )
                 res = cursor.fetchone()
         if res:
-            offre.id = res["id_offre"]
+            offre.id_offre = res["id_offre"]
             created = True
         return created
 

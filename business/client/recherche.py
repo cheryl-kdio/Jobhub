@@ -6,10 +6,10 @@ import dotenv
 
 class Recherche:
     def __init__(
-        self,
-        query_params: dict,
+        self, query_params: dict, id_recherche=None
     ):  # Certains attributs sont potentiellement à mettre en privé/protection
         dotenv.load_dotenv(override=True)
+        self.id_recherche = id_recherche
         self.base_url = os.environ["HOST_WEBSERVICE"]
         self.query_params = query_params
         self.params = {
