@@ -39,7 +39,6 @@ class UtilisateurDao(metaclass=Singleton):
                     requete,
                 )
                 results = cur.fetchall()
-                print(results)
                 mails = [result["mail"] for result in results]
         return mails
 
@@ -164,7 +163,6 @@ class UtilisateurDao(metaclass=Singleton):
         passw = getpass("Mot de passe : ")
         mdp_db_salt = UtilisateurDao().get_salt_mdp(mail)
         salt_db = mdp_db_salt["sel"]
-        print(salt_db)
         mdp_db = mdp_db_salt["mdp"]
 
         try:
