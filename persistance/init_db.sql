@@ -45,7 +45,7 @@ CREATE TABLE projet2A.offre (
     salaire_minimum INTEGER,
     etre_en_favoris BOOLEAN,
     utilisateur_id INT,
-    date_ajout DATE DEFAULT CURRENT_DATE
+    date_ajout DATE DEFAULT CURRENT_DATE,
     FOREIGN KEY (utilisateur_id) REFERENCES projet2A.compte_utilisateur(id_compte_utilisateur)
 );
 -- A completer avec les autres tables
