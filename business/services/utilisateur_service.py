@@ -1,9 +1,6 @@
 from business.dao.utilisateur_dao import UtilisateurDao
 from business.client.compte_utilisateur import CompteUtilisateur
 
-from business.services.compte_utilisateur_service import CompteUtilisateurService
-
-
 from getpass import getpass
 from argon2 import PasswordHasher
 
@@ -76,6 +73,7 @@ class Utilisateur(UtilisateurDao):
     def se_connecter(
         self,
         mail,
+        passw
     ):
         """Permet à un utilisateur de se connecter en saisissant son adresse e-mail et son mot de passe.
 
@@ -91,7 +89,7 @@ class Utilisateur(UtilisateurDao):
                 # Demander à l'utilisateur de saisir son identifiant et son mot de passe
                 mail = mail
 
-                utilisateur = UtilisateurDao().verif_connexion(mail=mail)
+                utilisateur = UtilisateurDao().verif_connexion(mail=mail,passw=passw)
 
                 # Vérifier si l'utilisateur a été trouvé dans la base de données
                 if utilisateur:
@@ -120,6 +118,8 @@ class Utilisateur(UtilisateurDao):
                     CompteUtilisateur.ville = UtilisateurDao.get_value_from_mail(
                         self, mail=mail, value="ville"
                     )
+                    CompteUtilisateur.mail=mail
+                    
                     return CompteUtilisateur
                 else:
                     print(

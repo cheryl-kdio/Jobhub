@@ -1,6 +1,6 @@
 class Offre:
-    def __init__(self, titre, domaine, lieu, type_contrat, lien_offre, salaire_minimum):
-        self.id_offre = None
+    def __init__(self, titre, domaine, lieu, type_contrat, lien_offre, salaire_minimum, id_offre=None):
+        self.id_offre = id_offre
         self.titre = titre
         self.domaine = domaine
         self.lieu = lieu

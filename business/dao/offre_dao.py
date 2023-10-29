@@ -38,23 +38,24 @@ class OffreDao(metaclass=Singleton):
         with DBConnection().connection as connection:
             with connection.cursor() as cursor:
                 query = (
-                    "SELECT id_offre FROM projet2A.offre o "
+                    "SELECT * FROM projet2A.offre o "
                     "WHERE o.titre=%(titre)s AND o.domaine = %(domaine)s AND o.lieu =%(lieu)s AND "
-                    "o.type_contrat = %(type_contrat)s AND o.lien_offre =%(lien_offre)s AND "
-                    "o.salaire_minimum = %(salaire_minimum)s AND o.etre_en_favoris= %(etre_en_favoris)s AND o.utilisateur_id= %(utilisateur_id)s"
+                    "o.type_contrat = %(type_contrat)s AND "
+                    " o.utilisateur_id= %(utilisateur_id)s"
                 )
                 params = {
                     "titre": offre.titre,
                     "domaine": offre.domaine,
                     "lieu": offre.lieu,
                     "type_contrat": offre.type_contrat,
-                    "lien_offre": offre.lien_offre,
-                    "salaire_minimum": offre.salaire_minimum,
                     "utilisateur_id": utilisateur.id,
                 }
                 cursor.execute(query, params)
                 res = cursor.fetchone()
-        return res["id_offre"] if res is not None else None
+        if res is not None:
+            return res["id_offre"]
+        else :
+            return None
 
     def ajouter_offre(self, offre, utilisateur):
         """
@@ -74,27 +75,27 @@ class OffreDao(metaclass=Singleton):
         """
         created = False
 
-        deja_favoris = self.deja_favoris(offre, id_utilisateur)
-        if deja_favoris is None:
+        deja_favoris = self.deja_favoris(offre, utilisateur)
+        if deja_favoris is not None:
             return created
 
         with DBConnection().connection as connection:
             with connection.cursor() as cursor:
-                # Sauvegarder l'offre d'un utilisateur
+                    # Sauvegarder l'offre d'un utilisateur
                 cursor.execute(
-                    "INSERT INTO projet2A.offre(titre, domaine, lieu, type_contrat, lien_offre, salaire_minimum, etre_en_favoris, utilisateur_id) "
-                    " VALUES (%(titre)s, %(domaine)s, %(lieu)s, %(type_contrat)s, %(lien_offre)s, %(salaire_minimum)s, %(etre_en_favoris)s, %(utilisateur_id)s)  "
-                    "RETURNING id_offre",
-                    {
-                        "titre": offre.titre,
-                        "domaine": offre.domaine,
-                        "lieu": offre.lieu,
-                        "type_contrat": offre.type_contrat,
-                        "lien_offre": offre.lien_offre,
-                        "salaire_minimum": offre.salaire_minimum,
-                        "utilisateur_id": utilisateur.id,
-                    },
-                )
+                    "INSERT INTO projet2A.offre(titre, domaine, lieu, type_contrat, lien_offre, salaire_minimum, utilisateur_id) "
+                    " VALUES (%(titre)s, %(domaine)s, %(lieu)s, %(type_contrat)s, %(lien_offre)s, %(salaire_minimum)s, %(utilisateur_id)s)  "
+                        "RETURNING id_offre",
+                        {
+                            "titre": offre.titre,
+                            "domaine": offre.domaine,
+                            "lieu": offre.lieu,
+                            "type_contrat": offre.type_contrat,
+                            "lien_offre": offre.lien_offre,
+                            "salaire_minimum": offre.salaire_minimum,
+                            "utilisateur_id": utilisateur.id,
+                        },
+                    )
                 res = cursor.fetchone()
         if res:
             offre.id_offre = res["id_offre"]
@@ -113,9 +114,6 @@ class OffreDao(metaclass=Singleton):
          -------
              True si l'offre a bien été sauvegardée
         """
-        id_utilisateur = UtilisateurDao().get_value_from_mail(
-            utilisateur.mail, "id_compte_utilisateur"
-        )
 
         with DBConnection().connection as connection:
             with connection.cursor() as cursor:
@@ -124,11 +122,11 @@ class OffreDao(metaclass=Singleton):
                     "SELECT * "
                     "FROM projet2A.offre "
                     "WHERE utilisateur_id=%(id_utilisateur)s",
-                    {"id_utilisateur": id_utilisateur},
+                    {"id_utilisateur": utilisateur.id},
                 )
                 res = cursor.fetchall()
 
-        offres = [Offre(id_offre=row["id_offre"], titre=row["titre"], domaine=row["domaine"],
+        offres = [Offre(id_offre=row["id_offre"],titre=row["titre"], domaine=row["domaine"],
                 lieu=row["lieu"], type_contrat=row["type_contrat"], lien_offre=row["lien_offre"],
                 salaire_minimum=row["salaire_minimum"]) for row in res]
         return offres

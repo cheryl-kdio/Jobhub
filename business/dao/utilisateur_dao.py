@@ -152,7 +152,7 @@ class UtilisateurDao(metaclass=Singleton):
                 id_liste = cur.fetchall()
         return [id_liste[0] for id in id_liste]
 
-    def verif_connexion(self, mail):  # Voir comment l'ajuster avec notre DAO
+    def verif_connexion(self, mail,passw):  # Voir comment l'ajuster avec notre DAO
         """
         Vérifie la connexion de l'utilisateur en vérifiant son mot de passe.
 
@@ -162,7 +162,6 @@ class UtilisateurDao(metaclass=Singleton):
         Returns:
             bool: True si la connexion est réussie, False sinon.
         """
-        passw = getpass("Mot de passe : ")
         mdp_db_salt = UtilisateurDao().get_salt_mdp(mail)
         salt_db = mdp_db_salt["sel"]
         mdp_db = mdp_db_salt["mdp"]
