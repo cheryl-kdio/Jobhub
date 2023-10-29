@@ -9,11 +9,12 @@ from business.services.utilisateur_service import Utilisateur
 from business.dao.offre_dao import OffreDao
 from business.dao.recherche_dao import RechercheDao
 
-# Pierre = Utilisateur().create_account("cheryl", "ck@gmail.com", "Patate12") ##Attention a la boucle
-pierre = Utilisateur().se_connecter("ck@gmail.com")
+# Pierre = Utilisateur().create_account("cheryl", "ck@gmail.com", "Patate12", "Patate12")  ##Attention a la boucle
+
+pierre = Utilisateur().se_connecter("ck@gmail.com", "Patate12")
 
 query_params = {
-    "results_per_page": 20,
+    "results_per_page": 10,
     "what": "python dev",
     "where": "london",
     # "sort_direction": "up",
@@ -31,17 +32,21 @@ query_params = {
 
 a = Recherche(query_params=query_params)
 RechercheDao().sauvegarder_recherche(a, pierre)
-b = RechercheService().obtenir_resultats(a)
+# b = RechercheService().obtenir_resultats(a)
 # print(b[0])
 # print(str(query_params))
 # OffreDao().ajouter_offre(b[0], pierre.id)
-OffreDao().supprimer_offre(11)
+# OffreDao().supprimer_offre(11)
 
 ##Pierre sauvegarde les paramètres de sa recherche
 
-RechercheDao().sauvegarder_recherche(a, pierre)
+# RechercheDao().sauvegarder_recherche(a, pierre)
 
 
 ### Pierre supprime sa recherche de ses favoris
 
 RechercheDao().supprimer_recherche(a, pierre)
+
+# Voir favoris
+
+# RechercheDao().voir_favoris(pierre)
