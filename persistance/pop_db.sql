@@ -1,27 +1,18 @@
 --- modifier avec de 'vraies' données 
 ---- completer avec les insertions dans les autres tables
-INSERT INTO projet2A.compte_utilisateur (mdp, nom, age, mail, tel, ville, code_postal)
+INSERT INTO projet2A.compte_utilisateur (mdp, nom, age, mail, tel, ville, code_postal,sel)
 VALUES
-    ('mot_de_passe1', 'NomUtilisateur1', 25, 'email1@example.com', 1234567890, 'Paris', 75000),
-    ('mot_de_passe2', 'NomUtilisateur2', 30, 'email2@example.com', 9876543210, 'Marseille', 13000),
-    ('mot_de_passe3', 'NomUtilisateur3', 22, 'email3@example.com', 5555555555, 'Lyon', 69000),
-    ('mot_de_passe4', 'NomUtilisateur4', 28, 'email4@example.com', 7777777777, 'Toulouse', 31000),
-    ('mot_de_passe5', 'NomUtilisateur5', 35, 'email5@example.com', 9999999999, 'Bordeaux', 33000),
-    ('mot_de_passe6', 'NomUtilisateur6', 31, 'email6@example.com', 8888888888, 'Nice', 06000),
-    ('mot_de_passe7', 'NomUtilisateur7', 27, 'email7@example.com', 6666666666, 'Strasbourg', 67000),
-    ('mot_de_passe8', 'NomUtilisateur8', 29, 'email8@example.com', 4444444444, 'Lille', 59000),
-    ('mot_de_passe9', 'NomUtilisateur9', 23, 'email9@example.com', 2222222222, 'Nantes', 44000),
-    ('mot_de_passe10', 'NomUtilisateur10', 26, 'email10@example.com', 1111111111, 'Rennes', 35000);
+    ('$argon2id$v=19$m=65536,t=3,p=4$o2uZeuRofa7yQ/PPyU2/sA$SfOhgVvtruOajQpfjGX2I2D0/UF6MMxh1vD+S9O/kpk', 'cheryl', 25, 'ck@gmail.com', 0626340800, 'Rennes', 35170,'xbZb3OJ5InH9buJR');
 
 INSERT INTO projet2A.recherche (query_params, utilisateur_id)
 VALUES
-    ('Recherche 1', 1),
-    ('Recherche 2', 2),
-    ('Recherche 3', 3),
-    ('Recherche 4', 4),
-    ('Recherche 5', 5),
-    ('Recherche 6', 6),
-    ('Recherche 7', 7),
-    ('Recherche 8', 8),
-    ('Recherche 9', 9),
-    ('Recherche 10', 10);
+    ('{
+    "results_per_page": 20,
+    "what": "python dev",
+}
+', 1),
+    ('{
+    "results_per_page": 20,
+    "what": "data scientist",
+}
+', 1);
