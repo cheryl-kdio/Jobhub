@@ -21,5 +21,10 @@ class Offre:
         self.entreprise = entreprise
         self.description = description
 
-    def mettre_en_favoris(self):
-        self._etre_en_favoris = True
+    def __str__(self):
+        return (f"Offre: {self.titre}\n"
+                f"Domaine: {self.domaine}\n"
+                f"Lieu: {self.lieu}\n"
+                f"Type de contrat: {self.type_contrat}\n"
+                f"Salaire minimum: {self.salaire_minimum}\n"
+                f"Lien: {self.lien_offre}")
