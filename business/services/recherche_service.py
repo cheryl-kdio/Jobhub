@@ -29,6 +29,8 @@ class RechercheService:
                     type_contrat=job.get("contract_type", ""),
                     lien_offre=job.get("redirect_url", ""),
                     salaire_minimum=job.get("salary_min", ""),
+                    entreprise=job.get("company", {}).get("display_name}", ""),
+                    description=job.get("description", ""),
                 )
                 if offre:
                     offres.append(offre)
@@ -37,20 +39,4 @@ class RechercheService:
 
         else:
             print("Votre recherche ne peut pas être effectuée.")
-
-    def afficher_offres(self, recherche: Recherche):
-        offres = self.obtenir_resultats(recherche)
-        if offres:
-            # Créez un DataFrame à partir de la liste des offres
-            data = {
-                "Titre": [offre.titre for offre in offres],
-                "Domaine": [offre.domaine for offre in offres],
-                "Lieu": [offre.lieu for offre in offres],
-                "Type de Contrat": [offre.type_contrat for offre in offres],
-                "Lien Offre": [offre.lien_offre for offre in offres],
-                "Salaire Minimum": [offre.salaire_minimum for offre in offres],
-                "Favoris": [offre.etre_en_favoris for offre in offres],
-            }
-            print(tabulate(data, headers="keys", tablefmt="pretty"))
-        else:
-            print("Aucune offre trouvée.")
+            return None
