@@ -61,10 +61,7 @@ CREATE TABLE projet2A.profil_chercheur_emploi (
     domaine VARCHAR(255),
     salaire_minimum INTEGER,
     salaire_maximum INTEGER,  
-    cdi BOOLEAN,             
-    temps_partiel BOOLEAN,    
-    temps_plein BOOLEAN,      
-    cdd BOOLEAN,              
+    type_contrat VARCHAR(255),            
     utilisateur_id INT,
     FOREIGN KEY (utilisateur_id) REFERENCES projet2A.compte_utilisateur(id_compte_utilisateur)
 );

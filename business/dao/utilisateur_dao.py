@@ -152,7 +152,7 @@ class UtilisateurDao(metaclass=Singleton):
                 id_liste = cur.fetchall()
         return [id_liste[0] for id in id_liste]
 
-    def verif_connexion(self, mail,passw):  # Voir comment l'ajuster avec notre DAO
+    def verif_connexion(self, mail, passw):  # Voir comment l'ajuster avec notre DAO
         """
         Vérifie la connexion de l'utilisateur en vérifiant son mot de passe.
 
@@ -202,33 +202,33 @@ class UtilisateurDao(metaclass=Singleton):
                     (nom, age, mail, tel, ville, code_postal, id),
                 )
 
-        def supprimer(self, user) -> bool:
-            """Suppression d'un utilisateur dans la base de données
+    def supprimer(self, user) -> bool:
+        """Suppression d'un utilisateur dans la base de données
 
-            Parameters
-            ----------
-            user : CompteUtilisateur
-                utilisateur à supprimer de la base de données
+        Parameters
+        ----------
+        user : CompteUtilisateur
+            utilisateur à supprimer de la base de données
 
-            Returns
-            -------
-                True si l'utilisateur a bien été supprimé
-            """
-            try:
-                with DBConnection().connection as connection:
-                    with connection.cursor() as cursor:
-                        # Supprimer le compte d'un utilisateur
-                        cursor.execute(
-                            "DELETE FROM projet2A.compte_utilisateur           "
-                            " WHERE id_compte_utilisateur=%(id_compte_utilisateur)s      ",
-                            {"id_compte_utilisateur": user.id_compte_utilisateur},
-                        )
-                        res = cursor.rowcount
-            except Exception as e:
-                print(e)
-                raise
+        Returns
+        -------
+            True si l'utilisateur a bien été supprimé
+        """
+        try:
+            with DBConnection().connection as connection:
+                with connection.cursor() as cursor:
+                    # Supprimer le compte d'un utilisateur
+                    cursor.execute(
+                        "DELETE FROM projet2A.compte_utilisateur           "
+                        " WHERE id_compte_utilisateur=%(id_compte_utilisateur)s      ",
+                        {"id_compte_utilisateur": user.id_compte_utilisateur},
+                    )
+                    res = cursor.rowcount
+        except Exception as e:
+            print(e)
+            raise
 
-            return res > 0
+        return res > 0
 
     def check_mail(self, mail):
         """
