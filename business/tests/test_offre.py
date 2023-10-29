@@ -7,7 +7,7 @@ from business.services.utilisateur_service import Utilisateur
 from business.dao.offre_dao import OffreDao
 from tabulate import tabulate
 
-# Utilisateur().create_account("cheryl","ck@gmail.com","Patate12","Patate12")
+#Utilisateur().create_account("cheryl","ck@gmail.com","Patate12","Patate12")
 
 print("Test de connexion")
 pers = Utilisateur().se_connecter("ck@gmail.com", "Patate12")
@@ -30,7 +30,7 @@ data = {
     "Domaine": [offre.domaine for offre in offres],
     "Lieu": [offre.lieu for offre in offres],
     "Type de Contrat": [offre.type_contrat for offre in offres],
-    "Salaire Minimum": [offre.salaire_minimum for offre in offres],
+    "Entreprise " : [offre.entreprise for offre in offres]
 }
 print(tabulate(data, headers="keys", tablefmt="pretty"))
 print("#####\n Mettre en favoris \n #####")

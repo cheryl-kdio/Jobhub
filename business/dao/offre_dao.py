@@ -39,15 +39,11 @@ class OffreDao(metaclass=Singleton):
             with connection.cursor() as cursor:
                 query = (
                     "SELECT * FROM projet2A.offre o "
-                    "WHERE o.titre=%(titre)s AND o.domaine = %(domaine)s AND o.lieu =%(lieu)s AND "
-                    "o.type_contrat = %(type_contrat)s AND "
+                    "WHERE id_offre =%(id_offre)s AND "
                     " o.utilisateur_id= %(utilisateur_id)s"
                 )
                 params = {
-                    "titre": offre.titre,
-                    "domaine": offre.domaine,
-                    "lieu": offre.lieu,
-                    "type_contrat": offre.type_contrat,
+                    "id_offre": offre.id_offre,
                     "utilisateur_id": utilisateur.id,
                 }
                 cursor.execute(query, params)
@@ -83,10 +79,11 @@ class OffreDao(metaclass=Singleton):
             with connection.cursor() as cursor:
                 # Sauvegarder l'offre d'un utilisateur
                 cursor.execute(
-                    "INSERT INTO projet2A.offre(titre, domaine, lieu, type_contrat, lien_offre, salaire_minimum,entreprise,description, utilisateur_id) "
-                    " VALUES (%(titre)s, %(domaine)s, %(lieu)s, %(type_contrat)s, %(lien_offre)s,%(entreprise)s ,%(description)s, %(salaire_minimum)s, %(utilisateur_id)s)  "
+                    "INSERT INTO projet2A.offre(id_offre,titre, domaine, lieu, type_contrat, lien_offre, salaire_minimum, entreprise,description, utilisateur_id) "
+                    " VALUES (%(id_offre)s,%(titre)s, %(domaine)s, %(lieu)s, %(type_contrat)s, %(lien_offre)s, %(salaire_minimum)s, %(entreprise)s ,%(description)s, %(utilisateur_id)s)  "
                     "RETURNING id_offre",
                     {
+                        "id_offre":offre.id_offre,
                         "titre": offre.titre,
                         "domaine": offre.domaine,
                         "lieu": offre.lieu,
@@ -100,7 +97,6 @@ class OffreDao(metaclass=Singleton):
                 )
                 res = cursor.fetchone()
         if res:
-            offre.id_offre = res["id_offre"]
             created = True
         return created
 

@@ -37,7 +37,7 @@ CREATE TABLE projet2A.recherche (
 DROP TABLE IF EXISTS projet2A.offre CASCADE ;
 
 CREATE TABLE projet2A.offre (
-    id_offre SERIAL PRIMARY KEY,
+    id_offre BIGINT PRIMARY KEY,
     titre VARCHAR(255),
     domaine VARCHAR(255),
     lieu VARCHAR(255), 
