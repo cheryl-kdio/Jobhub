@@ -12,6 +12,8 @@ from tabulate import tabulate
 print("Test de connexion")
 pers = Utilisateur().se_connecter("ck@gmail.com", "Patate12")
 
+print("Test de modification info")
+Utilisateur().update(pers.id,nom="Cheryl",age="20",tel=330626340800, ville="Paris", code_postal=35170)
 print("Test de recherche")
 
 query_params = {
