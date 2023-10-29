@@ -1,3 +1,5 @@
+from business.dao.db_connection import DBConnection
+from business.singleton import Singleton
 from business.client.profil_chercheur_emploi import ProfilChercheurEmploi
 from business.client.recherche import Recherche
 
@@ -57,12 +59,9 @@ class ProfilChercheurEmploiDao:
             "distance": 10,
             "salary_min": profil_chercheur_emploi.salaire_minimum,
             "salary_max": profil_chercheur_emploi.salaire_maximum,
-            "permanent": profil_chercheur_emploi.cdi,
-            "part_time": profil_chercheur_emploi.temps_partiel,
-            "full_time": profil_chercheur_emploi.temps_plein,
-            "contract": profil_chercheur_emploi.cdd,
+            "type_contrat": profil_chercheur_emploi.type_contrat,
         }
-        recherche = Recherche()
+        recherche = Recherche(query_params)
         alertes = []
         if recherche.response.status_code == 200:
             jobs = recherche.response.json()["results"]
@@ -105,9 +104,9 @@ class ProfilChercheurEmploiDao:
             with connection.cursor() as cursor:
                 # Sauvegarder l'offre d'un utilisateur
                 cursor.execute(
-                    "INSERT INTO projet2A.profil_chercheur_emploi (lieu, domaine, salaire_minimum, salaire_maximum,type_contrat) "
-                    "VALUES (%(lieu)s, %(domaine)s, %(salaire_minimum)s, %(salaire_maximum)s,%(type_contrat)s)"
-                    "RETURNING id_offre",
+                    "INSERT INTO projet2A.profil_chercheur_emploi (lieu, domaine, salaire_minimum, salaire_maximum,type_contrat,utilisateur_id) "
+                    "VALUES (%(lieu)s, %(domaine)s, %(salaire_minimum)s, %(salaire_maximum)s,%(type_contrat)s, %(utilisateur_id)s)"
+                    "RETURNING id_profil_chercheur_emploi",
                     {
                         "lieu": profil_chercheur_emploi.lieu,
                         "domaine": profil_chercheur_emploi.domaine,

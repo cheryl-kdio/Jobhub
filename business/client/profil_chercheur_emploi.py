@@ -1,11 +1,11 @@
 class ProfilChercheurEmploi:
     def __init__(
         self,
-        lieu,
-        domaine,
-        salaire_minimum,
-        salaire_maximum,
-        type_contrat,
+        lieu=None,
+        domaine=None,
+        salaire_minimum=None,
+        salaire_maximum=None,
+        type_contrat=None,
         id_profil_chercheur_emploi=None,
     ):
         self.id_profil_chercheur_emploi = id_profil_chercheur_emploi
