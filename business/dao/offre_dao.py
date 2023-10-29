@@ -89,7 +89,7 @@ class OffreDao(metaclass=Singleton):
                         "lieu": offre.lieu,
                         "type_contrat": offre.type_contrat,
                         "lien_offre": offre.lien_offre,
-                        "salaire_minimum": offre.salaire_minimum,
+                        "salaire_minimum": offre.salaire_minimum if offre.salaire_minimum else None,
                         "description": offre.description,
                         "entreprise": offre.entreprise,
                         "utilisateur_id": utilisateur.id,

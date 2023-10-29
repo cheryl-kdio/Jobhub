@@ -26,6 +26,7 @@ print("Affichage des resultats")
 offres = r.obtenir_resultats(Recherche(query_params=query_params))
 
 data = {
+    "n":[i + 1 for i, offre in enumerate(offres)],
     "Titre": [offre.titre for offre in offres],
     "Domaine": [offre.domaine for offre in offres],
     "Lieu": [offre.lieu for offre in offres],
@@ -37,11 +38,22 @@ print("#####\n Mettre en favoris \n #####")
 
 o = OffreDao()
 
+num = int(input("Selectionner une offre à mettre en favoris [1-20]: "))
+
 print("ajout favoris")
-if o.ajouter_offre(offres[0], pers):
+if o.ajouter_offre(offres[num-1], pers):
     print("offre ajoutée en favoris")
 else:
     print("offre non rajoutée")
 
-liste_fav = o.voir_favoris(pers)
-print("Liste des favoris :\n", liste_fav)
+offres = o.voir_favoris(pers)
+
+data = {
+    "n":[offre.id_offre for offre in offres],
+    "Titre": [offre.titre for offre in offres],
+    "Domaine": [offre.domaine for offre in offres],
+    "Lieu": [offre.lieu for offre in offres],
+    "Type de Contrat": [offre.type_contrat for offre in offres],
+    "Entreprise " : [offre.entreprise for offre in offres]
+}
+print(tabulate(data, headers="keys", tablefmt="pretty"))
