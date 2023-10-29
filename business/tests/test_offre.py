@@ -17,7 +17,6 @@ print("Test de recherche")
 query_params = {
     "results_per_page": 20,
     "what": "python dev",
-    "where": "london"
 }
 
 r=RechercheService()
@@ -26,8 +25,14 @@ print("Affichage des resultats")
 
 offres=r.obtenir_resultats(Recherche(query_params=query_params))
 
-print(offres)
-
+data = {
+                "Titre": [offre.titre for offre in offres],
+                "Domaine": [offre.domaine for offre in offres],
+                "Lieu": [offre.lieu for offre in offres],
+                "Type de Contrat": [offre.type_contrat for offre in offres],
+                "Salaire Minimum": [offre.salaire_minimum for offre in offres],
+            }
+print(tabulate(data, headers="keys", tablefmt="pretty"))
 print("#####\n Mettre en favoris \n #####")
 
 o=OffreDao()
