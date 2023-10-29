@@ -54,7 +54,7 @@ class OffreDao(metaclass=Singleton):
                 res = cursor.fetchone()
         if res is not None:
             return res["id_offre"]
-        else :
+        else:
             return None
 
     def ajouter_offre(self, offre, utilisateur):
@@ -81,21 +81,23 @@ class OffreDao(metaclass=Singleton):
 
         with DBConnection().connection as connection:
             with connection.cursor() as cursor:
-                    # Sauvegarder l'offre d'un utilisateur
+                # Sauvegarder l'offre d'un utilisateur
                 cursor.execute(
-                    "INSERT INTO projet2A.offre(titre, domaine, lieu, type_contrat, lien_offre, salaire_minimum, utilisateur_id) "
-                    " VALUES (%(titre)s, %(domaine)s, %(lieu)s, %(type_contrat)s, %(lien_offre)s, %(salaire_minimum)s, %(utilisateur_id)s)  "
-                        "RETURNING id_offre",
-                        {
-                            "titre": offre.titre,
-                            "domaine": offre.domaine,
-                            "lieu": offre.lieu,
-                            "type_contrat": offre.type_contrat,
-                            "lien_offre": offre.lien_offre,
-                            "salaire_minimum": offre.salaire_minimum,
-                            "utilisateur_id": utilisateur.id,
-                        },
-                    )
+                    "INSERT INTO projet2A.offre(titre, domaine, lieu, type_contrat, lien_offre, salaire_minimum,entreprise,description, utilisateur_id) "
+                    " VALUES (%(titre)s, %(domaine)s, %(lieu)s, %(type_contrat)s, %(lien_offre)s,%(entreprise)s ,%(description)s, %(salaire_minimum)s, %(utilisateur_id)s)  "
+                    "RETURNING id_offre",
+                    {
+                        "titre": offre.titre,
+                        "domaine": offre.domaine,
+                        "lieu": offre.lieu,
+                        "type_contrat": offre.type_contrat,
+                        "lien_offre": offre.lien_offre,
+                        "salaire_minimum": offre.salaire_minimum,
+                        "description": offre.description,
+                        "entreprise": offre.entreprise,
+                        "utilisateur_id": utilisateur.id,
+                    },
+                )
                 res = cursor.fetchone()
         if res:
             offre.id_offre = res["id_offre"]
@@ -126,10 +128,18 @@ class OffreDao(metaclass=Singleton):
                 )
                 res = cursor.fetchall()
 
-        offres = [Offre(id_offre=row["id_offre"],titre=row["titre"], domaine=row["domaine"],
-                lieu=row["lieu"], type_contrat=row["type_contrat"], lien_offre=row["lien_offre"],
-                salaire_minimum=row["salaire_minimum"]) for row in res]
+        offres = [
+            Offre(
+                id_offre=row["id_offre"],
+                titre=row["titre"],
+                domaine=row["domaine"],
+                lieu=row["lieu"],
+                type_contrat=row["type_contrat"],
+                lien_offre=row["lien_offre"],
+                salaire_minimum=row["salaire_minimum"],
+                entreprise=row["entreprise"],
+                description=row["description"],
+            )
+            for row in res
+        ]
         return offres
-
-
-
