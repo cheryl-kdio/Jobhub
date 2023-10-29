@@ -4,7 +4,27 @@ from business.client.recherche import Recherche
 
 class ProfilChercheurEmploiDao:
     def modifier_profil_chercheur_emploi(self, profil_chercheur_emploi):
-        pass
+        with DBConnection().connection as connection:
+            with connection.cursor() as cur:
+                update = """
+                UPDATE projet2A.profil_chercheur_emploi
+                SET lieu=COALESCE(%s,lieu), domaine=COALESCE(%s,domaine), salaire_minimum=COALESCE(%s,salaire_minimum),
+                    type_contrat = COALESCE(%s,type_contrat), salaire_maximum=COALESCE(%s,salaire_maximum)
+                WHERE id_profil_chercheur_emploi = %(id_profil_chercheur_emploi)s AND utilisateur_id = %(utilisateur_id)s 
+                """
+
+                cur.execute(
+                    update,
+                    (
+                        profil_chercheur_emploi.lieu,
+                        profil_chercheur_emploi.domaine,
+                        profil_chercheur_emploi.salaire_minimum,
+                        profil_chercheur_emploi.type_contrat,
+                        profil_chercheur_emploi.salaire_maximum,
+                        profil_chercheur_emploi.id_profil_chercheur_emploi,
+                        profil_chercheur_emploi.utilisateur_id,
+                    ),
+                )
 
     def deja_enregistré(self, profil_chercheur_emploi, utilisateur):
         with DBConnection().connection as connection:
