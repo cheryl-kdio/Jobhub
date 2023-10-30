@@ -9,8 +9,7 @@ from business.services.utilisateur_service import Utilisateur
 from business.dao.offre_dao import OffreDao
 from business.dao.recherche_dao import RechercheDao
 
-# Pierre = Utilisateur().create_account("cheryl", "ck@gmail.com", "Patate12", "Patate12")  ##Attention a la boucle
-
+# Pierre = Utilisateur().create_account("cheryl", "ck@gmail.com", "Patate12", "Patate12")
 pierre = Utilisateur().se_connecter("ck@gmail.com", "Patate12")
 
 query_params = {
@@ -31,7 +30,7 @@ query_params = {
 
 
 a = Recherche(query_params=query_params)
-RechercheDao().sauvegarder_recherche(a, pierre)
+# RechercheDao().sauvegarder_recherche(a, pierre)
 # b = RechercheService().obtenir_resultats(a)
 # print(b[0])
 # print(str(query_params))
@@ -45,8 +44,8 @@ RechercheDao().sauvegarder_recherche(a, pierre)
 
 ### Pierre supprime sa recherche de ses favoris
 
-RechercheDao().supprimer_recherche(a, pierre)
+# RechercheDao().supprimer_recherche(a, pierre)
 
 # Voir favoris
 
-# RechercheDao().voir_favoris(pierre)
+RechercheDao().voir_favoris(pierre)

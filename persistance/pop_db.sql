@@ -7,12 +7,12 @@ VALUES
 INSERT INTO projet2A.recherche (query_params, utilisateur_id)
 VALUES
     ('{
-    "results_per_page": 20,
+    "results_per_page": "20",
     "what": "python dev",
 }
 ', 1),
     ('{
-    "results_per_page": 20,
+    "results_per_page": "20",
     "what": "data scientist",
 }
 ', 1);

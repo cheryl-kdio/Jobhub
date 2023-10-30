@@ -16,6 +16,8 @@ from business.client.offre import Offre
 class TestOffreDao(TestCase):
     def setUp(self):
         self.offre_dao = OffreDao()
+        Pierre = Utilisateur().create_account("cheryl", "ck@gmail.com", "Patate12", "Patate12") 
+pierre = Utilisateur().se_connecter("ck@gmail.com", "Patate12")
 
     def test_supprimer_offre(self):
         # Mock de la connexion et du curseur

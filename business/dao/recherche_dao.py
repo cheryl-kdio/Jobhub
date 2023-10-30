@@ -105,6 +105,4 @@ class RechercheDao(metaclass=Singleton):
                     query_params=json.loads(row["query_params"])
                 ).query_params
                 recherches.append(recherche)
-        print(
-            recherches
-        )  ## remettre en return + voir comment on peut faire pour aller plus loin
+        return recherches  ## remettre en return + voir comment on peut faire pour aller plus loin

@@ -1,92 +1,136 @@
-import unittest
-from unittest.mock import MagicMock, patch
-from business.dao.recherche_dao import (
-    RechercheDao,
-)  # Remplacez "your_module" par le nom de votre module
+import time
+from unittest import TestCase, TextTestRunner, TestLoader
 from business.client.recherche import Recherche
-from business.client.compte_utilisateur import CompteUtilisateur
+from business.dao.db_connection import DBConnection
+
+from business.services.recherche_service import RechercheService
+from business.dao.recherche_dao import RechercheDao
+from business.services.utilisateur_service import Utilisateur
 
 
-class TestRechercheDao(unittest.TestCase):
-    def setUp(self):
-        self.recherche_dao = RechercheDao()
-
+class TestRechercheDao(TestCase):
     def test_supprimer_recherche(self):
-        recherche = Recherche(
-            id_recherche=1
-        )  # Créez une instance de Recherche avec un ID factice
-        utilisateur = CompteUtilisateur(
-            id=1
-        )  # Créez une instance de CompteUtilisateur avec un ID factice
+        # GIVEN
+        query_params = {
+            "results_per_page": "20",
+            "what": "python dev",
+        }
+        pierre = Utilisateur().se_connecter("ck@gmail.com", "Patate12")
+        recherche = Recherche(query_params)
+        dao = RechercheDao()
 
-        # Mock de la connexion et du curseur
-        with patch("business.dao.recherche_dao.DBConnection") as mock_connection:
-            mock_cursor = (
-                mock_connection.return_value.connection.__enter__.return_value.cursor().__enter__.return_value
-            )
-            mock_cursor.rowcount = 1  # Suppression réussie
+        # WHEN
 
-            result = self.recherche_dao.supprimer_recherche(recherche, utilisateur)
-            self.assertTrue(result)  # Assurez-vous que la méthode retourne True
+        result = dao.supprimer_recherche(recherche, pierre)
+
+        # THEN
+
+        self.assertTrue(result)  # Assurez-vous que la méthode retourne True
 
     def test_sauvegarder_recherche(self):
-        nom_recherche = "Ma Recherche"
-        recherche = Recherche(
-            params="Paramètres", response="Résultat"
-        )  # Créez une instance de Recherche
-        utilisateur = CompteUtilisateur(
-            id=1
-        )  # Créez une instance de CompteUtilisateur avec un ID factice
+        # GIVEN
+        query_params = {
+            "results_per_page": "20",
+            "what": "python dev",
+        }
+        pierre = Utilisateur().se_connecter("ck@gmail.com", "Patate12")
+        recherche = Recherche(query_params)
+        dao = RechercheDao()
+        # WHEN
 
-        # Mock de la connexion et du curseur
-        with patch("business.dao.recherche_dao.DBConnection") as mock_connection:
-            mock_cursor = (
-                mock_connection.return_value.connection.__enter__.return_value.cursor().__enter__.return_value
-            )
-            mock_cursor.fetchone.return_value = {
-                "id_recherche": 1
-            }  # ID factice de la recherche ajoutée
+        result = dao.sauvegarder_recherche(recherche, pierre)
 
-            result = self.recherche_dao.sauvegarder_recherche(
-                nom_recherche, recherche, utilisateur
-            )
-            self.assertTrue(result)  # Assurez-vous que la méthode retourne True
+        # THEN
+
+        self.assertTrue(result)  # Assurez-vous que la méthode retourne True
 
     def test_deja_favoris(self):
-        recherche = Recherche(
-            query_params="Paramètres"
-        )  # Créez une instance de Recherche
-        id_utilisateur = 1  # ID factice de l'utilisateur
+        # GIVEN
+        query_params = {
+            "results_per_page": "20",
+            "what": "python dev",
+        }
+        pierre = Utilisateur().se_connecter("ck@gmail.com", "Patate12")
+        recherche = Recherche(query_params)
+        dao = RechercheDao()
 
-        # Mock de la connexion et du curseur
-        with patch("business.dao.recherche_dao.DBConnection") as mock_connection:
-            mock_cursor = (
-                mock_connection.return_value.connection.__enter__.return_value.cursor().__enter__.return_value
-            )
-            mock_cursor.fetchone.return_value = None
+        # WHEN
 
-            result = self.recherche_dao.deja_favoris(recherche, id_utilisateur)
-            self.assertFalse(result)  # Assurez-vous que la méthode retourne False
+        result = dao.deja_favoris(recherche, pierre.id)
+
+        # THEN
+
+        self.assertTrue(result)  # Assurez-vous que la méthode retourne True
 
     def test_voir_favoris(self):
-        utilisateur = CompteUtilisateur(
-            mail="test@example.com"
-        )  # Créez un utilisateur factice
+        # GIVEN
+        pierre = Utilisateur().se_connecter("ck@gmail.com", "Patate12")
+        dao = RechercheDao()
+        # WHEN
 
-        # Mock de la connexion et du curseur
-        with patch("business.dao.recherche_dao.DBConnection") as mock_connection:
-            mock_cursor = (
-                mock_connection.return_value.connection.__enter__.return_value.cursor().__enter__.return_value
-            )
-            mock_cursor.fetchall.return_value = [
-                {"query_params": "Paramètres"}
-            ]  # Ici, vous pouvez simuler les données que vous attendez
+        result = dao.voir_favoris(pierre)
 
-            result = self.recherche_dao.voir_favoris(utilisateur)
-            self.assertEqual(
-                len(result), 1
-            )  # Assurez-vous que la méthode retourne une liste avec une recherche
+        # THEN
+        self.assertEqual(
+            len(result), 2
+        )  # Assurez-vous que la méthode retourne une liste avec une recherche
+
+    def test_si_sauvegarde_en_plus(self):
+        # GIVEN
+        query_params = {
+            "results_per_page": "20",
+            "what": "python dev",
+        }
+        pierre = Utilisateur().se_connecter("ck@gmail.com", "Patate12")
+        recherche = Recherche(query_params)
+        dao = RechercheDao()
+
+        # WHEN
+
+        result = dao.sauvegarder_recherche(recherche, pierre)
+
+        # THEN
+
+        self.assertFalse(result)  # Assurez-vous que la méthode retourne False
+
+    def test_si_supprime_bien(self):
+        # GIVEN
+        query_params = {
+            "results_per_page": "20",
+            "what": "python dev",
+        }
+        pierre = Utilisateur().se_connecter("ck@gmail.com", "Patate12")
+        recherche = Recherche(query_params)
+        dao = RechercheDao()
+
+        # WHEN
+
+        result = dao.supprimer_recherche(recherche, pierre)
+
+        # THEN
+
+        self.assertTrue(result)  # Assurez-vous que la méthode retourne True
+
+    def test_plus_favoris(self):
+        # GIVEN
+        query_params = {
+            "results_per_page": "20",
+            "what": "python dev",
+        }
+        pierre = Utilisateur().se_connecter("ck@gmail.com", "Patate12")
+        recherche = Recherche(query_params)
+        dao = RechercheDao()
+        # WHEN
+
+        result = dao.deja_favoris(recherche, pierre.id)
+
+        # THEN
+
+        self.assertFalse(result)  # Assurez-vous que la méthode retourne False
 
 
 if __name__ == "__main__":
-    unittest.main()
+    # Run the tests
+    result = TextTestRunner(verbosity=2).run(
+        TestLoader().loadTestsFromTestCase(TestRechercheDao)
+    )
