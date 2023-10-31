@@ -13,9 +13,9 @@ from business.dao.recherche_dao import RechercheDao
 pierre = Utilisateur().se_connecter("ck@gmail.com", "Patate12")
 
 query_params = {
-    "results_per_page": 10,
+    "results_per_page": 20,
     "what": "python dev",
-    "where": "london",
+    # "where": "london",
     # "sort_direction": "up",
     # "sort_by": "relevance",
     # "category": "IT Jobs",
@@ -30,7 +30,7 @@ query_params = {
 
 
 a = Recherche(query_params=query_params)
-# RechercheDao().sauvegarder_recherche(a, pierre)
+RechercheDao().sauvegarder_recherche(a, pierre)
 # b = RechercheService().obtenir_resultats(a)
 # print(b[0])
 # print(str(query_params))
@@ -48,4 +48,4 @@ a = Recherche(query_params=query_params)
 
 # Voir favoris
 
-RechercheDao().voir_favoris(pierre)
+# RechercheDao().voir_favoris(pierre)
