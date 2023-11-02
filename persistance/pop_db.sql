@@ -8,3 +8,15 @@ INSERT INTO projet2A.recherche (query_params, utilisateur_id)
 VALUES
     ('{"results_per_page": 20,"what": "python dev"}', 1),
     ('{"results_per_page": 20,"what": "data scientist"}', 1);
+
+INSERT INTO projet2A.offre (titre,
+    domaine ,
+    lieu , 
+    type_contrat ,
+    lien_offre ,
+    salaire_minimum,
+    entreprise,
+    description, utilisateur_id)
+VALUES 
+    ('offre_test', 'a', 'b', 'v', 'r', 6, 'b', 8,1)
+    

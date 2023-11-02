@@ -1,10 +1,8 @@
 class CompteUtilisateur:
     """
     Classe représentant un compte utilisateur
-
     Attributes
     ----------
-
     mdp : str
         Le mot de passe du compte utilisateur.
     nom : str

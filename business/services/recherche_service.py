@@ -23,7 +23,7 @@ class RechercheService:
             jobs = recherche.response.json()["results"]
             for job in jobs:
                 offre = Offre(
-                    id_offre=job.get("id",""),
+                    id_offre=job.get("id", ""),
                     titre=job.get("title", ""),
                     domaine=job.get("category", {}).get("label", ""),
                     lieu=job.get("location", {}).get("display_name", ""),

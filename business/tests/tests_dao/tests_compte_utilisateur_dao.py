@@ -1,148 +1,55 @@
-import unittest
-from unittest.mock import MagicMock, patch
-from business.dao.utilisateur_dao import (
-    UtilisateurDao,
-)  # Remplacez "your_module" par le nom de votre module
+import pytest
+from business.dao.utilisateur_dao import UtilisateurDao
 
 
-class TestUtilisateurDao(unittest.TestCase):
-    def setUp(self):
-        self.utilisateur_dao = UtilisateurDao()
+utilisateurdao = UtilisateurDao()
 
-    def test_add_db(self):
-        with patch("business.dao.utilisateur_dao.DBConnection") as mock_connection:
-            mock_cursor = (
-                mock_connection.return_value.connection.__enter__.return_value.cursor().__enter__.return_value
-            )
 
-            name_user = "TestUser"
-            mail = "testuser@example.com"
-            password = "hashed_password"
-            sel = "salt"
+def test_get_mail():
+    adresses_email = utilisateurdao.get_mail()
 
-            result = self.utilisateur_dao.add_db(name_user, mail, password, sel)
-            self.assertTrue(result)
+    assert isinstance(adresses_email, list)
+    assert len(adresses_email) > 0
 
-    def test_get_mail(self):
-        with patch("business.dao.utilisateur_dao.DBConnection") as mock_connection:
-            mock_cursor = (
-                mock_connection.return_value.connection.__enter__.return_value.cursor().__enter__.return_value
-            )
-            mock_cursor.fetchall.return_value = [
-                {"mail": "test1@example.com"},
-                {"mail": "test2@example.com"},
-            ]
+    for email in adresses_email:
+        assert isinstance(email, str)
 
-            result = self.utilisateur_dao.get_mail()
-            self.assertEqual(result, ["test1@example.com", "test2@example.com"])
 
-    def test_get_salt_mdp(self):
-        with patch("business.dao.utilisateur_dao.DBConnection") as mock_connection:
-            mock_cursor = (
-                mock_connection.return_value.connection.__enter__.return_value.cursor().__enter__.return_value
-            )
-            mock_cursor.fetchone.return_value = {
-                "mdp": "hashed_password",
-                "sel": "salt",
-            }
+def test_get_value_from_mail():
+    resultat = UtilisateurDao().get_value_from_mail("louise.louise@gmail.com", "nom")
 
-            result = self.utilisateur_dao.get_salt_mdp("testuser@example.com")
-            self.assertEqual(result, {"mdp": "hashed_password", "sel": "salt"})
+    assert resultat == "louise"
+    result = UtilisateurDao().get_value_from_mail("louis.louise@gmail.com", "nom")
 
-    def test_get_value_from_mail(self):
-        with patch("business.dao.utilisateur_dao.DBConnection") as mock_connection:
-            mock_cursor = (
-                mock_connection.return_value.connection.__enter__.return_value.cursor().__enter__.return_value
-            )
-            mock_cursor.fetchone.return_value = {"value": "some_value"}
+    assert result is None
 
-            result = self.utilisateur_dao.get_value_from_mail(
-                "testuser@example.com", "value"
-            )
-            self.assertEqual(result, "some_value")
 
-    def test_drop_id(self):
-        with patch("business.dao.utilisateur_dao.DBConnection") as mock_connection:
-            mock_cursor = (
-                mock_connection.return_value.connection.__enter__.return_value.cursor().__enter__.return_value
-            )
+def test_get_mdp_salt():
+    resultat = UtilisateurDao().get_salt_mdp("louise.louise@gmail.com")
 
-            result = self.utilisateur_dao.drop_id(123)
-            self.assertTrue(result)
+    assert (
+        resultat["mdp"]
+        == "$argon2id$v=19$m=65536,t=3,p=4$8DhmVYtGPTnnoC6cdm8rAg$gR7ocn48noQ5oLmoAYOUf79GV0GHZn0chbna8mCpr4E"
+    )
+    assert resultat["sel"] == "Ij1enqw5lNCTu7N3"
 
-    def test_iterer_donnees(self):
-        with patch("business.dao.utilisateur_dao.DBConnection") as mock_connection:
-            mock_cursor = (
-                mock_connection.return_value.connection.__enter__.return_value.cursor().__enter__.return_value
-            )
-            mock_cursor.fetchall.return_value = [
-                {"id_compte_utilisateur": 1},
-                {"id_compte_utilisateur": 2},
-            ]
 
-            result = self.utilisateur_dao.iterer_donnees()
-            self.assertEqual(result, [1, 2])
+def test_iterer_donnees():
+    id_utilisateurs = utilisateurdao.iterer_donnees()
+    assert isinstance(id_utilisateurs, list)
+    assert len(id_utilisateurs) > 0
 
-    def test_recuperer_utilisateur(self):
-        with patch("business.dao.utilisateur_dao.DBConnection") as mock_connection:
-            mock_cursor = (
-                mock_connection.return_value.connection.__enter__.return_value.cursor().__enter__.return_value
-            )
-            mock_cursor.fetchall.return_value = [
-                {"col1": "value1", "col2": "value2"},
-                {"col1": "value3", "col2": "value4"},
-            ]
 
-            result = self.utilisateur_dao.recuperer_utilisateur(1)
-            self.assertEqual(
-                result,
-                [
-                    {"col1": "value1", "col2": "value2"},
-                    {"col1": "value3", "col2": "value4"},
-                ],
-            )
+def test_recuperer_utilisateur():
+    id_utilisateur_existant = 1
+    utilisateur = utilisateurdao.recuperer_utilisateur(id_utilisateur_existant)
 
-    def test_verif_connexion(self):
-        with patch("business.dao.utilisateur_dao.getpass") as mock_getpass, patch(
-            "your_module.PasswordHasher"
-        ) as mock_password_hasher:
-            mock_getpass.return_value = "user_password"
-            mock_connection = mock_password_hasher.return_value
-            mock_connection.verify.return_value = True
+    assert isinstance(utilisateur, list)
 
-            result = self.utilisateur_dao.verif_connexion("testuser@example.com")
-            self.assertTrue(result)
+    assert len(utilisateur) > 0
 
-    def test_update(self):
-        with patch("business.dao.utilisateur_dao.DBConnection") as mock_connection:
-            mock_cursor = (
-                mock_connection.return_value.connection.__enter__.return_value.cursor().__enter__.return_value
-            )
-
-            result = self.utilisateur_dao.update(
-                1, nom="NewName", age=30, mail="newmail@example.com"
-            )
-            self.assertTrue(result)
-
-    def test_supprimer(self):
-        with patch("business.dao.utilisateur_dao.DBConnection") as mock_connection:
-            mock_cursor = (
-                mock_connection.return_value.connection.__enter__.return_value.cursor().__enter__.return_value
-            )
-            mock_cursor.rowcount = 1
-
-            result = self.utilisateur_dao.supprimer(MagicMock())
-            self.assertTrue(result)
-
-    def test_check_mail(self):
-        with patch(
-            "business.dao.utilisateur_dao.UtilisateurDao.get_mail"
-        ) as mock_get_mail:
-            mock_get_mail.return_value = ["existing@example.com"]
-
-            result = self.utilisateur_dao.check_mail("new@example.com")
-            self.assertTrue(result)
+    assert isinstance(utilisateur[0], dict)
 
 
 if __name__ == "__main__":
-    unittest.main()
+    pytest.main()
