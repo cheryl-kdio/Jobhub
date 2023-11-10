@@ -76,6 +76,8 @@ CREATE TABLE projet2A.candidatures (
     type_contrat VARCHAR(255),
     entreprise VARCHAR(255),
     utilisateur_id INT,
+    etat TEXT DEFAULT 'En attente',
+    est_mis_a_jour BOOLEAN DEFAULT FALSE,
     date_ajout DATE DEFAULT CURRENT_DATE,
     PRIMARY KEY (id_offre, utilisateur_id),
     FOREIGN KEY (utilisateur_id) REFERENCES projet2A.compte_utilisateur(id_compte_utilisateur)

@@ -133,3 +133,6 @@ class Candidature_Dao(metaclass=Singleton):
             for row in res
         ]
         return offres
+
+
+
