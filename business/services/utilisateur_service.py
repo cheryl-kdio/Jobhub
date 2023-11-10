@@ -23,32 +23,6 @@ class Utilisateur(UtilisateurDao):
 
         """
         name_user = nom
-        utilisateurdao = UtilisateurDao()
-
-        while True:
-            # mail = Utilisateur.get_user_info(self, info="mail")
-            if not utilisateurdao.check_email_valide(mail=mail):
-                print("Adresse e-mail invalide. Veuillez réessayer.")
-                continue
-
-            if not utilisateurdao.check_email_unique(mail=mail):
-                print("Adresse e-mail déjà existante. Veuillez en choisir une autre.")
-                continue
-            else:
-                print("Adresse mail valide")
-                break
-
-        while True:
-            # passw = UtilisateurDao.get_user_info(self, info="mdp")
-            if not utilisateurdao.check_mdp_valide(mdp=mdp):
-                print(
-                    "Le mot de passe ne remplit pas les conditions. Veuillez réessayer."
-                )
-                continue
-            else:
-                print("Le mot de passe est conforme")
-                break
-
         sel = "".join(
             random.choice(string.ascii_letters + string.digits) for _ in range(16)
         )
@@ -57,24 +31,9 @@ class Utilisateur(UtilisateurDao):
 
         password = ph.hash(mot_de_passe_concatene)
 
-        while True:
-            password_to_check = UtilisateurDao.get_user_info(self, info="mdp_to_check")
-            if not utilisateurdao.check_mdp_egal(
-                mdp=password, mdp_to_check=sel + password_to_check
-            ):
-                print("Le mot de passe est invalide. Veuillez réessayer.")
-                continue
-            else:
-                print("Le mot de passe est valide.")
-                break
-
         UtilisateurDao().add_db(name_user, mail, password, sel)
 
-    def se_connecter(
-        self,
-        mail,
-        passw
-    ):
+    def se_connecter(self, mail, passw):
         """Permet à un utilisateur de se connecter en saisissant son adresse e-mail et son mot de passe.
 
         Returns:
@@ -89,7 +48,7 @@ class Utilisateur(UtilisateurDao):
                 # Demander à l'utilisateur de saisir son identifiant et son mot de passe
                 mail = mail
 
-                utilisateur = UtilisateurDao().verif_connexion(mail=mail,passw=passw)
+                utilisateur = UtilisateurDao().verif_connexion(mail=mail, passw=passw)
 
                 # Vérifier si l'utilisateur a été trouvé dans la base de données
                 if utilisateur:
@@ -118,8 +77,8 @@ class Utilisateur(UtilisateurDao):
                     CompteUtilisateur.ville = UtilisateurDao.get_value_from_mail(
                         self, mail=mail, value="ville"
                     )
-                    CompteUtilisateur.mail=mail
-                    
+                    CompteUtilisateur.mail = mail
+
                     return CompteUtilisateur
                 else:
                     print(

@@ -10,7 +10,7 @@ class StartView(AbstractView):
             {
                 "type": "list",
                 "name": "choix",
-                "message": "Bienvenue sur notre application de recherche d'emplois !",
+                "message": f"Bonjour {Session().user_name}",
                 "choices": [
                     "Se connecter",
                     "Créer un compte",
@@ -37,9 +37,9 @@ class StartView(AbstractView):
             return CreateAccountView()
 
         elif reponse["choix"] == "Lancer une recherche":
-            from view.battle_view import BattleView
+            from presentation.recherche_view import RechercheView
 
-            return BattleView()
+            return RechercheView()
 
         elif reponse["choix"] == "Créer un compte":
             from presentation.creer_compte_view import CreateAccountView
