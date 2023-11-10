@@ -3,7 +3,6 @@ tabulate
 psycopg2-binary
 dataclasses
 python-dotenv
-fastapi
 inquirerPy
 argon2-cffi
-Flask
+inquirerPy
