@@ -37,7 +37,7 @@ CREATE TABLE projet2A.recherche (
 DROP TABLE IF EXISTS projet2A.offre CASCADE ;
 
 CREATE TABLE projet2A.offre (
-    id_offre BIGINT PRIMARY KEY,
+    id_offre BIGINT ,
     titre VARCHAR(255),
     domaine VARCHAR(255),
     lieu VARCHAR(255), 
@@ -48,6 +48,7 @@ CREATE TABLE projet2A.offre (
     description TEXT,
     utilisateur_id INT,
     date_ajout DATE DEFAULT CURRENT_DATE,
+    PRIMARY KEY (id_offre, utilisateur_id),
     FOREIGN KEY (utilisateur_id) REFERENCES projet2A.compte_utilisateur(id_compte_utilisateur)
 );
 
@@ -67,3 +68,15 @@ CREATE TABLE projet2A.profil_chercheur_emploi (
 );
 
 -- A completer avec les autres tables
+CREATE TABLE projet2A.candidatures (
+    id_offre BIGINT ,
+    titre VARCHAR(255),
+    domaine VARCHAR(255),
+    lieu VARCHAR(255), 
+    type_contrat VARCHAR(255),
+    entreprise VARCHAR(255),
+    utilisateur_id INT,
+    date_ajout DATE DEFAULT CURRENT_DATE,
+    PRIMARY KEY (id_offre, utilisateur_id),
+    FOREIGN KEY (utilisateur_id) REFERENCES projet2A.compte_utilisateur(id_compte_utilisateur)
+);
