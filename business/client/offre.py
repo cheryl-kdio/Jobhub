@@ -5,10 +5,10 @@ class Offre:
         domaine,
         lieu,
         type_contrat,
-        lien_offre,
-        salaire_minimum,
         entreprise,
-        description,
+          lien_offre=None,
+        salaire_minimum=None,
+        description=None,
         id_offre=None,
     ):
         self.id_offre = id_offre

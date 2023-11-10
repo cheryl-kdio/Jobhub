@@ -5,6 +5,7 @@ from business.services.recherche_service import RechercheService
 from business.dao.recherche_dao import RechercheDao
 from business.services.utilisateur_service import Utilisateur
 from business.dao.offre_dao import OffreDao
+from business.dao.candidature_dao import Candidature_Dao
 from tabulate import tabulate
 
 #Utilisateur().create_account("cheryl","ck@gmail.com","Patate12","Patate12")
@@ -59,3 +60,5 @@ data = {
     "Entreprise " : [offre.entreprise for offre in offres]
 }
 print(tabulate(data, headers="keys", tablefmt="pretty"))
+
+print("Test de candidature")
