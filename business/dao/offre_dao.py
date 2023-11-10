@@ -11,12 +11,12 @@ from business.dao.utilisateur_dao import UtilisateurDao
 class OffreDao(metaclass=Singleton):
     def supprimer_offre(self, offre) -> bool:
         """
-        Suppression d'une offre sauvegardé par un utilisateur dans la base de données
+        Suppression d'une offre favoris d'un utilisateur dans la base de données
 
         Parameters
         ----------
         offre : Offre
-            Offre sauvegardé par un utilisateur à supprimer de la base de données
+            Offre sauvegardée par un utilisateur à supprimer de la base de données
 
         Returns
         -------
@@ -26,34 +26,32 @@ class OffreDao(metaclass=Singleton):
             with connection.cursor() as cursor:
                 # Supprimer l'offre sauvegardé d'un utilisateur
                 cursor.execute(
-                    "DELETE FROM projet2A.offre" " WHERE id_offre = %(id_offre)s ",
+                    "DELETE FROM projet2A.offre        "
+                    " WHERE id_offre = %(id_offre)s      ",
                     {"id_offre": offre.id_offre},
                 )
                 res = cursor.rowcount
 
         return res > 0
 
-    def deja_favoris(self, offre, id_utilisateur):
+    def deja_favoris(self, offre, utilisateur):
         with DBConnection().connection as connection:
             with connection.cursor() as cursor:
                 query = (
-                    "SELECT id_offre FROM projet2A.offre o "
-                    "WHERE o.titre=%(titre)s AND o.domaine = %(domaine)s AND o.lieu =%(lieu)s AND "
-                    "o.type_contrat = %(type_contrat)s AND o.lien_offre =%(lien_offre)s AND "
-                    "o.salaire_minimum = %(salaire_minimum)s  AND o.utilisateur_id= %(utilisateur_id)s"
+                    "SELECT * FROM projet2A.offre o "
+                    "WHERE id_offre =%(id_offre)s AND "
+                    " o.utilisateur_id= %(utilisateur_id)s"
                 )
                 params = {
-                    "titre": offre.titre,
-                    "domaine": offre.domaine,
-                    "lieu": offre.lieu,
-                    "type_contrat": offre.type_contrat,
-                    "lien_offre": offre.lien_offre,
-                    "salaire_minimum": offre.salaire_minimum,
-                    "utilisateur_id": id_utilisateur,
+                    "id_offre": offre.id_offre,
+                    "utilisateur_id": utilisateur.id,
                 }
                 cursor.execute(query, params)
                 res = cursor.fetchone()
-        return res["id_offre"] if res is not None else None
+        if res is not None:
+            return res["id_offre"]
+        else:
+            return None
 
     def ajouter_offre(self, offre, utilisateur):
         """
@@ -73,30 +71,34 @@ class OffreDao(metaclass=Singleton):
         """
         created = False
 
-        deja_favoris = self.deja_favoris(offre, utilisateur.id)
-        if deja_favoris is None:
+        deja_favoris = self.deja_favoris(offre, utilisateur)
+        if deja_favoris is not None:
             return created
 
         with DBConnection().connection as connection:
             with connection.cursor() as cursor:
                 # Sauvegarder l'offre d'un utilisateur
                 cursor.execute(
-                    "INSERT INTO projet2A.offre(titre, domaine, lieu, type_contrat, lien_offre, salaire_minimum, utilisateur_id) "
-                    " VALUES (%(titre)s, %(domaine)s, %(lieu)s, %(type_contrat)s, %(lien_offre)s, %(salaire_minimum)s, %(utilisateur_id)s)  "
+                    "INSERT INTO projet2A.offre(id_offre,titre, domaine, lieu, type_contrat, lien_offre, salaire_minimum, entreprise,description, utilisateur_id) "
+                    " VALUES (%(id_offre)s,%(titre)s, %(domaine)s, %(lieu)s, %(type_contrat)s, %(lien_offre)s, %(salaire_minimum)s, %(entreprise)s ,%(description)s, %(utilisateur_id)s)  "
                     "RETURNING id_offre",
                     {
+                        "id_offre": offre.id_offre,
                         "titre": offre.titre,
                         "domaine": offre.domaine,
                         "lieu": offre.lieu,
                         "type_contrat": offre.type_contrat,
                         "lien_offre": offre.lien_offre,
-                        "salaire_minimum": offre.salaire_minimum,
+                        "salaire_minimum": offre.salaire_minimum
+                        if offre.salaire_minimum
+                        else None,
+                        "description": offre.description,
+                        "entreprise": offre.entreprise,
                         "utilisateur_id": utilisateur.id,
                     },
                 )
                 res = cursor.fetchone()
         if res:
-            offre.id = res["id_offre"]
             created = True
         return created
 
@@ -112,9 +114,6 @@ class OffreDao(metaclass=Singleton):
          -------
              True si l'offre a bien été sauvegardée
         """
-        id_utilisateur = UtilisateurDao().get_value_from_mail(
-            utilisateur.mail, "id_compte_utilisateur"
-        )
 
         with DBConnection().connection as connection:
             with connection.cursor() as cursor:
@@ -123,7 +122,7 @@ class OffreDao(metaclass=Singleton):
                     "SELECT * "
                     "FROM projet2A.offre "
                     "WHERE utilisateur_id=%(id_utilisateur)s",
-                    {"id_utilisateur": id_utilisateur},
+                    {"id_utilisateur": utilisateur.id},
                 )
                 res = cursor.fetchall()
 
@@ -136,6 +135,8 @@ class OffreDao(metaclass=Singleton):
                 type_contrat=row["type_contrat"],
                 lien_offre=row["lien_offre"],
                 salaire_minimum=row["salaire_minimum"],
+                entreprise=row["entreprise"],
+                description=row["description"],
             )
             for row in res
         ]
