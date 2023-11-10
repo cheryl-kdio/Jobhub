@@ -18,5 +18,5 @@ INSERT INTO projet2A.offre (titre,
     entreprise,
     description, utilisateur_id)
 VALUES 
-    ('offre_test', 'a', 'b', 'v', 'r', 6, 'b', 8,1)
+    ('Emplois Informatiqu', 'a', 'b', 'v', 'r', 6, 'b', 8,1)
     
