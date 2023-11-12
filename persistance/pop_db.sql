@@ -9,14 +9,7 @@ VALUES
     ('{"results_per_page": 20,"what": "python dev"}', 1),
     ('{"results_per_page": 20,"what": "data scientist"}', 1);
 
-INSERT INTO projet2A.offre (titre,
-    domaine ,
-    lieu , 
-    type_contrat ,
-    lien_offre ,
-    salaire_minimum,
-    entreprise,
-    description, utilisateur_id)
+INSERT INTO projet2A.offre (id_offre,titre,domaine , lieu , type_contrat ,entreprise, utilisateur_id)
 VALUES 
-    ('Emplois Informatiqu', 'a', 'b', 'v', 'r', 6, 'b', 8,1)
+    (1,'test','dev','spdn','CDI','nike',1 );
     

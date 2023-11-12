@@ -13,12 +13,19 @@ class TestOffreDao(TestCase):
         # GIVEN
 
         pierre = Utilisateur().se_connecter("ck@gmail.com", "Patate12")
-        offre = Offre("offre_test", "a", "b", "v", "r", 6, "b", 8)
+        offre = Offre(
+            titre="test",
+            domaine="dev",
+            lieu="spdn",
+            type_contrat="CDI",
+            entreprise="nike",
+            id_offre=1,
+        )
         dao = OffreDao()
 
         # WHEN
 
-        result = dao.supprimer_offre(offre, pierre)
+        result = dao.supprimer_offre(offre)
 
         # THEN
 
@@ -28,26 +35,40 @@ class TestOffreDao(TestCase):
 
     def test_sauvegarder_offre(self):
         pierre = Utilisateur().se_connecter("ck@gmail.com", "Patate12")
-        offre = Offre("offre_test", "a", "b", "v", "r", 6, "b", 8)
+        offre = Offre(
+            titre="test",
+            domaine="dev",
+            lieu="spdn",
+            type_contrat="CDI",
+            entreprise="nike",
+            id_offre=1,
+        )
         dao = OffreDao()
 
         # WHEN
 
-        result = dao.ajouter_offre(offre, pierre.id)
+        result = dao.ajouter_offre(offre, pierre)
 
         # THEN
 
-        self.assertTrue(result)  # Assurez-vous que la méthode retourne True
+        self.assertTrue(result)  # Assurez-vous que la méthode retourne TRUE
 
     def test_deja_favoris(self):
         # GIVEN
         pierre = Utilisateur().se_connecter("ck@gmail.com", "Patate12")
-        offre = Offre("offre_test", "a", "b", "v", "r", 6, "b", 8)
+        offre = Offre(
+            titre="test",
+            domaine="dev",
+            lieu="spdn",
+            type_contrat="CDI",
+            entreprise="nike",
+            id_offre=1,
+        )
         dao = OffreDao()
 
         # WHEN
 
-        result = dao.deja_favoris(offre, pierre.id)
+        result = dao.deja_favoris(offre, pierre)
 
         # THEN
 
@@ -69,12 +90,19 @@ class TestOffreDao(TestCase):
     def test_si_sauvegarde_en_plus(self):
         # GIVEN
         pierre = Utilisateur().se_connecter("ck@gmail.com", "Patate12")
-        offre = Offre("offre_test", "a", "b", "v", "r", 6, "b", 8)
+        offre = Offre(
+            titre="test",
+            domaine="dev",
+            lieu="spdn",
+            type_contrat="CDI",
+            entreprise="nike",
+            id_offre=1,
+        )
         dao = OffreDao()
 
         # WHEN
 
-        result = dao.ajouter_offre(offre, pierre.id)
+        result = dao.ajouter_offre(offre, pierre)
 
         # THEN
 
