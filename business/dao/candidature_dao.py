@@ -1,5 +1,5 @@
 from business.dao.db_connection import DBConnection
-from business.singleton import Singleton
+from utils.singleton import Singleton
 from business.client.offre import Offre
 from business.client.recherche import Recherche
 from business.client.compte_utilisateur import CompteUtilisateur
@@ -133,6 +133,3 @@ class Candidature_Dao(metaclass=Singleton):
             for row in res
         ]
         return offres
-
-
-

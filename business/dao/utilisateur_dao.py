@@ -1,5 +1,5 @@
 from business.dao.db_connection import DBConnection
-from business.singleton import Singleton
+from utils.singleton import Singleton
 
 from argon2 import PasswordHasher
 

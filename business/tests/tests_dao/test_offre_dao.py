@@ -9,7 +9,7 @@ from business.services.utilisateur_service import Utilisateur
 
 
 class TestOffreDao(TestCase):
-    def test_supprimer_offre(self):
+    def test_01__supprimer_offre(self):
         # GIVEN
 
         pierre = Utilisateur().se_connecter("ck@gmail.com", "Patate12")
@@ -33,7 +33,7 @@ class TestOffreDao(TestCase):
             result
         )  # Assurez-vous que la méthode retourne True ce qui signifie qu'elle s'est bien supprimé
 
-    def test_sauvegarder_offre(self):
+    def test_02_sauvegarder_offre(self):
         pierre = Utilisateur().se_connecter("ck@gmail.com", "Patate12")
         offre = Offre(
             titre="test",
@@ -53,7 +53,7 @@ class TestOffreDao(TestCase):
 
         self.assertTrue(result)  # Assurez-vous que la méthode retourne TRUE
 
-    def test_deja_favoris(self):
+    def test_03_deja_favoris(self):
         # GIVEN
         pierre = Utilisateur().se_connecter("ck@gmail.com", "Patate12")
         offre = Offre(
@@ -74,7 +74,7 @@ class TestOffreDao(TestCase):
 
         self.assertIsNotNone(result)  # Assurez-vous que la méthode retourne True
 
-    def test_voir_favoris(self):
+    def test_04_voir_favoris(self):
         # GIVEN
         pierre = Utilisateur().se_connecter("ck@gmail.com", "Patate12")
         dao = OffreDao()

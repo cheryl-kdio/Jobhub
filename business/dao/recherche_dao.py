@@ -1,5 +1,5 @@
 from business.dao.db_connection import DBConnection
-from business.singleton import Singleton
+from utils.singleton import Singleton
 from business.client.recherche import Recherche
 from business.client.compte_utilisateur import CompteUtilisateur
 from business.dao.utilisateur_dao import UtilisateurDao
@@ -105,4 +105,5 @@ class RechercheDao(metaclass=Singleton):
                     query_params=json.loads(row["query_params"])
                 ).query_params
                 recherches.append(recherche)
-        return recherches  ## remettre en return + voir comment on peut faire pour aller plus loin
+        return recherches
+        ## remettre en return + voir comment on peut faire pour aller plus loin

@@ -6,10 +6,10 @@ VALUES
 
 INSERT INTO projet2A.recherche (query_params, utilisateur_id)
 VALUES
-    ('{"results_per_page": 20,"what": "python dev"}', 1),
-    ('{"results_per_page": 20,"what": "data scientist"}', 1);
+    ('{"results_per_page": 20, "what": "python dev"}', 1),
+    ('{"results_per_page": 20, "what": "data scientist"}', 1);
 
 INSERT INTO projet2A.offre (id_offre,titre,domaine , lieu , type_contrat ,entreprise, utilisateur_id)
 VALUES 
-    (1,'test','dev','spdn','CDI','nike',1 );
+    (1, 'test', 'dev', 'spdn', 'CDI', 'nike', 1);
     

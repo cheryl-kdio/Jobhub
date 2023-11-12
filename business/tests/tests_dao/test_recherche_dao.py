@@ -9,7 +9,7 @@ from business.services.utilisateur_service import Utilisateur
 
 
 class TestRechercheDao(TestCase):
-    def test_supprimer_recherche(self):
+    def test_01__supprimer_recherche(self):
         # GIVEN
         query_params = {
             "results_per_page": 20,
@@ -29,7 +29,7 @@ class TestRechercheDao(TestCase):
             result
         )  # Assurez-vous que la méthode retourne True ce qui signifie qu'elle s'est bien supprimé
 
-    def test_sauvegarder_recherche(self):
+    def test_02__sauvegarder_recherche(self):
         # GIVEN
         query_params = {
             "results_per_page": 20,
@@ -46,7 +46,7 @@ class TestRechercheDao(TestCase):
 
         self.assertTrue(result)  # Assurez-vous que la méthode retourne True
 
-    def test_deja_favoris(self):
+    def test_03_deja_favoris(self):
         # GIVEN
         query_params = {
             "results_per_page": 20,
@@ -64,7 +64,7 @@ class TestRechercheDao(TestCase):
 
         self.assertIsNotNone(result)  # Assurez-vous que la méthode retourne True
 
-    def test_voir_favoris(self):
+    def test_04_voir_favoris(self):
         # GIVEN
         pierre = Utilisateur().se_connecter("ck@gmail.com", "Patate12")
         dao = RechercheDao()
@@ -77,7 +77,7 @@ class TestRechercheDao(TestCase):
             len(result), 2
         )  # Assurez-vous que la méthode retourne une liste avec une recherche
 
-    def test_si_sauvegarde_en_plus(self):
+    def test_05_si_sauvegarde_en_plus(self):
         # GIVEN
         query_params = {
             "results_per_page": 20,
