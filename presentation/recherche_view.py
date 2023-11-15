@@ -17,8 +17,8 @@ from InquirerPy import prompt
 
 
 class RechercheView(AbstractView):
-    def __init__(self):
-        utilisateurdao = UtilisateurDao()
+    def __init__(self, user=None):
+        self.user = user
         self.results_per_page = 20
         self.__questions = [
             {
@@ -34,7 +34,6 @@ class RechercheView(AbstractView):
             "results_per_page": self.results_per_page,
             "what": answers["mot_cle"],
         }
-        ## Initialisation d'une recherche
         recherche = Recherche(query_params=query_params)
         r = RechercheService()
         print("Resultats obtenus :")
@@ -56,6 +55,27 @@ class RechercheView(AbstractView):
             return StartView()
         else:
             print(answers[0])
+            sauvegarder_recherche = prompt(
+                [
+                    {
+                        "type": "confirm",
+                        "name": "sauv",
+                        "message": "Sauvergarder la recherche ?",
+                        "default": False,
+                    }
+                ]
+            )
+            if sauvegarder_recherche["sauv"]:
+                if self.user:
+                    RechercheDao().sauvegarder_recherche(recherche, self.user)
+                    print("Search saved successfully.")
+                else:
+                    print(
+                        "Vous devez être connecté pour accéder à cette fonctionnalité"
+                    )
+                    from presentation.start_view import StartView
+
+                    return StartView()
             autre_recherche = prompt(
                 [
                     {
@@ -66,14 +86,18 @@ class RechercheView(AbstractView):
                     }
                 ]
             )
-
             if autre_recherche["continue"]:
-                return RechercheView()
+                return RechercheView(self.user)
 
             else:
-                from presentation.start_view import StartView
+                if not self.user:
+                    from presentation.start_view import StartView
 
-                return StartView()
+                    return StartView()
+                else:
+                    from representation.user_view import UserView
+
+                    return UserView(self.user)
 
     def display_info(self):
         print("Veuillez entrer les informations suivantes :")
