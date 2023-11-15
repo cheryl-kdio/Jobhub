@@ -40,4 +40,5 @@ class RechercheService:
 
         else:
             print("Votre recherche ne peut pas être effectuée.")
+            print(recherche.response.text)
             return None

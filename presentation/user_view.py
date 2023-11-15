@@ -4,15 +4,16 @@ from presentation.abstract_view import AbstractView
 from presentation.session import Session
 
 
-class StartView(AbstractView):
-    def __init__(self):
+class UserView(AbstractView):
+    def __init__(self, user):
+        self.user = user
         self.__questions = [
             {
                 "type": "list",
                 "name": "choix",
                 "message": f"Bonjour {Session().user_name}",
                 "choices": [
-                    "Se connecter",
+                    "Consulter son profil",
                     "Créer un compte",
                     "Lancer une recherche",
                     "Quitter",
@@ -31,15 +32,15 @@ class StartView(AbstractView):
         if reponse["choix"] == "Quitter":
             pass
 
-        elif reponse["choix"] == "Se connecter":
-            from presentation.connection_view import ConnexionView
+        elif reponse["choix"] == "Consulter son profil":
+            from presentation.profile_view import ProfileView
 
-            return ConnexionView()
+            return ProfileView()
 
         elif reponse["choix"] == "Lancer une recherche":
             from presentation.recherche_view import RechercheView
 
-            return RechercheView()
+            return RechercheView(self.user)
 
         elif reponse["choix"] == "Créer un compte":
             from presentation.creer_compte_view import CreateAccountView
