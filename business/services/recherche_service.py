@@ -10,11 +10,11 @@ from business.dao.recherche_dao import RechercheDao
 
 class RechercheService:
     def sauvegarder_recherche(
-        self, nom_recherche: str, recherche, utilisateur: CompteUtilisateur
+        self, recherche: Recherche, utilisateur: CompteUtilisateur
     ):
-        RechercheDao().sauvegarder_recherche(nom_recherche, recherche, utilisateur)
+        RechercheDao().sauvegarder_recherche(recherche, utilisateur)
 
-    def supprimer_recherche(self, recherche: Recherche):
+    def supprimer_recherche(self, recherche: Recherche, utilisateur: CompteUtilisateur):
         RechercheDao().supprimer_recherche(recherche, utilisateur)
 
     def obtenir_resultats(self, recherche: Recherche):
