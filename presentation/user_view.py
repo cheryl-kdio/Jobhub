@@ -35,7 +35,7 @@ class UserView(AbstractView):
         elif reponse["choix"] == "Consulter son profil":
             from presentation.profile_view import ProfileView
 
-            return ProfileView()
+            return ProfileView(self.user)
 
         elif reponse["choix"] == "Lancer une recherche":
             from presentation.recherche_view import RechercheView
