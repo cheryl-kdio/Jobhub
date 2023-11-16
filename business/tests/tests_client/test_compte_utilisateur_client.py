@@ -1,7 +1,6 @@
 import unittest
 from unittest.mock import patch
 from business.client.compte_utilisateur import CompteUtilisateur
-from business.services.compte_utilisateur_service import CompteUtilisateurService
 from business.services.utilisateur_service import Utilisateur
 
 
@@ -34,7 +33,7 @@ class TestCompteUtilisateur(unittest.TestCase):
     def test_deconnexion(self):
         self.compte_utilisateur._connexion = True
 
-        compte_utilisateur_service = CompteUtilisateurService()
+        compte_utilisateur_service = Utilisateur()
 
         # Utilisez patch pour simuler la sortie utilisateur
         with patch("builtins.print") as mock_print:
