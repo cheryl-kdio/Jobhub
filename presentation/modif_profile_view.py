@@ -41,11 +41,11 @@ class ModifProfileView(AbstractView):
 
         if answers[0] == "retour":
             from presentation.start_view import StartView
-        elif answers[0] == "Lieu":
+        else:
             question = {
                 "type": "input",
-                "name": "nouv_lieu",
-                "message": "Nouveau Lieu",
+                "name": "nouv",
+                "message": f"Nouveau {answers[0]}:",
             }
 
             from business.dao.profil_chercheur_emploi_dao import (
@@ -53,15 +53,7 @@ class ModifProfileView(AbstractView):
             )
 
             pced = ProfilChercheurEmploiDao()
-            self.pce.lieu = prompt(question)["nouv_lieu"]
-            for i in [
-                "lieu",
-                "domaine",
-                "salaire_minimum",
-                "salaire_maximum",
-                "type_contrat",
-            ]:
-                print(getattr(self.pce, i))
+            self.pce.lieu = prompt(question)["nouv"]
             pced.modifier_profil_chercheur_emploi(self.pce)
             print(self.pce)
             questions = [
@@ -86,168 +78,7 @@ class ModifProfileView(AbstractView):
             elif prompt(question) == "Retour":
                 from presentation.profile_view import ProfileView
 
-                return ProfileView(user)
-            else:
-                pass
-
-        elif answers[0] == "Domaine":
-            question = {
-                "type": "input",
-                "name": "nouv_domaine",
-                "message": "Nouveau Domaine",
-            }
-
-            from business.dao.profil_chercheur_emploi_dao import (
-                ProfilChercheurEmploiDao,
-            )
-
-            pced = ProfilChercheurEmploiDao()
-            pce.domain = prompt(question)
-            modifier_profil_chercheur_emploi(self, pce)
-            print(pce)
-            questions = [
-                {
-                    "type": "list",
-                    "name": "choix",
-                    "message": "",
-                    "choices": [
-                        "Modifier un autre paramètre",
-                        "Lancer une recherche",
-                        "Retour",
-                        "Quitter",
-                    ],
-                }
-            ]
-            if prompt(questions) == "Modifier un autre paramètre":
-                return ModifProfileView(pce, self.user)
-            elif prompt(question) == "Lancer une recherche":
-                from presentation.recherche_view import RechercheView
-
-                return RechercheView(self.user)
-            elif prompt(question) == "Retour":
-                from presentation.profile_view import ProfileView
-
-                return ProfileView(user)
-            else:
-                pass
-        elif answers[0] == "Salaire minimum":
-            question = {
-                "type": "input",
-                "name": "nouv_salaire_min",
-                "message": "Nouveau Salaire Minimum",
-            }
-
-            from business.dao.profil_chercheur_emploi_dao import (
-                ProfilChercheurEmploiDao,
-            )
-
-            pced = ProfilChercheurEmploiDao()
-            pce.salaire_minimum = prompt(question)
-            modifier_profil_chercheur_emploi(self, pce)
-            print(pce)
-            questions = [
-                {
-                    "type": "list",
-                    "name": "choix",
-                    "message": "",
-                    "choices": [
-                        "Modifier un autre paramètre",
-                        "Lancer une recherche",
-                        "Retour",
-                        "Quitter",
-                    ],
-                }
-            ]
-            if prompt(questions) == "Modifier un autre paramètre":
-                return ModifProfileView(pce, self.user)
-            elif prompt(question) == "Lancer une recherche":
-                from presentation.recherche_view import RechercheView
-
-                return RechercheView(self.user)
-            elif prompt(question) == "Retour":
-                from presentation.profile_view import ProfileView
-
-                return ProfileView(user)
-            else:
-                pass
-        elif answers[0] == "Salaire maximum":
-            question = {
-                "type": "input",
-                "name": "nouv_salaire_max",
-                "message": "Nouveau Salaire Maximum",
-            }
-
-            from business.dao.profil_chercheur_emploi_dao import (
-                ProfilChercheurEmploiDao,
-            )
-
-            pced = ProfilChercheurEmploiDao()
-            pce.salaire_maximum = prompt(question)
-            modifier_profil_chercheur_emploi(self, pce)
-            print(pce)
-            questions = [
-                {
-                    "type": "list",
-                    "name": "choix",
-                    "message": "",
-                    "choices": [
-                        "Modifier un autre paramètre",
-                        "Lancer une recherche",
-                        "Retour",
-                        "Quitter",
-                    ],
-                }
-            ]
-            if prompt(questions) == "Modifier un autre paramètre":
-                return ModifProfileView(pce, self.user)
-            elif prompt(question) == "Lancer une recherche":
-                from presentation.recherche_view import RechercheView
-
-                return RechercheView(self.user)
-            elif prompt(question) == "Retour":
-                from presentation.profile_view import ProfileView
-
-                return ProfileView(user)
-            else:
-                pass
-        elif answers[0] == "type_contrat":
-            question = {
-                "type": "input",
-                "name": "nouv_contrat",
-                "message": "Nouveau Type de Contrat",
-            }
-
-            from business.dao.profil_chercheur_emploi_dao import (
-                ProfilChercheurEmploiDao,
-            )
-
-            pced = ProfilChercheurEmploiDao()
-            pce.type_contrat = prompt(question)
-            modifier_profil_chercheur_emploi(self, pce)
-            print(pce)
-            questions = [
-                {
-                    "type": "list",
-                    "name": "choix",
-                    "message": "",
-                    "choices": [
-                        "Modifier un autre paramètre",
-                        "Lancer une recherche",
-                        "Retour",
-                        "Quitter",
-                    ],
-                }
-            ]
-            if prompt(questions) == "Modifier un autre paramètre":
-                return ModifProfileView(pce, self.user)
-            elif prompt(question) == "Lancer une recherche":
-                from presentation.recherche_view import RechercheView
-
-                return RechercheView(self.user)
-            elif prompt(question) == "Retour":
-                from presentation.profile_view import ProfileView
-
-                return ProfileView(user)
+                return ProfileView(self.user)
             else:
                 pass
 
