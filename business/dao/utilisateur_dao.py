@@ -174,33 +174,30 @@ class UtilisateurDao(metaclass=Singleton):
             print("Le mot de passe est invalide.")
             return False
 
-    def update(
-        self, id, nom=None, age=None, mail=None, tel=None, ville=None, code_postal=None
-    ):
+    def update_user_info(self, id, field, new_value):
         """
         Met à jour les informations de l'utilisateur dans la base de données.
 
         Parameters:
             id (int): L'ID de l'utilisateur à mettre à jour.
-            nom (str, optional): Le nouveau nom de l'utilisateur.
-            age (int, optional): Le nouvel âge de l'utilisateur.
-            mail (str, optional): La nouvelle adresse e-mail de l'utilisateur.
-            tel (int, optional): Le nouveau numéro de téléphone de l'utilisateur.
-            ville (str, optional): La nouvelle ville de résidence de l'utilisateur.
-            code_postal (int, optional): Le nouveau code postal de la ville de résidence de l'utilisateur.
+            field (str): Le champ à mettre à jour.
+            new_value: La nouvelle valeur du champ.
         """
+        allowed_fields = ["nom", "age", "mail", "tel", "ville", "code_postal"]
+
+        if field not in allowed_fields:
+            print("Champ non autorisé.")
+            return
+
         with DBConnection().connection as connection:
             with connection.cursor() as cur:
-                update = """UPDATE projet2A.compte_utilisateur
-                SET nom=COALESCE(%s,nom),
-                    age = COALESCE(%s,age), mail = COALESCE(%s,mail),
-                    tel = COALESCE(%s,tel), ville = COALESCE(%s,ville), code_postal=COALESCE(%s,code_postal)
-                WHERE id_compte_utilisateur = %s """
+                update_query = f"""
+                    UPDATE projet2A.compte_utilisateur
+                    SET {field} = %s
+                    WHERE id_compte_utilisateur = %s
+                """
 
-                cur.execute(
-                    update,
-                    (nom, age, mail, tel, ville, code_postal, id),
-                )
+                cur.execute(update_query, (new_value, id))
 
     def supprimer(self, user) -> bool:
         """Suppression d'un utilisateur dans la base de données

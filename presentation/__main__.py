@@ -21,6 +21,7 @@ if __name__ == "__main__":
         # Display the info of the view
         current_view.display_info()
         # ask user for a choice
+
         current_view = current_view.make_choice()
 
     with open("presentation/graphical_assets/bye.txt", "r", encoding="utf-8") as asset:

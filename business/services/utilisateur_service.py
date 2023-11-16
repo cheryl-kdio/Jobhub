@@ -96,14 +96,17 @@ class Utilisateur(UtilisateurDao):
 
 # Appeler la fonction se_connecter
 if __name__ == "__main__":
-    u1 = Utilisateur()
-    u3 = u1.create_account(
-        nom="tom",
-        mail="tom.t@gmail.com",
-        mdp="Tom0001",
-        mdp_verif="Tom0001",
-    )
+    # u1 = Utilisateur()
+    # u3 = u1.create_account(
+    #    nom="tom",
+    #    mail="tom.t@gmail.com",
+    #    mdp="Tom0001",
+    #    mdp_verif="Tom0001",
+    # )
     # CompteUtilisateurService().deconnexion(u3)
 
     # CompteUtilisateurService().modifierInfo(u3, mail="pascal@gmail")
+    # UtilisateurDao().afficher_db()
+    Utilisateur().update_user_info(2, "nom", "Benoit")
     UtilisateurDao().afficher_db()
+    # print(UtilisateurDao().recuperer_utilisateur(3))
