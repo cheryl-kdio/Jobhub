@@ -58,10 +58,11 @@ CREATE TABLE projet2A.offre (
 DROP TABLE IF EXISTS projet2A.profil_chercheur_emploi CASCADE ;
 CREATE TABLE projet2A.profil_chercheur_emploi (
     id_profil_chercheur_emploi SERIAL PRIMARY KEY,
+    nom TEXT,
+    mots_cles TEXT,
     lieu VARCHAR(255),
-    domaine VARCHAR(255),
     salaire_minimum INTEGER,
-    salaire_maximum INTEGER,  
+    distance INTEGER,
     type_contrat VARCHAR(255),            
     utilisateur_id INT,
     FOREIGN KEY (utilisateur_id) REFERENCES projet2A.compte_utilisateur(id_compte_utilisateur)

@@ -4,46 +4,55 @@ from business.client.recherche import Recherche
 from business.services.recherche_service import RechercheService
 from business.dao.recherche_dao import RechercheDao
 from business.services.utilisateur_service import Utilisateur
-from business.dao.profil_chercheur_emploi_dao import ProfilChercheurEmploiDao
+from business.dao.offre_dao import OffreDao
+from business.dao.candidature_dao import CandidatureDao
 from business.client.profil_chercheur_emploi import ProfilChercheurEmploi
+from business.dao.profil_chercheur_emploi_dao import ProfilChercheurEmploiDao
 from tabulate import tabulate
+
+#Utilisateur().create_account("cheryl","ck@gmail.com","Patate12","Patate12")
 
 print("Test de connexion")
 pers = Utilisateur().se_connecter("ck@gmail.com", "Patate12")
 
-print("Création profil chercheur emploi")
+#print("Test de modification info")
+#Utilisateur().update(pers.id,nom="Cheryl",age="20",tel=330626340800, ville="Paris", code_postal=35170)
+print("Test de création profil emploi")
+
+profil=ProfilChercheurEmploi(nom="test31",mots_cles="developpeur python",lieu="paris",distance=10)
 p=ProfilChercheurEmploiDao()
-if p.ajouter_profil_chercheur_emploi(ProfilChercheurEmploi(lieu="Paris",), pers):
-    print(True)
 
-
-if p.ajouter_profil_chercheur_emploi(ProfilChercheurEmploi(lieu="Paris", domaine="Informatique", salaire_minimum=300,type_contrat="contract"), pers):
-    print(True)
+print("ajout profil")
+if p.ajouter_profil_chercheur_emploi(profil,pers):
+    print("ajoutée")
 else:
-    print(False)
+    print("non rajoutée")
 
-if p.ajouter_profil_chercheur_emploi(ProfilChercheurEmploi(lieu="Paris", domaine="Informatique", salaire_minimum=300,type_contrat="contract"), pers):
-    print(True)
-else:
-    print(False)
 
-liste=p.voir_profil_chercheur_emploi(pers)
-print(liste)
+print("match critères")
 
-print("recherche")
-offres=p.match_criteres(liste[0])
+offres=p.match_criteres(profil)
+
 data = {
     "n":[i + 1 for i, offre in enumerate(offres)],
+    "Titre": [offre.titre for offre in offres],
     "Domaine": [offre.domaine for offre in offres],
     "Lieu": [offre.lieu for offre in offres],
     "Type de Contrat": [offre.type_contrat for offre in offres],
+    "Entreprise " : [offre.entreprise for offre in offres]
 }
-
 print(tabulate(data, headers="keys", tablefmt="pretty"))
+print("#####\n Voir profil \n #####")
+print(profil.id_profil_chercheur_emploi)
 
-for i in range(len(liste)):
-    p.supprimer_profil_chercheur_emploi(liste[i])
+offres = p.voir_profil_chercheur_emploi(pers)
 
-liste=p.voir_profil_chercheur_emploi(pers)
-print(liste)
-
+data = {
+    "n":[offre.id_profil_chercheur_emploi for offre in offres],
+    "Titre": [offre.nom for offre in offres],
+    "Lieu": [offre.lieu for offre in offres],
+    "Type de Contrat": [offre.type_contrat for offre in offres],
+}
+print(tabulate(data, headers="keys", tablefmt="pretty"))
+### Changer la maj et vérifier la suppression
+#p.maj(offres[0])

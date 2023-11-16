@@ -2,47 +2,42 @@ from business.dao.db_connection import DBConnection
 from utils.singleton import Singleton
 from business.client.profil_chercheur_emploi import ProfilChercheurEmploi
 from business.client.recherche import Recherche
+from business.services.recherche_service import RechercheService
+
 
 
 class ProfilChercheurEmploiDao:
-    def modifier_profil_chercheur_emploi(self, profil_chercheur_emploi):
+    def maj(self,profil_chercheur_emploi):
         with DBConnection().connection as connection:
-            with connection.cursor() as cur:
-                update = """
-                UPDATE projet2A.profil_chercheur_emploi
-                SET lieu=COALESCE(%s,lieu), domaine=COALESCE(%s,domaine), salaire_minimum=COALESCE(%s,salaire_minimum),
-                    type_contrat = COALESCE(%s,type_contrat), salaire_maximum=COALESCE(%s,salaire_maximum)
-                WHERE id_profil_chercheur_emploi = %(id_profil_chercheur_emploi)s AND utilisateur_id = %(utilisateur_id)s 
-                """
+                with connection.cursor() as cur:
+                    update_query = """UPDATE projet2A.profil_chercheur_emploi
+                    SET mots_cles=(%s,mots_cles)
+                        lieu = COALESCE(%s, lieu), 
+                        salaire_minimum = COALESCE(%s, salaire_minimum),
+                        distance = COALESCE(%s, distance), 
+                        type_contrat = COALESCE(%s, type_contrat), 
+                    WHERE id_compte_utilisateur = %s """
 
-                cur.execute(
-                    update,
-                    (
-                        profil_chercheur_emploi.lieu,
-                        profil_chercheur_emploi.domaine,
-                        profil_chercheur_emploi.salaire_minimum,
-                        profil_chercheur_emploi.type_contrat,
-                        profil_chercheur_emploi.salaire_maximum,
-                        profil_chercheur_emploi.id_profil_chercheur_emploi,
-                        profil_chercheur_emploi.utilisateur_id,
-                    ),
-                )
+                    cur.execute(
+                        update_query,
+                        (profil_chercheur_emploi.mots_cles, profil_chercheur_emploi.lieu, profil_chercheur_emploi.salaire_minimum, profil_chercheur_emploi.distance, profil_chercheur_emploi.type_contrat, profil_chercheur_emploi.id_profil_chercheur_emploi),
+                    )
+                    
+                    if cur.rowcount > 0:
+                        return True
+                    else:
+                        return False
 
-    def deja_enregistré(self, profil_chercheur_emploi, utilisateur):
+
+    def deja_cree(self, profil_chercheur_emploi, utilisateur):
         with DBConnection().connection as connection:
             with connection.cursor() as cursor:
                 query = (
                     "SELECT * FROM projet2A.profil_chercheur_emploi "
-                    "WHERE lieu =%(lieu)s AND domaine=%(domaine)s AND salaire_minimum=%(salaire_minimum)s "
-                    "AND salaire_maximum=%(salaire_maximum)s AND type_contrat=%(type_contrat)s  AND"
-                    " utilisateur_id= %(utilisateur_id)s"
+                    "WHERE nom =%(nom)s AND utilisateur_id= %(utilisateur_id)s"
                 )
                 params = {
-                    "lieu": profil_chercheur_emploi.lieu,
-                    "domaine": profil_chercheur_emploi.domaine,
-                    "salaire_minimum": profil_chercheur_emploi.salaire_minimum,
-                    "salaire_maximum": profil_chercheur_emploi.salaire_maximum,
-                    "type_contrat": profil_chercheur_emploi.type_contrat,
+                    "nom": profil_chercheur_emploi.nom,
                     "utilisateur_id": utilisateur.id,
                 }
                 cursor.execute(query, params)
@@ -53,30 +48,10 @@ class ProfilChercheurEmploiDao:
             return None
 
     def match_criteres(self, profil_chercheur_emploi):
-        query_params = {
-            "where": profil_chercheur_emploi.lieu,
-            "category": profil_chercheur_emploi.domaine,
-            "distance": 10,
-            "salary_min": profil_chercheur_emploi.salaire_minimum,
-            "salary_max": profil_chercheur_emploi.salaire_maximum,
-            "type_contrat": profil_chercheur_emploi.type_contrat,
-        }
-        recherche = Recherche(query_params)
-        alertes = []
-        if recherche.response.status_code == 200:
-            jobs = recherche.response.json()["results"]
-            for job in jobs:
-                alerte = ProfilChercheurEmploi(
-                    lieu=job.get("location", {}).get("display_name", ""),
-                    domaine=job.get("category", {}).get("label", ""),
-                    salaire_minimum=job.get("salary_min", ""),
-                    salaire_maximum=job.get("salary_max", ""),
-                    type_contrat=job.get("contract_type", ""),
-                )
-                if alerte:
-                    alertes.append(alerte)
-
-            return alertes
+        recherche_init = Recherche(profil_chercheur_emploi.query_params)
+        r = RechercheService()
+        offres = r.obtenir_resultats(recherche_init)
+        return offres
 
     def ajouter_profil_chercheur_emploi(self, profil_chercheur_emploi, utilisateur):
         """
@@ -84,7 +59,6 @@ class ProfilChercheurEmploiDao:
 
         Parameters
         ----------
-
         profil_chercheur_emploi : profil_chercheur_emploi
             Offre à sauvegarder
         utilisateur : CompteUtilisateur
@@ -92,36 +66,36 @@ class ProfilChercheurEmploiDao:
 
         Returns
         -------
-            True si l'offre a bien été sauvegardée
+            ID du profil sauvegardé, ou None si le profil existe déjà
         """
-        created = False
 
-        deja_favoris = self.deja_enregistré(profil_chercheur_emploi, utilisateur)
-        if deja_favoris is not None:
-            return created
+        # Check if the profile already exists
+        created = False
+        deja_cree_id = self.deja_cree(profil_chercheur_emploi, utilisateur)
+        if deja_cree_id is not None:
+            return created  # Profile already exists
 
         with DBConnection().connection as connection:
             with connection.cursor() as cursor:
-                # Sauvegarder l'offre d'un utilisateur
+                # Sauvegarder le nouveau profil d'un utilisateur
                 cursor.execute(
-                    "INSERT INTO projet2A.profil_chercheur_emploi (lieu, domaine, salaire_minimum, salaire_maximum,type_contrat,utilisateur_id) "
-                    "VALUES (%(lieu)s, %(domaine)s, %(salaire_minimum)s, %(salaire_maximum)s,%(type_contrat)s, %(utilisateur_id)s)"
+                    "INSERT INTO projet2A.profil_chercheur_emploi (nom, lieu, mots_cles,salaire_minimum, type_contrat, utilisateur_id) "
+                    "VALUES (%(nom)s, %(lieu)s, %(mots_cles)s,%(salaire_minimum)s, %(type_contrat)s, %(utilisateur_id)s) "
                     "RETURNING id_profil_chercheur_emploi",
                     {
+                        "nom": profil_chercheur_emploi.nom,
+                        "mots_cles" :profil_chercheur_emploi.mots_cles,
                         "lieu": profil_chercheur_emploi.lieu,
-                        "domaine": profil_chercheur_emploi.domaine,
                         "salaire_minimum": profil_chercheur_emploi.salaire_minimum,
-                        "salaire_maximum": profil_chercheur_emploi.salaire_maximum,
                         "type_contrat": profil_chercheur_emploi.type_contrat,
                         "utilisateur_id": utilisateur.id,
                     },
                 )
                 res = cursor.fetchone()
+
         if res:
-            profil_chercheur_emploi.id_profil_chercheur_emploi = res[
-                "id_profil_chercheur_emploi"
-            ]
-            created = True
+            profil_chercheur_emploi.id_profil_chercheur_emploi = res["id_profil_chercheur_emploi"]
+            created=True
         return created
 
     def supprimer_profil_chercheur_emploi(self, profil_chercheur_emploi):
@@ -166,10 +140,11 @@ class ProfilChercheurEmploiDao:
         profils = [
             ProfilChercheurEmploi(
                 id_profil_chercheur_emploi=row["id_profil_chercheur_emploi"],
+                nom=row["nom"],
+                mots_cles=row["mots_cles"],
                 lieu=row["lieu"],
-                domaine=row["domaine"],
+                distance=row["distance"],
                 salaire_minimum=row["salaire_minimum"],
-                salaire_maximum=row["salaire_maximum"],
                 type_contrat=row["type_contrat"],
             )
             for row in res
