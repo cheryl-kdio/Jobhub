@@ -47,17 +47,13 @@ class CreateAccountView(AbstractView):
                 "validate": lambda mdp_check: utilisateurdao.check_mdp_valide(mdp_check),
                 "invalid_message": "Le mot de passe ne remplit pas les conditions.",
             },
-            {
-                "type": "password",
-                "name": "mdp_confirmation",
-                "message": "Confirmez votre mot de passe : ",
-            },
+
         ]
 
     def make_choice(self):
         while True:
             answers = prompt(self.__questions)
-            if answers["mdp"] == answers["mdp_confirmation"]:
+            if answers["mdp"] == answers["mdp_check"]:
                 break
             else:
                 print("Les mots de passe ne correspondent pas. Veuillez réessayer.")
