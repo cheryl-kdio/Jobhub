@@ -8,39 +8,15 @@ from business.services.recherche_service import RechercheService
 from business.dao.utilisateur_dao import UtilisateurDao
 
 
-class Candidature_Dao(metaclass=Singleton):
-    def supprimer_candidature(self, offre) -> bool:
-        """
-        Suppression d'une offre favoris d'un utilisateur dans la base de données
+class CandidatureDao(metaclass=Singleton):
 
-        Parameters
-        ----------
-        offre : Offre
-            Offre sauvegardée par un utilisateur à supprimer de la base de données
-
-        Returns
-        -------
-            True si l'offre a bien été supprimé
-        """
-        with DBConnection().connection as connection:
-            with connection.cursor() as cursor:
-                # Supprimer l'offre sauvegardé d'un utilisateur
-                cursor.execute(
-                    "DELETE FROM projet2A.candidatures        "
-                    " WHERE id_offre = %(id_offre)s      ",
-                    {"id_offre": offre.id_offre},
-                )
-                res = cursor.rowcount
-
-        return res > 0
-
-    def deja_favoris(self, offre, utilisateur):
+    def deja_candidat(self, offre, utilisateur):
         with DBConnection().connection as connection:
             with connection.cursor() as cursor:
                 query = (
-                    "SELECT * FROM projet2A.offre o "
+                    "SELECT * FROM projet2A.candidatures c "
                     "WHERE id_offre =%(id_offre)s AND "
-                    " o.utilisateur_id= %(utilisateur_id)s"
+                    " c.utilisateur_id= %(utilisateur_id)s"
                 )
                 params = {
                     "id_offre": offre.id_offre,
@@ -53,7 +29,7 @@ class Candidature_Dao(metaclass=Singleton):
         else:
             return None
 
-    def ajouter_candidature(self, offre, utilisateur):
+    def candidater(self, offre, utilisateur):
         """
         Sauvegarde l'offre dans la base de données
 
@@ -61,26 +37,26 @@ class Candidature_Dao(metaclass=Singleton):
         ----------
 
         offre : Offre
-            Offre à sauvegarder
+            Offre à candidater
         utilisateur : CompteUtilisateur
-            Utilisateur qui sauvegarde l'offre
+            Utilisateur qui candidate à l'offre
 
         Returns
         -------
-            True si l'offre a bien été sauvegardée
+            True si la candidature a bien été effectuée
         """
         created = False
 
-        deja_favoris = self.deja_favoris(offre, utilisateur)
-        if deja_favoris is not None:
+        deja_candidat = self.deja_candidat(offre, utilisateur)
+        if deja_candidat is not None:
             return created
 
         with DBConnection().connection as connection:
             with connection.cursor() as cursor:
                 # Sauvegarder l'offre d'un utilisateur
                 cursor.execute(
-                    "INSERT INTO projet2A.offre(id_offre,titre, domaine, lieu, type_contrat, entreprise, utilisateur_id) "
-                    " VALUES (%(id_offre)s,%(titre)s, %(domaine)s, %(lieu)s, %(type_contrat)s, %(entreprise)s, %(utilisateur_id)s)  "
+                    "INSERT INTO projet2A.candidatures(id_offre,titre, domaine, lieu, type_contrat, lien_offre, salaire_minimum, entreprise,description, utilisateur_id) "
+                    " VALUES (%(id_offre)s,%(titre)s, %(domaine)s, %(lieu)s, %(type_contrat)s, %(lien_offre)s, %(salaire_minimum)s, %(entreprise)s ,%(description)s, %(utilisateur_id)s)  "
                     "RETURNING id_offre",
                     {
                         "id_offre": offre.id_offre,
@@ -88,6 +64,11 @@ class Candidature_Dao(metaclass=Singleton):
                         "domaine": offre.domaine,
                         "lieu": offre.lieu,
                         "type_contrat": offre.type_contrat,
+                        "lien_offre": offre.lien_offre,
+                        "salaire_minimum": offre.salaire_minimum
+                        if offre.salaire_minimum
+                        else None,
+                        "description": offre.description,
                         "entreprise": offre.entreprise,
                         "utilisateur_id": utilisateur.id,
                     },
@@ -97,14 +78,14 @@ class Candidature_Dao(metaclass=Singleton):
             created = True
         return created
 
-    def voir_candidature(self, utilisateur):
+    def voir_candidatures(self, utilisateur):
         """
-         Voir les offres favoris de la base de données
+         Voir les candidatures d'un utilisateur
 
          Parameters
          ----------
          utilisateur : CompteUtilisateur
-               Utilisateur qui sauvegarde l'offre
+               Utilisateur qui a candidaté l'offre
         Returns
          -------
              True si l'offre a bien été sauvegardée
@@ -115,7 +96,7 @@ class Candidature_Dao(metaclass=Singleton):
                 # Sauvegarder l'offre d'un utilisateur
                 cursor.execute(
                     "SELECT * "
-                    "FROM projet2A.offre "
+                    "FROM projet2A.candidatures "
                     "WHERE utilisateur_id=%(id_utilisateur)s",
                     {"id_utilisateur": utilisateur.id},
                 )
@@ -128,7 +109,10 @@ class Candidature_Dao(metaclass=Singleton):
                 domaine=row["domaine"],
                 lieu=row["lieu"],
                 type_contrat=row["type_contrat"],
+                lien_offre=row["lien_offre"],
+                salaire_minimum=row["salaire_minimum"],
                 entreprise=row["entreprise"],
+                description=row["description"],
             )
             for row in res
         ]

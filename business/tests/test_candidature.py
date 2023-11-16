@@ -37,19 +37,19 @@ data = {
     "Entreprise " : [offre.entreprise for offre in offres]
 }
 print(tabulate(data, headers="keys", tablefmt="pretty"))
-print("#####\n Mettre en favoris \n #####")
+print("#####\n Candidater \n #####")
 
-o = OffreDao()
+o = CandidatureDao()
 
-num = int(input("Selectionner une offre à mettre en favoris [1-20]: "))
+num = int(input("Selectionner une offre à laquelle candidater [1-20]: "))
 
 print("ajout favoris")
-if o.ajouter_offre(offres[num-1], pers):
-    print("offre ajoutée en favoris")
+if o.candidater(offres[num-1], pers):
+    print("candidature envoyée")
 else:
-    print("offre non rajoutée")
+    print("dejà candidat")
 
-offres = o.voir_favoris(pers)
+offres = o.voir_candidatures(pers)
 
 data = {
     "n":[offre.id_offre for offre in offres],
