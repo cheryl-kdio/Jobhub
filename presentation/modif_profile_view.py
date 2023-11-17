@@ -81,19 +81,22 @@ class ModifProfileView(AbstractView):
                     "message": "",
                     "choices": [
                         "Modifier un autre paramètre",
-                        "Lancer une recherche",
+                        "Se déconnecter",
                         "Retour",
                         "Quitter",
                     ],
                 }
             ]
-            if prompt(questions) == "Modifier un autre paramètre":
+            answ = prompt(questions)
+            if answ["choix"] == "Modifier un autre paramètre":
                 return ModifProfileView(self.pce, self.user)
-            elif prompt(question) == "Lancer une recherche":
-                from presentation.recherche_view import RechercheView
 
-                return RechercheView(self.user)
-            elif prompt(question) == "Retour":
+            elif answ["choix"] == "Se déconnecter":
+                self.user._connexion = False
+                from presentation.start_view import StartView
+
+                return StartView()
+            elif answ["choix"] == "Retour":
                 from presentation.profile_view import ProfileView
 
                 return ProfileView(self.user)

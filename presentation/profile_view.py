@@ -88,7 +88,6 @@ class ProfileView(AbstractView):
             ]
 
             profil_chercheur_emploi = prompt(questions)
-            print(profil_chercheur_emploi)
 
         input("Appuyez sur Entrée pour continuer")
         with open(
@@ -109,12 +108,13 @@ class ProfileView(AbstractView):
 
             return ModifProfileView(user=self.user, pce=profil_chercheur_emploi)
 
-        elif reponse["choix"] == "Lancer une recherche":
-            from presentation.recherche_view import RechercheView
+        elif reponse["choix"] == "Retour":
+            from presentation.user_view import UserView
 
-            return RechercheView(self.user)
+            return UserView(self.user)
 
-        elif reponse["choix"] == "Créer un compte":
-            from presentation.creer_compte_view import CreateAccountView
+        elif reponse["choix"] == "Se déconnecter":
+            self.user._connexion = False
+            from presentation.start_view import StartView
 
-            return CreateAccountView()
+            return StartView()

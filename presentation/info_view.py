@@ -26,9 +26,12 @@ class InfoView(AbstractView):
 
         utilisateurdao = UtilisateurDao
         utils = utilisateurdao.recuperer_utilisateur(self, self.user.id)
+        excluded_fields = ["id_compte_utilisateur", "mdp", "sel"]
+
         for record in utils:
             for i, (key, value) in enumerate(record.items()):
-                print(f"{i + 1}: {key}: {value}")
+                if key not in excluded_fields:
+                    print(f"{i + 1}: {key}: {value}")
 
         input("Appuyez sur Entrée pour continuer")
         with open(
@@ -46,12 +49,13 @@ class InfoView(AbstractView):
 
             return ModifInfoView(self.user)
 
-        elif reponse["choix"] == "Lancer une recherche":
-            from presentation.recherche_view import RechercheView
+        elif reponse["choix"] == "Retour":
+            from presentation.user_view import UserView
 
-            return RechercheView(self.user)
+            return UserView(self.user)
 
-        elif reponse["choix"] == "Créer un compte":
-            from presentation.creer_compte_view import CreateAccountView
+        elif reponse["choix"] == "Se déconnecter":
+            self.user._connexion = False
+            from presentation.start_view import StartView
 
-            return CreateAccountView()
+            return StartView()
