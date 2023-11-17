@@ -5,28 +5,28 @@ from business.client.recherche import Recherche
 from business.services.recherche_service import RechercheService
 
 
-
 class ProfilChercheurEmploiDao:
-    def maj(self,profil_chercheur_emploi):
+    def maj(self, id, field, new_value):
+        allowed_fields = ["nom", "mots_cles", "lieu", "distance", "type_contrat"]
+
+        if field not in allowed_fields:
+            print("Champ non autorisé.")
+            return
+
         with DBConnection().connection as connection:
-                with connection.cursor() as cur:
-                    update_query = """UPDATE projet2A.profil_chercheur_emploi
-                    SET mots_cles=(%s,mots_cles)
-                        lieu = COALESCE(%s, lieu), 
-                        distance = COALESCE(%s, distance), 
-                        type_contrat = COALESCE(%s, type_contrat), 
-                    WHERE id_compte_utilisateur = %s """
+            with connection.cursor() as cur:
+                update_query = f"""
+                    UPDATE projet2A.profil_chercheur_emploi
+                    SET {field} = %s
+                    WHERE id_profil_chercheur_emploi = %s
+                """
 
-                    cur.execute(
-                        update_query,
-                        (mots_cles, lieu, profil_chercheur_emploi.distance, profil_chercheur_emploi.type_contrat, profil_chercheur_emploi.id_profil_chercheur_emploi),
-                    )
-                    
-                    if cur.rowcount > 0:
-                        return True
-                    else:
-                        return False
+                cur.execute(update_query, (new_value, id))
 
+        if cur.rowcount > 0:
+            return True
+        else:
+            return False
 
     def deja_cree(self, profil_chercheur_emploi, utilisateur):
         with DBConnection().connection as connection:
@@ -83,7 +83,7 @@ class ProfilChercheurEmploiDao:
                     "RETURNING id_profil_chercheur_emploi",
                     {
                         "nom": profil_chercheur_emploi.nom,
-                        "mots_cles" :profil_chercheur_emploi.mots_cles,
+                        "mots_cles": profil_chercheur_emploi.mots_cles,
                         "lieu": profil_chercheur_emploi.lieu,
                         "type_contrat": profil_chercheur_emploi.type_contrat,
                         "utilisateur_id": utilisateur.id,
@@ -92,8 +92,10 @@ class ProfilChercheurEmploiDao:
                 res = cursor.fetchone()
 
         if res:
-            profil_chercheur_emploi.id_profil_chercheur_emploi = res["id_profil_chercheur_emploi"]
-            created=True
+            profil_chercheur_emploi.id_profil_chercheur_emploi = res[
+                "id_profil_chercheur_emploi"
+            ]
+            created = True
         return created
 
     def supprimer_profil_chercheur_emploi(self, profil_chercheur_emploi):
