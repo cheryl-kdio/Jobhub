@@ -60,7 +60,7 @@ class CreateAccountView(AbstractView):
 
         u = Utilisateur()
         u.create_account(
-            answers["nom"], answers["mail"], answers["mdp"], answers["mdp_confirmation"]
+            answers["nom"], answers["mail"], answers["mdp"], answers["mdp_check"]
         )
         print("Compte créé avec succès !")
         Session().user_name = answers["nom"]

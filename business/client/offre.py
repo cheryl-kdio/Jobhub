@@ -22,22 +22,30 @@ class Offre:
         self.description = description
 
     def __str__(self):
+        max_label_length = max(len("Domaine"), len("Lieu"), len("Type de contrat"),
+                            len("Salaire minimum"), len("Entreprise"), len("Description"), len("Lien"))
+
+        def format_line(label, value):
+            return f"{label:<{max_label_length}}: {value}"
+
+        border = "- - - - - - - - - - - - - - - - - - - -\n"  # Remplacez ceci par l'une des options ci-dessus
+
         return (
-            f"Id_offre : {self.id_offre}\n"
-            "+-----------------------------------+\n"
-            f"Offre: {self.titre}\n"
-            "+-----------------------------------+\n"
-            f"Domaine: {self.domaine}\n"
-            "+-----------------------------------+\n"
-            f"Lieu: {self.lieu}\n"
-            "+-----------------------------------+\n"
-            f"Type de contrat: {self.type_contrat}\n"
-            "+-----------------------------------+\n"
-            f"Salaire minimum: {self.salaire_minimum}\n"
-            "+-----------------------------------+\n"
-            f"Entreprise : {self.entreprise}\n"
-            "+-----------------------------------+\n"
-            f"Description : {self.description}\n"
-            "+-----------------------------------+\n"
-            f"Lien: {self.lien_offre}"
+            f"{border}"
+            f"{format_line('Offre', self.titre)}\n"
+            f"{border}"
+            f"{format_line('Domaine', self.domaine)}\n"
+            f"{border}"
+            f"{format_line('Lieu', self.lieu)}\n"
+            f"{border}"
+            f"{format_line('Type de contrat', self.type_contrat)}\n"
+            f"{border}"
+            f"{format_line('Salaire minimum', self.salaire_minimum)}\n"
+            f"{border}"
+            f"{format_line('Entreprise', self.entreprise)}\n"
+            f"{border}"
+            f"{format_line('Description', self.description)}\n"
+            f"{border}"
+            f"{format_line('Lien', self.lien_offre)}"
         )
+

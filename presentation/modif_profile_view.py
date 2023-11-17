@@ -23,12 +23,11 @@ class ModifProfileView(AbstractView):
         self.results_per_page = 20
 
     def make_choice(self):
-        print(self.pce.domaine)
         choix_profil = [
-            "Lieu",
-            "Domaine",
-            "Salaire minimum",
-            "Salaire maximum",
+            "nom",
+            "mots_cles",
+            "lieu",
+            "distance",
             "type_contrat",
         ]
 
@@ -41,21 +40,40 @@ class ModifProfileView(AbstractView):
 
         if answers[0] == "retour":
             from presentation.start_view import StartView
+
+            return StartView()
+
         else:
             question = {
                 "type": "input",
                 "name": "nouv",
                 "message": f"Nouveau {answers[0]}:",
             }
-
             from business.dao.profil_chercheur_emploi_dao import (
                 ProfilChercheurEmploiDao,
             )
 
             pced = ProfilChercheurEmploiDao()
-            self.pce.lieu = prompt(question)["nouv"]
-            pced.modifier_profil_chercheur_emploi(self.pce)
-            print(self.pce)
+            pced.maj(
+                int(self.pce["profil"].split("ID: ")[1].split(",")[0]),
+                answers[0],
+                prompt(question)["nouv"],
+            )
+
+            utils = pced.voir_profil_chercheur_emploi(self.user)
+
+            for i, profil in enumerate(utils, 1):
+                print(f"Profil {i}:")
+                print(f"ID: {profil.id_profil_chercheur_emploi}")
+                print(f"Nom: {profil.nom}")
+                print(f"Mots-clés: {profil.mots_cles}")
+                print(f"Lieu: {profil.lieu}")
+                print(f"Distance: {profil.distance}")
+                print(f"Type de contrat: {profil.type_contrat}")
+                print("\n")
+
+            input("Appuyez sur entrée pour continuer")
+
             questions = [
                 {
                     "type": "list",
