@@ -19,7 +19,7 @@ pers = Utilisateur().se_connecter("ck@gmail.com", "Patate12")
 #Utilisateur().update(pers.id,nom="Cheryl",age="20",tel=330626340800, ville="Paris", code_postal=35170)
 print("Test de création profil emploi")
 
-profil=ProfilChercheurEmploi(nom="test31",mots_cles="developpeur python",lieu="paris",distance=10)
+profil=ProfilChercheurEmploi(nom="test31",mots_cles="developpeur python",lieu="paris",distance=10,type_contrat="CDD")
 p=ProfilChercheurEmploiDao()
 
 print("ajout profil")
