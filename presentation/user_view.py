@@ -40,14 +40,14 @@ class UserView(AbstractView):
             return ProfileView(self.user)
 
         elif reponse["choix"] == "Offres sauvegardés":
-            from presentation.profile_view import ProfileView
+            from presentation.afficher_offre_favoris import OffreView
 
-            return ProfileView(self.user)
+            return OffreView(self.user)
 
         elif reponse["choix"] == "Recherches sauvegardés":
-            from presentation.profile_view import ProfileView
+            from presentation.afficher_recherche_favoris import RechercheView
 
-            return ProfileView(self.user)
+            return RechercheView(self.user)
 
         elif reponse["choix"] == "Lancer une recherche":
             from presentation.recherche_view import RechercheView

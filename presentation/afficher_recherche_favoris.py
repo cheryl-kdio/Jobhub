@@ -4,7 +4,7 @@ from presentation.abstract_view import AbstractView
 from presentation.session import Session
 
 
-class Offre_favoris_View(AbstractView):
+class RechercheView(AbstractView):
     def __init__(self, user):
         self.user = user
         self.__questions = [
@@ -29,12 +29,21 @@ class Offre_favoris_View(AbstractView):
         if pce == []:
             print("Vous n'avez pas enregistré de recherche")
             print("Remplissons le ! :")
+            # l'emmener faire une recherche
 
         else:
-            recherche = pce[0]
-        for i in ["query_params"]:
-            print(getattr(recherche, i))
+            recherche = pce
 
+        what = []
+        where = []
+
+        for item in recherche:
+            what = item.get("what", "N/A")
+            where = item.get("where", "N/A")
+            print("Intitulé:", item.get("what", "N/A"))
+            print("Lieu", item.get("where","N/A"))
+            print("===") 
+        
         input("Appuyez sur Entrée pour continuer")
         with open(
             "presentation/graphical_assets/banner.txt", "r", encoding="utf-8"
@@ -63,3 +72,20 @@ class Offre_favoris_View(AbstractView):
             from presentation.creer_compte_view import CreateAccountView
 
             return CreateAccountView()
+        
+        elif:
+            print(answers[0])
+            utiliser_recherche = prompt(
+                [
+                    {
+                        "type": "confirm",
+                        "name": "use",
+                        "message": "Utiliser la recherche ?",
+                        "default": False,
+                    }
+                ]
+            )
+            if utiliser_recherche["use"]:
+                if self.user: ## Quoi ajouter pour relancer la recherche initiale ? 
+
+                    return StartView()
