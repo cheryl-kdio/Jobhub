@@ -13,8 +13,7 @@ from business.dao.profil_chercheur_emploi_dao import ProfilChercheurEmploiDao
 from business.client.profil_chercheur_emploi import ProfilChercheurEmploi
 from business.dao.recherche_dao import RechercheDao
 
-from InquirerPy import prompt
-
+from business.dao.candidature_dao import CandidatureDao
 
 class RechercheView(AbstractView):
     def __init__(self, user=None):
@@ -55,6 +54,28 @@ class RechercheView(AbstractView):
             return StartView()
         else:
             print(answers[0])
+            candidater = prompt(
+                [
+                    {
+                        "type": "confirm",
+                        "name": "oui",
+                        "message": "Envoyer sa candidature",
+                        "default": False,
+                    }
+                ]
+            )
+            if candidater["oui"]:
+                if self.user:
+                    CandidatureDao().candidater(offre=answers[0],utilisateur=self.user)
+                    print("Candidature effectuée")
+                else:
+                    print(
+                        "Vous devez être connecté pour accéder à cette fonctionnalité"
+                    )
+                    from presentation.start_view import StartView
+                    return StartView()
+
+
             sauvegarder_recherche = prompt(
                 [
                     {

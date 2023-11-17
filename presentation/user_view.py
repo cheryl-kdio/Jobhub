@@ -15,6 +15,7 @@ class UserView(AbstractView):
                 "choices": [
                     "Consulter son profil",
                     "Vérifier ses informations personnelles",
+                    "Suivre ses candidatures",
                     "Lancer une recherche",
                     "Quitter",
                 ],
@@ -46,3 +47,7 @@ class UserView(AbstractView):
             from presentation.info_view import InfoView
 
             return InfoView(self.user)
+        
+        elif reponse["choix"]== "Suivre ses candidatures":
+            from presentation.suivi_candidature_view import CandidatureView
+            return CandidatureView(self.user)
