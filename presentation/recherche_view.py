@@ -95,7 +95,7 @@ class RechercheView(AbstractView):
 
                     return StartView()
                 else:
-                    from representation.user_view import UserView
+                    from presentation.user_view import UserView
 
                     return UserView(self.user)
 

@@ -13,7 +13,7 @@ class ProfileView(AbstractView):
                 "name": "choix",
                 "message": f"Bonjour {Session().user_name}",
                 "choices": [
-                    "Modifier son profil chercheur d'emploi",
+                    "Modifier ses alertes",
                     "Retour",
                     "Se déconnecter",
                     "Quitter",
@@ -27,7 +27,7 @@ class ProfileView(AbstractView):
         pced = ProfilChercheurEmploiDao()
         pce = pced.voir_profil_chercheur_emploi(self.user)
         if pce == []:
-            print("Votre Profil Chercheur d'Emploi est vide")
+            print("Vous n'avez pas d'alerte")
             print("Remplissons le ! :")
             questions = [
                 {
@@ -104,7 +104,7 @@ class ProfileView(AbstractView):
         if reponse["choix"] == "Quitter":
             pass
 
-        elif reponse["choix"] == "Modifier son profil chercheur d'emploi":
+        elif reponse["choix"] == "Modifier ses alertes":
             from presentation.modif_profile_view import ModifProfileView
 
             return ModifProfileView(user=self.user, pce=profil_chercheur_emploi)
