@@ -13,7 +13,7 @@ class ProfileView(AbstractView):
                 "name": "choix",
                 "message": f"Bonjour {Session().user_name}",
                 "choices": [
-                    "Modifier son profil chercheur d'emploi",
+                    "Modifier ses alertes",
                     "Retour",
                     "Se déconnecter",
                     "Quitter",
@@ -27,9 +27,19 @@ class ProfileView(AbstractView):
         pced = ProfilChercheurEmploiDao()
         pce = pced.voir_profil_chercheur_emploi(self.user)
         if pce == []:
-            print("Votre Profil Chercheur d'Emploi est vide")
+            print("Vous n'avez pas d'alerte")
             print("Remplissons le ! :")
             questions = [
+                {
+                    "type": "input",
+                    "name": "nom",
+                    "message": "Nom de l'alerte",
+                },
+                {
+                    "type": "input",
+                    "name": "mots_cles",
+                    "message": "Mots clés : ",
+                },
                 {
                     "type": "input",
                     "name": "lieu",
@@ -37,18 +47,8 @@ class ProfileView(AbstractView):
                 },
                 {
                     "type": "input",
-                    "name": "domaine",
-                    "message": "Domaine : ",
-                },
-                {
-                    "type": "input",
-                    "name": "salaire_min",
-                    "message": "Salaire minimum",
-                },
-                {
-                    "type": "input",
-                    "name": "salaire_max",
-                    "message": "Salaire maximum",
+                    "name": "distance",
+                    "message": "Distance autour de la ville",
                 },
                 {
                     "type": "input",
@@ -61,10 +61,10 @@ class ProfileView(AbstractView):
             from business.client.profil_chercheur_emploi import ProfilChercheurEmploi
 
             profil_chercheur_emploi = ProfilChercheurEmploi(
-                lieu=answers[0],
-                domaine=answers[1],
-                salaire_minimum=answers[2],
-                salaire_maximum=answers[3],
+                nom=answers[0],
+                mots_cles=answers[1],
+                lieu=answers[2],
+                distance=answers[3],
                 type_contrat=answers[4],
             )
 
@@ -72,15 +72,23 @@ class ProfileView(AbstractView):
             pce = pced.voir_profil_chercheur_emploi(self.user)[0]
 
         else:
-            profil_chercheur_emploi = pce[0]
-        for i in [
-            "lieu",
-            "domaine",
-            "salaire_minimum",
-            "salaire_maximum",
-            "type_contrat",
-        ]:
-            print(getattr(profil_chercheur_emploi, i))
+            from business.client.profil_chercheur_emploi import ProfilChercheurEmploi
+
+            questions = [
+                {
+                    "type": "list",
+                    "name": "profil",
+                    "message": "Choisissez le profil à consulter",
+                    "choices": [
+                        f"ID: {element.id_profil_chercheur_emploi}, Nom: {element.nom}, Lieu: {element.lieu}"
+                        for element in pce
+                        if isinstance(element, ProfilChercheurEmploi)
+                    ],
+                }
+            ]
+
+            profil_chercheur_emploi = prompt(questions)
+            print(profil_chercheur_emploi)
 
         input("Appuyez sur Entrée pour continuer")
         with open(
@@ -96,10 +104,10 @@ class ProfileView(AbstractView):
         if reponse["choix"] == "Quitter":
             pass
 
-        elif reponse["choix"] == "Modifier son profil chercheur d'emploi":
+        elif reponse["choix"] == "Modifier ses alertes":
             from presentation.modif_profile_view import ModifProfileView
 
-            return ModifProfileView(profil_chercheur_emploi, self.user)
+            return ModifProfileView(user=self.user, pce=profil_chercheur_emploi)
 
         elif reponse["choix"] == "Lancer une recherche":
             from presentation.recherche_view import RechercheView

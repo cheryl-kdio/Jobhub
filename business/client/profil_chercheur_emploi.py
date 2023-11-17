@@ -4,7 +4,6 @@ class ProfilChercheurEmploi:
         nom,
         mots_cles=None,
         lieu=None,
-        salaire_minimum=None,
         distance=None,
         type_contrat=None,
         id_profil_chercheur_emploi=None,
@@ -27,4 +26,3 @@ class ProfilChercheurEmploi:
             "permanent":1 if self.type_contrat=="CDI" else 0,
         }
         self.query_params = {k: v for k, v in self.query_params.items() if v}
-

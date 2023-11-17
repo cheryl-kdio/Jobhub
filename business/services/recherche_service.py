@@ -14,7 +14,7 @@ class RechercheService:
     ):
         RechercheDao().sauvegarder_recherche(recherche, utilisateur)
 
-    def supprimer_recherche(self, recherche: Recherche, utilisateur: CompteUtilisateur):
+    def supprimer_recherche(self, recherche: Recherche, utilisateur : CompteUtilisateur):
         RechercheDao().supprimer_recherche(recherche, utilisateur)
 
     def obtenir_resultats(self, recherche: Recherche):
@@ -40,5 +40,4 @@ class RechercheService:
 
         else:
             print("Votre recherche ne peut pas être effectuée.")
-            print(recherche.response.text)
             return None
