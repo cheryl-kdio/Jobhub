@@ -13,8 +13,10 @@ class UserView(AbstractView):
                 "name": "choix",
                 "message": f"Bonjour {Session().user_name}",
                 "choices": [
-                    "Consulter son profil",
+                    "Consulter ses alertes",
                     "Vérifier ses informations personnelles",
+                    "Offres sauvegardés",
+                    "Recherches sauvegardés",
                     "Lancer une recherche",
                     "Quitter",
                 ],
@@ -32,7 +34,17 @@ class UserView(AbstractView):
         if reponse["choix"] == "Quitter":
             pass
 
-        elif reponse["choix"] == "Consulter son profil":
+        elif reponse["choix"] == "Consulter ses alertes":
+            from presentation.profile_view import ProfileView
+
+            return ProfileView(self.user)
+
+        elif reponse["choix"] == "Offres sauvegardés":
+            from presentation.profile_view import ProfileView
+
+            return ProfileView(self.user)
+
+        elif reponse["choix"] == "Recherches sauvegardés":
             from presentation.profile_view import ProfileView
 
             return ProfileView(self.user)

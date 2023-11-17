@@ -4,7 +4,6 @@ class ProfilChercheurEmploi:
         nom,
         mots_cles=None,
         lieu=None,
-        salaire_minimum=None,
         distance=None,
         type_contrat=None,
         id_profil_chercheur_emploi=None,
@@ -23,4 +22,3 @@ class ProfilChercheurEmploi:
             "distance": self.distance,
         }
         self.query_params = {k: v for k, v in self.query_params.items() if v}
-
