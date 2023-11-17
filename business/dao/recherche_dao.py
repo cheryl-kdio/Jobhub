@@ -106,4 +106,3 @@ class RechercheDao(metaclass=Singleton):
                 ).query_params
                 recherches.append(recherche)
         return recherches
-        ## remettre en return + voir comment on peut faire pour aller plus loin
