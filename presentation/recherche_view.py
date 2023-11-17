@@ -74,6 +74,27 @@ class RechercheView(AbstractView):
                     )
                     from presentation.start_view import StartView
                     return StartView()
+            
+            favoris = prompt(
+                [
+                    {
+                        "type": "confirm",
+                        "name": "oui",
+                        "message": "Mettre en favoris",
+                        "default": False,
+                    }
+                ]
+            )
+            if favoris["oui"]:
+                if self.user:
+                    CandidatureDao().candidater(offre=answers[0],utilisateur=self.user)
+                    print("L'offre a bien été mis en favoris !")
+                else:
+                    print(
+                        "Vous devez être connecté pour accéder à cette fonctionnalité"
+                    )
+                    from presentation.afficher_offre_favoris import OffreView
+                    return OffreView()
 
 
             sauvegarder_recherche = prompt(

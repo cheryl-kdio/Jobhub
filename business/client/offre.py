@@ -47,5 +47,7 @@ class Offre:
             f"{format_line('Description', self.description)}\n"
             f"{border}"
             f"{format_line('Lien', self.lien_offre)}"
+            f"{border}"
+
         )
 

@@ -15,12 +15,9 @@ class UserView(AbstractView):
                 "choices": [
                     "Consulter ses alertes",
                     "Vérifier ses informations personnelles",
-<<<<<<< HEAD
                     "Suivre ses candidatures",
-=======
                     "Offres sauvegardés",
                     "Recherches sauvegardés",
->>>>>>> 68965a714b5a75e6f707e5bd2df199e404bd8c63
                     "Lancer une recherche",
                     "Quitter",
                 ],
