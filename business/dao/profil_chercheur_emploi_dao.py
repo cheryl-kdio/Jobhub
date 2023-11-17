@@ -13,14 +13,13 @@ class ProfilChercheurEmploiDao:
                     update_query = """UPDATE projet2A.profil_chercheur_emploi
                     SET mots_cles=(%s,mots_cles)
                         lieu = COALESCE(%s, lieu), 
-                        salaire_minimum = COALESCE(%s, salaire_minimum),
                         distance = COALESCE(%s, distance), 
                         type_contrat = COALESCE(%s, type_contrat), 
                     WHERE id_compte_utilisateur = %s """
 
                     cur.execute(
                         update_query,
-                        (profil_chercheur_emploi.mots_cles, profil_chercheur_emploi.lieu, profil_chercheur_emploi.salaire_minimum, profil_chercheur_emploi.distance, profil_chercheur_emploi.type_contrat, profil_chercheur_emploi.id_profil_chercheur_emploi),
+                        (mots_cles, lieu, profil_chercheur_emploi.distance, profil_chercheur_emploi.type_contrat, profil_chercheur_emploi.id_profil_chercheur_emploi),
                     )
                     
                     if cur.rowcount > 0:
@@ -79,14 +78,13 @@ class ProfilChercheurEmploiDao:
             with connection.cursor() as cursor:
                 # Sauvegarder le nouveau profil d'un utilisateur
                 cursor.execute(
-                    "INSERT INTO projet2A.profil_chercheur_emploi (nom, lieu, mots_cles,salaire_minimum, type_contrat, utilisateur_id) "
-                    "VALUES (%(nom)s, %(lieu)s, %(mots_cles)s,%(salaire_minimum)s, %(type_contrat)s, %(utilisateur_id)s) "
+                    "INSERT INTO projet2A.profil_chercheur_emploi (nom, lieu, mots_cles, type_contrat, utilisateur_id) "
+                    "VALUES (%(nom)s, %(lieu)s, %(mots_cles)s, %(type_contrat)s, %(utilisateur_id)s) "
                     "RETURNING id_profil_chercheur_emploi",
                     {
                         "nom": profil_chercheur_emploi.nom,
                         "mots_cles" :profil_chercheur_emploi.mots_cles,
                         "lieu": profil_chercheur_emploi.lieu,
-                        "salaire_minimum": profil_chercheur_emploi.salaire_minimum,
                         "type_contrat": profil_chercheur_emploi.type_contrat,
                         "utilisateur_id": utilisateur.id,
                     },
@@ -144,7 +142,6 @@ class ProfilChercheurEmploiDao:
                 mots_cles=row["mots_cles"],
                 lieu=row["lieu"],
                 distance=row["distance"],
-                salaire_minimum=row["salaire_minimum"],
                 type_contrat=row["type_contrat"],
             )
             for row in res

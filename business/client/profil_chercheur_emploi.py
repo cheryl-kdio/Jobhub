@@ -13,7 +13,6 @@ class ProfilChercheurEmploi:
         self.nom = nom
         self.mots_cles = mots_cles
         self.lieu = lieu
-        self.salaire_minimum = salaire_minimum
         self.distance = distance
         self.type_contrat = type_contrat
 
@@ -21,8 +20,6 @@ class ProfilChercheurEmploi:
         self.query_params = {
             "what": self.mots_cles,
             "where": self.lieu,
-            "salary_min": self.salaire_minimum,
-            "distance": self.distance,
             "distance": self.distance,
         }
         self.query_params = {k: v for k, v in self.query_params.items() if v}
