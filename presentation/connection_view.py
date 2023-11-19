@@ -33,20 +33,31 @@ class ConnexionView(AbstractView):
         ]
 
     def make_choice(self):
-        answers = prompt(self.__questions)
-        u = Utilisateur()
-        compte_utilisateur = u.se_connecter(
-            answers["mail"],
-            answers["mdp"],
-        )
+        max_attempts = 3
+        attempts = 0
 
-        if compte_utilisateur:
-            print("Connexion réussie, bienvenue ", compte_utilisateur.nom)
-            from presentation.user_view import UserView
+        while attempts < max_attempts:
+            answers = prompt(self.__questions)
+            u = Utilisateur()
+            compte_utilisateur = u.se_connecter(
+                answers["mail"],
+                answers["mdp"],
+            )
 
-            return UserView(compte_utilisateur)
-        else:
-            print("email ou mot de passe incorrect.")
+            if compte_utilisateur:
+                print("Connexion réussie, bienvenue ", compte_utilisateur.nom)
+                from presentation.user_view import UserView
+
+                return UserView(compte_utilisateur)
+            else:
+                print(
+                    "Identifiant ou mot de passe incorrect. Vous avez encore",
+                    max_attempts - attempts - 1,
+                    "tentatives.",
+                )
+                attempts += 1
+        print("Trop de tentatives infructueuses. La connexion est bloquée.")
+        return None
 
     def display_info(self):
         print("Veuillez entrer les informations suivantes :")

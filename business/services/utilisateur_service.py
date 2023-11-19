@@ -40,58 +40,35 @@ class Utilisateur(UtilisateurDao):
             CompteUtilisateur: Un objet CompteUtilisateur contenant les informations de l'utilisateur
                               connecté si la connexion réussit. None sinon.
         """
-        max_attempts = 3  # Nombre maximum de tentatives
-        attempts = 0  # Compteur de tentatives
 
-        while attempts < max_attempts:
-            try:
-                # Demander à l'utilisateur de saisir son identifiant et son mot de passe
-                mail = mail
+        utilisateur = UtilisateurDao().verif_connexion(mail=mail, passw=passw)
 
-                utilisateur = UtilisateurDao().verif_connexion(mail=mail, passw=passw)
-
-                # Vérifier si l'utilisateur a été trouvé dans la base de données
-                if utilisateur:
-                    name = UtilisateurDao.get_value_from_mail(
-                        self, mail=mail, value="nom"
-                    )
-                    print(f"Connexion réussie ! Bienvenue {name}")
-                    CompteUtilisateur._connexion = True
-
-                    CompteUtilisateur.id = UtilisateurDao.get_value_from_mail(
-                        self, mail=mail, value="id_compte_utilisateur"
-                    )
-
-                    CompteUtilisateur.nom = UtilisateurDao.get_value_from_mail(
-                        self, mail=mail, value="nom"
-                    )
-                    CompteUtilisateur.age = UtilisateurDao.get_value_from_mail(
-                        self, mail=mail, value="age"
-                    )
-                    CompteUtilisateur.code_postal = UtilisateurDao.get_value_from_mail(
-                        self, mail=mail, value="code_postal"
-                    )
-                    CompteUtilisateur.tel = UtilisateurDao.get_value_from_mail(
-                        self, mail=mail, value="tel"
-                    )
-                    CompteUtilisateur.ville = UtilisateurDao.get_value_from_mail(
-                        self, mail=mail, value="ville"
-                    )
-                    CompteUtilisateur.mail = mail
-
-                    return CompteUtilisateur
-                else:
-                    print(
-                        "Identifiant ou mot de passe incorrect. Vous avez encore",
-                        max_attempts - attempts - 1,
-                        "tentatives.",
-                    )
-                    attempts += 1
-
-            except Exception as e:
-                print("Erreur lors de la connexion à la base de données :", e)
-        print("Trop de tentatives infructueuses. La connexion est bloquée.")
-        return None
+        if utilisateur:
+            name = UtilisateurDao.get_value_from_mail(self, mail=mail, value="nom")
+            print(f"Connexion réussie ! Bienvenue {name}")
+            CompteUtilisateur._connexion = True
+            CompteUtilisateur.id = UtilisateurDao.get_value_from_mail(
+                self, mail=mail, value="id_compte_utilisateur"
+            )
+            CompteUtilisateur.nom = UtilisateurDao.get_value_from_mail(
+                self, mail=mail, value="nom"
+            )
+            CompteUtilisateur.age = UtilisateurDao.get_value_from_mail(
+                self, mail=mail, value="age"
+            )
+            CompteUtilisateur.code_postal = UtilisateurDao.get_value_from_mail(
+                self, mail=mail, value="code_postal"
+            )
+            CompteUtilisateur.tel = UtilisateurDao.get_value_from_mail(
+                self, mail=mail, value="tel"
+            )
+            CompteUtilisateur.ville = UtilisateurDao.get_value_from_mail(
+                self, mail=mail, value="ville"
+            )
+            CompteUtilisateur.mail = mail
+            return CompteUtilisateur
+        else:
+            return None
 
 
 # Appeler la fonction se_connecter

@@ -13,7 +13,6 @@ from business.dao.profil_chercheur_emploi_dao import ProfilChercheurEmploiDao
 from business.client.profil_chercheur_emploi import ProfilChercheurEmploi
 from business.dao.recherche_dao import RechercheDao
 
-from InquirerPy import prompt
 
 
 class CreateAccountView(AbstractView):

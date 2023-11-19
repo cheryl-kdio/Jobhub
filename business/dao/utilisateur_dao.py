@@ -152,7 +152,7 @@ class UtilisateurDao(metaclass=Singleton):
                 id_liste = cur.fetchall()
         return [id_liste[0] for id in id_liste]
 
-    def verif_connexion(self, mail, passw):  # Voir comment l'ajuster avec notre DAO
+    def verif_connexion(self, mail, passw):
         """
         Vérifie la connexion de l'utilisateur en vérifiant son mot de passe.
 
@@ -162,16 +162,21 @@ class UtilisateurDao(metaclass=Singleton):
         Returns:
             bool: True si la connexion est réussie, False sinon.
         """
-        mdp_db_salt = UtilisateurDao().get_salt_mdp(mail)
-        salt_db = mdp_db_salt["sel"]
-        mdp_db = mdp_db_salt["mdp"]
+        mail_exist = UtilisateurDao().check_mail(mail)
+        if not mail_exist:
+            mdp_db_salt = UtilisateurDao().get_salt_mdp(mail)
+            salt_db = mdp_db_salt["sel"]
+            mdp_db = mdp_db_salt["mdp"]
 
-        try:
-            ph.verify(mdp_db, salt_db + passw)
-            print("Le mot de passe est valide.")
-            return True
-        except:
-            print("Le mot de passe est invalide.")
+            try:
+                ph.verify(mdp_db, salt_db + passw)
+                print("Le mot de passe est valide.")
+                return True
+            except:
+                print("Le mot de passe est invalide.")
+                return False
+        else:
+            print("L'adresse mail est invalide")
             return False
 
     def update_user_info(self, id, field, new_value):

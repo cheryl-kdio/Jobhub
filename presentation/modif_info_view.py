@@ -58,31 +58,36 @@ class ModifInfoView(AbstractView):
                 self.user.id, answers[0], prompt(question)["nouv"]
             )
             utils = utilisateurdao.recuperer_utilisateur(self.user.id)
+            excluded_fields = ["id_compte_utilisateur", "mdp", "sel"]
+
             for record in utils:
                 for i, (key, value) in enumerate(record.items()):
-                    print(f"{i + 1}: {key}: {value}")
+                    if key not in excluded_fields:
+                        print(f"{i + 1}: {key}: {value}")
             input("Appuyez sur entrée pour continuer")
 
-        questions = [
+        quest = [
             {
                 "type": "list",
                 "name": "choix",
                 "message": "",
                 "choices": [
                     "Modifier une autre information",
-                    "Lancer une recherche",
                     "Retour",
+                    "Se déconnecter",
                     "Quitter",
                 ],
             }
         ]
-        if prompt(questions) == "Modifier une autre information":
+        answ = prompt(quest)
+        if answ["choix"] == "Modifier une autre information":
             return ModifInfoView(self.user)
-        elif prompt(questions) == "Lancer une recherche":
-            from presentation.recherche_view import RechercheView
+        elif answ["choix"] == "Se déconnecter":
+            self.user._connexion = False
+            from presentation.start_view import StartView
 
-            return RechercheView(self.user)
-        elif prompt(questions) == "Retour":
+            return StartView()
+        elif answ["choix"] == "Retour":
             from presentation.info_view import InfoView
 
             return InfoView(self.user)
