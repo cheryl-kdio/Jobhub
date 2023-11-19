@@ -1,7 +1,9 @@
 from InquirerPy import prompt
-
 from presentation.abstract_view import AbstractView
 from presentation.session import Session
+from business.dao.recherche_dao import (
+    RechercheDao,
+)  # Importing the module at the beginning
 
 
 class RechercheView(AbstractView):
@@ -13,37 +15,29 @@ class RechercheView(AbstractView):
                 "name": "choix",
                 "message": f"Bonjour {Session().user_name}",
                 "choices": [
-                    "Modifier ses recherches sauvegardés",
+                    "Supprimer des recherches sauvegardées",
                     "Retour",
-                    "Se déconnecter",
                     "Quitter",
                 ],
             }
         ]
 
     def display_info(self):
-        from business.dao.recherche_dao import RechercheDao
-
         pced = RechercheDao()
         pce = pced.voir_favoris(self.user)
-        if pce == []:
+        if not pce:  # Use if not pce instead of pce == []
             print("Vous n'avez pas enregistré de recherche")
             print("Remplissons le ! :")
-            # l'emmener faire une recherche
-
         else:
             recherche = pce
-
-        what = []
-        where = []
 
         for item in recherche:
             what = item.get("what", "N/A")
             where = item.get("where", "N/A")
-            print("Intitulé:", item.get("what", "N/A"))
-            print("Lieu", item.get("where","N/A"))
-            print("===") 
-        
+            print("Intitulé:", what)  # Use what instead of item.get("what", "N/A")
+            print("Lieu:", where)  # Use where instead of item.get("where", "N/A")
+            print("===")
+
         input("Appuyez sur Entrée pour continuer")
         with open(
             "presentation/graphical_assets/banner.txt", "r", encoding="utf-8"
@@ -53,39 +47,52 @@ class RechercheView(AbstractView):
         return recherche
 
     def make_choice(self):
-        profil_chercheur_emploi = self.display_info()
+        re = self.display_info()
         reponse = prompt(self.__questions)
+
         if reponse["choix"] == "Quitter":
             pass
 
-        elif reponse["choix"] == "Modifier ses recherches":
-            from presentation.modif_profile_view import ModifProfileView
+        elif reponse["choix"] == "Supprimer des recherches sauvegardées":
+            question = prompt(
+                [
+                    {
+                        "type": "list",
+                        "message": "Choisissez une recherche sauvegardée à supprimer :",
+                        "choices": [
+                            item["what"] for item in re
+                        ],  # Use a list comprehension
+                    }
+                ]
+            )
+            if question[0] == "Retour":  # Change "retour" to "Retour"
+                from presentation.user_view import UserView
 
-            return ModifProfileView(profil_chercheur_emploi, self.user)
+                return UserView(self.user)
+            else:
+                RechercheDao().supprimer_recherche(question[0], self.user)
 
-        elif reponse["choix"] == "Lancer une recherche":
-            from presentation.recherche_view import RechercheView
+        elif reponse["choix"] == "Retour":
+            from presentation.user_view import UserView
 
-            return RechercheView(self.user)
+            return UserView(self.user)
 
-        elif reponse["choix"] == "Créer un compte":
-            from presentation.creer_compte_view import CreateAccountView
-
-            return CreateAccountView()
-        
-        elif:
-            print(answers[0])
-            utiliser_recherche = prompt(
+        else:
+            q = prompt(
                 [
                     {
                         "type": "confirm",
-                        "name": "use",
-                        "message": "Utiliser la recherche ?",
+                        "name": "oui",
+                        "message": "Lancer une recherche",
                         "default": False,
                     }
                 ]
             )
-            if utiliser_recherche["use"]:
-                if self.user: ## Quoi ajouter pour relancer la recherche initiale ? 
+            if q["oui"]:  # Change q["Oui"] to q["oui"]
+                from presentation.recherche_view import RechercheView
 
-                    return StartView()
+                return RechercheView(self.user)
+            else:
+                from presentation.user_view import UserView
+
+                return UserView(self.user)
