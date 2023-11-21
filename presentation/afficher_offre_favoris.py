@@ -5,18 +5,27 @@ from presentation.session import Session
 
 
 class OffreView(AbstractView):
-    def __init__(self, user):
+    def __init__(self, user, langue):
         self.user = user
+        self.langue = langue
         self.__questions = [
             {
                 "type": "list",
                 "name": "choix",
-                "message": f"Bonjour {Session().user_name}",
+                "message": (
+                    f"Hello {Session().user_name}"
+                    if self.langue == "anglais"
+                    else f"Bonjour {Session().user_name}"
+                ),
                 "choices": [
-                    "Modifier ses offres sauvegardés",
-                    "Retour",
-                    "Se déconnecter",
-                    "Quitter",
+                    ("Return" if self.langue == "anglais" else "Retour"),
+                    ("Log out" if self.langue == "anglais" else "Se déconnecter"),
+                    ("Quit" if self.langue == "anglais" else "Quitter"),
+                    (
+                        "Delete an offer"
+                        if self.langue == "anglais"
+                        else "Supprimer une offre"
+                    ),
                 ],
             }
         ]
@@ -24,52 +33,108 @@ class OffreView(AbstractView):
     def display_info(self):
         from business.dao.offre_dao import OffreDao
 
-        pced = OffreDao()
-        pce = pced.voir_profil_chercheur_emploi(self.user)
+        offredao = OffreDao()
+        pce = offredao.voir_favoris(self.user)
         if pce == []:
-            print("Vous n'avez pas d'offres sauvegardés")
-            print("Remplissons le ! :")
-            ## l'emmener faire une recherche
+            print(
+                "Vous n'avez pas d'offres sauvegardés"
+                if self.langue == "anglais"
+                else "You don't have any saved offers."
+            )
 
         else:
-            offre = pce[0]
-        for i in [
-            "titre",
-            "domaine",
-            "lieu",
-            "type_contrat",
-            "lien_offre",
-            "salaire_minimum",
-            "entreprise",
-            "description",
-        ]:
-            print(getattr(offre, i))
+            from business.client.offre import Offre
 
-        input("Appuyez sur Entrée pour continuer")
-        with open(
-            "presentation/graphical_assets/banner.txt", "r", encoding="utf-8"
-        ) as asset:
-            print(asset.read())
+            questions = [
+                {
+                    "type": "list",
+                    "name": "offre",
+                    "message": (
+                        "Choose the offer to view:"
+                        if self.langue == "anglais"
+                        else "Choisissez l'offre à consulter :"
+                    ),
+                    "choices": [
+                        f" Title: {element.titre}, Location: {element.lieu}"
+                        if self.langue == "anglais"
+                        else f" Titre: {element.titre}, Lieu: {element.lieu}"
+                        for element in pce
+                        if isinstance(element, Offre)
+                    ],
+                }
+            ]
 
-        return offre
+            offre = prompt(questions)
+
+        return offre, pce
 
     def make_choice(self):
-        profil_chercheur_emploi = self.display_info()
+        offre, pce = self.display_info()
         reponse = prompt(self.__questions)
-        if reponse["choix"] == "Quitter":
+        if reponse["choix"] == ("Quitter" if self.langue == "français" else "Quit"):
             pass
 
-        elif reponse["choix"] == "Modifier ses offres":
-            from presentation.modif_profile_view import ModifProfileView
+        elif (
+            reponse["choix"] == "Supprimer une offre"
+            if self.langue == "français"
+            else "Delete an offer"
+        ):
+            from business.dao.offre_dao import OffreDao
 
-            return ModifProfileView(profil_chercheur_emploi, self.user)
+            offredao = OffreDao()
+            from business.client.offre import Offre
 
-        elif reponse["choix"] == "Lancer une recherche":
-            from presentation.recherche_view import RechercheView
+            question = [
+                {
+                    "type": "list",
+                    "name": "offre",
+                    "message": (
+                        "Choisissez l'offre à consulter"
+                        if self.langue == "français"
+                        else "Choose the offer to delete:"
+                    ),
+                    "choices": [
+                        f"ID:{element.id_offre}, Title: {element.titre}, Location: {element.lieu}"
+                        if self.langue == "anglais"
+                        else f" Id:{element.id_offre}, Titre: {element.titre}, Lieu: {element.lieu}"
+                        for element in pce
+                        if isinstance(element, Offre)
+                    ],
+                }
+            ]
+            offre = prompt(question)
+            selected_offre_str = offre["offre"]
 
-            return RechercheView(self.user)
+            selected_offre = None
+            for element in pce:
+                if (
+                    isinstance(element, Offre)
+                    and f"ID: {element.id_offre}" in selected_offre_str
+                ):
+                    selected_offre = element
+                    break
+            with open(
+                "presentation/graphical_assets/banner.txt", "r", encoding="utf-8"
+            ) as asset:
+                print(asset.read())
 
-        elif reponse["choix"] == "Créer un compte":
-            from presentation.creer_compte_view import CreateAccountView
+            offredao.supprimer_offre(selected_offre)
+            print(
+                "L'offre a bien été supprimée"
+                if self.langue == "français"
+                else "The offer has been deleted"
+            )
+            return OffreView(user=self.user, langue=self.langue)
 
-            return CreateAccountView()
+        elif reponse["choix"] == ("Retour" if self.langue == "français" else "Return"):
+            from presentation.user_view import UserView
+
+            return UserView(user=self.user, langue=self.langue)
+
+        elif reponse["choix"] == (
+            "Se déconnecter" if self.langue == "français" else "Disconnect"
+        ):
+            self.user._connexion = False
+            from presentation.start_view import StartView
+
+            return StartView(langue=self.langue)

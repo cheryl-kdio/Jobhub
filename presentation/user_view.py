@@ -5,21 +5,50 @@ from presentation.session import Session
 
 
 class UserView(AbstractView):
-    def __init__(self, user):
+    def __init__(self, user, langue):
         self.user = user
+        self.langue = langue
         self.__questions = [
             {
                 "type": "list",
                 "name": "choix",
-                "message": f"Bonjour {Session().user_name}",
+                "message": (
+                    f"Hello {Session().user_name}"
+                    if self.langue == "anglais"
+                    else f"Bonjour {Session().user_name}"
+                ),
                 "choices": [
-                    "Consulter ses alertes",
-                    "Vérifier ses informations personnelles",
-                    "Suivre ses candidatures",
-                    "Offres sauvegardés",
-                    "Recherches sauvegardés",
-                    "Lancer une recherche",
-                    "Quitter",
+                    (
+                        "View alerts"
+                        if self.langue == "anglais"
+                        else "Consulter ses alertes"
+                    ),
+                    (
+                        "Check personal information"
+                        if self.langue == "anglais"
+                        else "Vérifier ses informations personnelles"
+                    ),
+                    (
+                        "Follow applications"
+                        if self.langue == "anglais"
+                        else "Suivre ses candidatures"
+                    ),
+                    (
+                        "Saved offers"
+                        if self.langue == "anglais"
+                        else "Offres sauvegardés"
+                    ),
+                    (
+                        "Saved searches"
+                        if self.langue == "anglais"
+                        else "Recherches sauvegardés"
+                    ),
+                    (
+                        "Start a search"
+                        if self.langue == "anglais"
+                        else "Lancer une recherche"
+                    ),
+                    ("Quit" if self.langue == "anglais" else "Quitter"),
                 ],
             }
         ]
@@ -32,35 +61,55 @@ class UserView(AbstractView):
 
     def make_choice(self):
         reponse = prompt(self.__questions)
-        if reponse["choix"] == "Quitter":
+        if (
+            reponse["choix"] == "Quitter"
+            if self.langue == "français"
+            else reponse["choix"] == "Quit"
+        ):
             pass
 
-        elif reponse["choix"] == "Consulter ses alertes":
+        elif reponse["choix"] == (
+            "Consulter ses alertes" if self.langue == "français" else "View alerts"
+        ):
             from presentation.profile_view import ProfileView
 
-            return ProfileView(self.user)
+            return ProfileView(user=self.user, langue=self.langue)
 
-        elif reponse["choix"] == "Offres sauvegardés":
+        elif reponse["choix"] == (
+            "Offres sauvegardés" if self.langue == "français" else "Saved offers"
+        ):
             from presentation.afficher_offre_favoris import OffreView
 
-            return OffreView(self.user)
+            return OffreView(user=self.user, langue=self.langue)
 
-        elif reponse["choix"] == "Recherches sauvegardés":
+        elif reponse["choix"] == (
+            "Recherches sauvegardés" if self.langue == "français" else "Saved searches"
+        ):
             from presentation.afficher_recherche_favoris import RechercheView
 
-            return RechercheView(self.user)
+            return RechercheView(user=self.user, langue=self.langue)
 
-        elif reponse["choix"] == "Lancer une recherche":
+        elif reponse["choix"] == (
+            "Lancer une recherche" if self.langue == "français" else "Start a search"
+        ):
             from presentation.recherche_view import RechercheView
 
-            return RechercheView(self.user)
+            return RechercheView(user=self.user, langue=self.langue)
 
-        elif reponse["choix"] == "Vérifier ses informations personnelles":
+        elif reponse["choix"] == (
+            "Vérifier ses informations personnelles"
+            if self.langue == "français"
+            else "Check personal information"
+        ):
             from presentation.info_view import InfoView
 
-            return InfoView(self.user)
+            return InfoView(user=self.user, langue=self.langue)
 
-        elif reponse["choix"] == "Suivre ses candidatures":
+        elif reponse["choix"] == (
+            "Suivre ses candidatures"
+            if self.langue == "français"
+            else "Follow applications"
+        ):
             from presentation.suivi_candidature_view import CandidatureView
 
-            return CandidatureView(self.user)
+            return CandidatureView(user=self.user, langue=self.langue)
