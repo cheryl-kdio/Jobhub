@@ -5,18 +5,27 @@ from presentation.session import Session
 
 
 class OffreView(AbstractView):
-    def __init__(self, user):
+    def __init__(self, user, langue):
         self.user = user
+        self.langue = langue
         self.__questions = [
             {
                 "type": "list",
                 "name": "choix",
-                "message": f"Bonjour {Session().user_name}",
+                "message": (
+                    f"Hello {Session().user_name}"
+                    if self.langue == "anglais"
+                    else f"Bonjour {Session().user_name}"
+                ),
                 "choices": [
-                    "Supprimer une offre",
-                    "Retour",
-                    "Se déconnecter",
-                    "Quitter",
+                    ("Return" if self.langue == "anglais" else "Retour"),
+                    ("Log out" if self.langue == "anglais" else "Se déconnecter"),
+                    ("Quit" if self.langue == "anglais" else "Quitter"),
+                    (
+                        "Delete an offer"
+                        if self.langue == "anglais"
+                        else "Supprimer une offre"
+                    ),
                 ],
             }
         ]
@@ -27,7 +36,11 @@ class OffreView(AbstractView):
         offredao = OffreDao()
         pce = offredao.voir_favoris(self.user)
         if pce == []:
-            print("Vous n'avez pas d'offres sauvegardés")
+            print(
+                "Vous n'avez pas d'offres sauvegardés"
+                if self.langue == "anglais"
+                else "You don't have any saved offers."
+            )
 
         else:
             from business.client.offre import Offre
@@ -36,9 +49,15 @@ class OffreView(AbstractView):
                 {
                     "type": "list",
                     "name": "offre",
-                    "message": "Choisissez l'offre' à consulter",
+                    "message": (
+                        "Choose the offer to view:"
+                        if self.langue == "anglais"
+                        else "Choisissez l'offre à consulter :"
+                    ),
                     "choices": [
-                        f" Titre: {element.titre}, Lieu: {element.lieu}"
+                        f" Title: {element.titre}, Location: {element.lieu}"
+                        if self.langue == "anglais"
+                        else f" Titre: {element.titre}, Lieu: {element.lieu}"
                         for element in pce
                         if isinstance(element, Offre)
                     ],
@@ -52,10 +71,14 @@ class OffreView(AbstractView):
     def make_choice(self):
         offre, pce = self.display_info()
         reponse = prompt(self.__questions)
-        if reponse["choix"] == "Quitter":
+        if reponse["choix"] == ("Quitter" if self.langue == "français" else "Quit"):
             pass
 
-        elif reponse["choix"] == "Supprimer une offre":
+        elif (
+            reponse["choix"] == "Supprimer une offre"
+            if self.langue == "français"
+            else "Delete an offer"
+        ):
             from business.dao.offre_dao import OffreDao
 
             offredao = OffreDao()
@@ -65,9 +88,15 @@ class OffreView(AbstractView):
                 {
                     "type": "list",
                     "name": "offre",
-                    "message": "Choisissez l'offre à consulter",
+                    "message": (
+                        "Choisissez l'offre à consulter"
+                        if self.langue == "français"
+                        else "Choose the offer to delete:"
+                    ),
                     "choices": [
-                        f"ID: {element.id_offre}, Titre: {element.titre}, Lieu: {element.lieu}"
+                        f"ID:{element.id_offre}, Title: {element.titre}, Location: {element.lieu}"
+                        if self.langue == "anglais"
+                        else f" Id:{element.id_offre}, Titre: {element.titre}, Lieu: {element.lieu}"
                         for element in pce
                         if isinstance(element, Offre)
                     ],
@@ -90,16 +119,22 @@ class OffreView(AbstractView):
                 print(asset.read())
 
             offredao.supprimer_offre(selected_offre)
-            print("L'offre a bien été supprimée")
-            return OffreView(self.user)
+            print(
+                "L'offre a bien été supprimée"
+                if self.langue == "français"
+                else "The offer has been deleted"
+            )
+            return OffreView(user=self.user, langue=self.langue)
 
-        elif reponse["choix"] == "Retour":
+        elif reponse["choix"] == ("Retour" if self.langue == "français" else "Return"):
             from presentation.user_view import UserView
 
-            return UserView(self.user)
+            return UserView(user=self.user, langue=self.langue)
 
-        elif reponse["choix"] == "Se déconnecter":
+        elif reponse["choix"] == (
+            "Se déconnecter" if self.langue == "français" else "Disconnect"
+        ):
             self.user._connexion = False
             from presentation.start_view import StartView
 
-            return StartView()
+            return StartView(langue=self.langue)

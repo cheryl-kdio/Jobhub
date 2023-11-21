@@ -5,18 +5,27 @@ from presentation.session import Session
 
 
 class InfoView(AbstractView):
-    def __init__(self, user):
+    def __init__(self, user, langue):
+        self.langue = langue
         self.user = user
         self.__questions = [
             {
                 "type": "list",
                 "name": "choix",
-                "message": f"Bonjour {Session().user_name}",
+                "message": (
+                    f"Hello {Session().user_name}"
+                    if self.langue == "anglais"
+                    else f"Bonjour {Session().user_name}"
+                ),
                 "choices": [
-                    "Modifier ses informations personnelles",
-                    "Retour",
-                    "Se déconnecter",
-                    "Quitter",
+                    (
+                        "Update personal information"
+                        if self.langue == "anglais"
+                        else "Modifier ses informations personnelles"
+                    ),
+                    ("Return" if self.langue == "anglais" else "Retour"),
+                    ("Disconnect" if self.langue == "anglais" else "Se déconnecter"),
+                    ("Quit" if self.langue == "anglais" else "Quitter"),
                 ],
             }
         ]
@@ -33,7 +42,11 @@ class InfoView(AbstractView):
                 if key not in excluded_fields:
                     print(f"{i + 1}: {key}: {value}")
 
-        input("Appuyez sur Entrée pour continuer")
+        input(
+            "Appuyez sur Entrée pour continuer"
+            if self.langue == "français"
+            else "Press enter to continue"
+        )
         with open(
             "presentation/graphical_assets/banner.txt", "r", encoding="utf-8"
         ) as asset:
@@ -41,21 +54,29 @@ class InfoView(AbstractView):
 
     def make_choice(self):
         reponse = prompt(self.__questions)
-        if reponse["choix"] == "Quitter":
+        if reponse["choix"] == "Quit" if self.langue == "anglais" else "Quitter":
             pass
 
-        elif reponse["choix"] == "Modifier ses informations personnelles":
+        elif reponse["choix"] == (
+            "Update personal information"
+            if self.langue == "anglais"
+            else "Modifier ses informations personnelles"
+        ):
             from presentation.modif_info_view import ModifInfoView
 
-            return ModifInfoView(self.user)
+            return ModifInfoView(user=self.user, langue=self.langue)
 
-        elif reponse["choix"] == "Retour":
+        elif reponse["choix"] == "Return" if self.langue == "anglais" else "Retour":
             from presentation.user_view import UserView
 
-            return UserView(self.user)
+            return UserView(user=self.user, langue=self.langue)
 
-        elif reponse["choix"] == "Se déconnecter":
+        elif (
+            reponse["choix"] == "Disconnect"
+            if self.langue == "anglais"
+            else "Se déconnecter"
+        ):
             self.user._connexion = False
             from presentation.start_view import StartView
 
-            return StartView()
+            return StartView(langue=self.langue)
