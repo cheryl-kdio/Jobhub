@@ -17,10 +17,10 @@ from InquirerPy import prompt
 
 
 class ModifProfileView(AbstractView):
-    def __init__(self, pce, user=None):
+    def __init__(self, pce, langue, user=None):
         self.pce = pce
         self.user = user
-        self.results_per_page = 20
+        self.langue = langue
 
     def make_choice(self):
         choix_profil = [
@@ -30,11 +30,32 @@ class ModifProfileView(AbstractView):
             "distance",
             "type_contrat",
         ]
+        translated_choices = (
+            [
+                "Name",
+                "Keywords",
+                "Location",
+                "Distance",
+                "Contract Type",
+            ]
+            if self.langue == "anglais"
+            else [
+                "Nom",
+                "Mots-clés",
+                "Lieu",
+                "Distance",
+                "Type de contrat",
+            ]
+        )
 
         question = {
             "type": "list",
-            "message": "Choisissez un élément à modifier :",
-            "choices": choix_profil,
+            "message": (
+                "Choose an element to modify:"
+                if self.langue == "anglais"
+                else "Choisissez un élément à modifier :"
+            ),
+            "choices": translated_choices,
         }
         answers = prompt([question])
 
@@ -44,10 +65,15 @@ class ModifProfileView(AbstractView):
             return StartView()
 
         else:
+            real_choice = choix_profil[translated_choices.index(answers[0])]
             question = {
                 "type": "input",
                 "name": "nouv",
-                "message": f"Nouveau {answers[0]}:",
+                "message": (
+                    f"New {answers[0]}:"
+                    if self.langue == "anglais"
+                    else f"Nouveau {answers[0]} :"
+                ),
             }
             from business.dao.profil_chercheur_emploi_dao import (
                 ProfilChercheurEmploiDao,
@@ -56,30 +82,64 @@ class ModifProfileView(AbstractView):
             pced = ProfilChercheurEmploiDao()
             pced.maj(
                 int(self.pce["profil"].split("ID: ")[1].split(",")[0]),
-                answers[0],
+                real_choice,
                 prompt(question)["nouv"],
             )
 
             utils = pced.voir_profil_chercheur_emploi(self.user)
 
             for i, profil in enumerate(utils, 1):
-                print(f"Profil {i}:")
+                print(f"Profile {i}:")
                 print(f"ID: {profil.id_profil_chercheur_emploi}")
-                print(f"Nom: {profil.nom}")
-                print(f"Mots-clés: {profil.mots_cles}")
-                print(f"Lieu: {profil.lieu}")
-                print(f"Distance: {profil.distance}")
-                print(f"Type de contrat: {profil.type_contrat}")
+                print(
+                    f"Name: {profil.nom}"
+                    if self.langue == "anglais"
+                    else f"Nom: {profil.nom}"
+                )
+                print(
+                    f"Keywords: {profil.mots_cles}"
+                    if self.langue == "anglais"
+                    else f"Mots-clés: {profil.mots_cles}"
+                )
+                print(
+                    f"Location: {profil.lieu}"
+                    if self.langue == "anglais"
+                    else f"Lieu: {profil.lieu}"
+                )
+                print(
+                    f"Distance: {profil.distance}"
+                    if self.langue == "anglais"
+                    else f"Distance: {profil.distance}"
+                )
+                print(
+                    f"Contract Type: {profil.type_contrat}"
+                    if self.langue == "anglais"
+                    else f"Type de contrat: {profil.type_contrat}"
+                )
                 print("\n")
 
-            input("Appuyez sur entrée pour continuer")
-
+            input(
+                "Press Enter to continue"
+                if self.langue == "anglais"
+                else "Appuyez sur entrée pour continuer"
+            )
             questions = [
                 {
                     "type": "list",
                     "name": "choix",
-                    "message": "",
+                    "message": (
+                        "Choose an option:"
+                        if self.langue == "anglais"
+                        else "Choisissez une option:"
+                    ),
                     "choices": [
+                        "Modify another parameter",
+                        "Log out",
+                        "Return",
+                        "Quit",
+                    ]
+                    if self.langue == "anglais"
+                    else [
                         "Modifier un autre paramètre",
                         "Se déconnecter",
                         "Retour",
@@ -88,20 +148,32 @@ class ModifProfileView(AbstractView):
                 }
             ]
             answ = prompt(questions)
-            if answ["choix"] == "Modifier un autre paramètre":
-                return ModifProfileView(self.pce, self.user)
+            if (
+                answ["choix"] == "Modify another parameter"
+                if self.langue == "anglais"
+                else "Modifier un autre paramètre"
+            ):
+                return ModifProfileView(self.pce, user=self.user, langue=self.langue)
 
-            elif answ["choix"] == "Se déconnecter":
+            elif (
+                answ["choix"] == "Log out"
+                if self.langue == "anglais"
+                else "Se déconnecter"
+            ):
                 self.user._connexion = False
                 from presentation.start_view import StartView
 
-                return StartView()
-            elif answ["choix"] == "Retour":
+                return StartView(langue=self.langue)
+            elif answ["choix"] == "Return" if self.langue == "anglais" else "Retour":
                 from presentation.profile_view import ProfileView
 
-                return ProfileView(self.user)
+                return ProfileView(user=self.user, langue=self.langue)
             else:
                 pass
 
     def display_info(self):
-        print("Veuillez entrer les informations suivantes :")
+        print(
+            "Enter the following information:"
+            if self.langue == "anglais"
+            else "Veuillez entrer les informations suivantes :"
+        )

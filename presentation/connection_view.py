@@ -18,17 +18,26 @@ from InquirerPy import prompt
 
 
 class ConnexionView(AbstractView):
-    def __init__(self):
+    def __init__(self, langue):
+        self.langue = langue
         self.__questions = [
             {
                 "type": "input",
                 "name": "mail",
-                "message": "Votre adresse mail :",
+                "message": (
+                    "Your email address:"
+                    if self.langue == "anglais"
+                    else "Votre adresse mail :"
+                ),
             },
             {
                 "type": "password",
                 "name": "mdp",
-                "message": "Votre mot de passe : ",
+                "message": (
+                    "Your password:"
+                    if self.langue == "anglais"
+                    else "Votre mot de passe :"
+                ),
             },
         ]
 
@@ -45,20 +54,35 @@ class ConnexionView(AbstractView):
             )
 
             if compte_utilisateur:
-                print("Connexion réussie, bienvenue ", compte_utilisateur.nom)
+                if self.langue == "français":
+                    print("Connexion réussie, bienvenue ", compte_utilisateur.nom)
+                elif self.langue == "anglais":
+                    print("Succesfull connection, welcome ", compte_utilisateur.nom)
                 from presentation.user_view import UserView
 
-                return UserView(compte_utilisateur)
+                return UserView(user=compte_utilisateur, langue=self.langue)
             else:
-                print(
-                    "Identifiant ou mot de passe incorrect. Vous avez encore",
-                    max_attempts - attempts - 1,
-                    "tentatives.",
-                )
+                if self.langue == "français":
+                    print(
+                        "Identifiant ou mot de passe incorrect. Vous avez encore",
+                        max_attempts - attempts - 1,
+                        "tentatives.",
+                    )
+                elif self.langue == "anglais":
+                    print(
+                        "Incorrect username or password. You have",
+                        max_attempts - attempts - 1,
+                        "attempts remaining.",
+                    )
                 attempts += 1
-        print("Trop de tentatives infructueuses. La connexion est bloquée.")
-        from presentation.start_view import StartView
-        return StartView()
+        if self.langue == "français":
+            print("Trop de tentatives infructueuses. La connexion est bloquée.")
+        elif self.langue == "anglais":
+            print("Too many unsuccessful attempts. Connection blocked.")
+        return None
 
     def display_info(self):
-        print("Veuillez entrer les informations suivantes :")
+        if self.langue == "français":
+            print("Veuillez entrer les informations suivantes :")
+        elif self.langue == "anglais":
+            print("Please enter the following information: :")
