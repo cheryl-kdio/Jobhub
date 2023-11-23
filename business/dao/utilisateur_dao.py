@@ -86,34 +86,6 @@ class UtilisateurDao(metaclass=Singleton):
                 else:
                     return None
 
-    def drop_id(self, id):
-        """
-        Supprime un utilisateur de la base de données en utilisant son ID.
-
-        Parameters:
-            id (int): L'ID de l'utilisateur à supprimer.
-        """
-        with DBConnection().connection as connection:
-            with connection.cursor() as cur:
-                delete_line = f"DELETE FROM projet2A.compte_utilisateur WHERE id_compte_utilisateur = %s;"
-                cur.execute(delete_line, (id,))
-
-    def iterer_donnees(self):
-        """
-        Itère à travers les ID des utilisateurs dans la base de données.
-
-        Returns:
-            List[int]: Liste des ID des utilisateurs.
-        """
-        with DBConnection().connection as connection:
-            with connection.cursor() as cur:
-                get_id = (
-                    f"SELECT id_compte_utilisateur FROM projet2A.compte_utilisateur;"
-                )
-                cur.execute(get_id)
-                id_liste = cur.fetchall()
-        return [id_liste[0] for id in id_liste]
-
     def recuperer_utilisateur(self, id):
         """
         Récupère les données d'un utilisateur depuis la base de données en utilisant son ID.
@@ -130,27 +102,6 @@ class UtilisateurDao(metaclass=Singleton):
                 cur.execute(get_user, (id,))
                 user = cur.fetchall()
         return user
-
-    def afficher_db(self):  # Affiche l'ensemble de la base de données
-        """
-        Affiche l'ensemble de la base de données.
-        """
-        with DBConnection().connection as connection:
-            with connection.cursor() as cur:
-                display_all = f"SELECT * FROM projet2A.compte_utilisateur;"
-                cur.execute(display_all)
-                rows = cur.fetchall()
-                for row in rows:
-                    print(row)
-
-        with DBConnection().connection as connection:
-            with connection.cursor() as cur:
-                get_id = (
-                    f"SELECT id_compte_utilisateur FROM projet2A.compte_utilisateur;"
-                )
-                cur.execute(get_id)
-                id_liste = cur.fetchall()
-        return [id_liste[0] for id in id_liste]
 
     def verif_connexion(self, mail, passw):
         """
@@ -281,15 +232,3 @@ class UtilisateurDao(metaclass=Singleton):
             return True
         except:
             return False
-
-    def get_user_info(self, info):
-        if info == "mail":
-            info = input("Veuillez saisir votre adresse e-mail : ")
-        if info == "name_user":
-            info = input("Veuillez saisir votre nom : ")
-        if info == "mdp":
-            info = getpass.getpass("Veuillez saisir votre mot de passe : ")
-        if info == "mdp_to_check":
-            info = getpass.getpass("Veuillez confirmer votre mot de passe : ")
-
-        return info

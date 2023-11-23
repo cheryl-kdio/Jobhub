@@ -1,175 +1,131 @@
-from InquirerPy import prompt
+from InquirerPy import prompt,inquirer
 
 from presentation.abstract_view import AbstractView
 from presentation.session import Session
+from business.dao.profil_chercheur_emploi_dao import ProfilChercheurEmploiDao
+from business.client.profil_chercheur_emploi import ProfilChercheurEmploi
+from business.dao.recherche_dao import RechercheDao
+from business.services.recherche_service import RechercheService
+from business.client.recherche import Recherche
 
 
 class ProfileView(AbstractView):
     def __init__(self, user, langue):
         self.user = user
         self.langue = langue
-        self.__questions = [
-            {
-                "type": "list",
-                "name": "choix",
-                "message": (
-                    f"Hello {Session().user_name}"
-                    if self.langue == "anglais"
-                    else f"Bonjour {Session().user_name}"
-                ),
-                "choices": [
-                    (
-                        "Modify alerts"
-                        if self.langue == "anglais"
-                        else "Modifier ses alertes"
-                    ),
-                    "Back" if self.langue == "anglais" else "Retour",
-                    "Disconnect" if self.langue == "anglais" else "Se déconnecter",
-                    "Quit" if self.langue == "anglais" else "Quitter",
-                ],
-            }
-        ]
 
     def display_info(self):
-        from business.dao.profil_chercheur_emploi_dao import ProfilChercheurEmploiDao
+        pass
 
+    def make_choice(self):
         pced = ProfilChercheurEmploiDao()
-        pce = pced.voir_profil_chercheur_emploi(self.user)
-        if pce == []:
-            print(
-                "You don't have any alerts"
-                if self.langue == "anglais"
-                else "Vous n'avez pas d'alerte"
-            )
-            print(
-                "Let's create one! :"
-                if self.langue == "anglais"
-                else "Créons-en une ! :"
-            )
-            questions = [
+        choix_alertes = [
+            {"name": str(i+1)+". "+alerte.nom + "-" + alerte.lieu, "value": alerte}
+            for i, alerte in enumerate(pced.voir_profil_chercheur_emploi(self.user))
+        ] + [{"name": "Creer une alerte", "value": "create_alert"}, {"name": "Retour", "value": "retour"}]
+
+        self.__questions = {
+            "type": "list",
+            "message": "Voir le détail d'une alerte : \n - - - - - - - - - - - - - - - - - - - -\n"
+            if self.langue == "français"
+            else "Detail an alert : \n - - - - - - - - - - - - - - - - - - - -\n",
+            "choices": choix_alertes,
+        }
+
+        answers = prompt(self.__questions)
+
+        if answers[0] == "retour":
+            from presentation.start_view import StartView
+            return StartView(self.langue)
+
+        elif answers[0] == "create_alert":
+            self.__questions = [
                 {
                     "type": "input",
                     "name": "nom",
-                    "message": "Alert name"
-                    if self.langue == "anglais"
-                    else "Nom de l'alerte",
+                    "message": "Alert name : " if self.langue == "anglais" else "Nom de l'alerte :",
                 },
                 {
                     "type": "input",
                     "name": "mots_cles",
-                    "message": "Keywords: "
-                    if self.langue == "anglais"
-                    else "Mots clés : ",
+                    "message": "Keywords: " if self.langue == "anglais" else "Mots clés : ",
                 },
                 {
                     "type": "input",
                     "name": "lieu",
-                    "message": "City where you want to work:"
-                    if self.langue == "anglais"
-                    else "Ville où vous souhaitez travailler :",
+                    "message": "City where you want to work:" if self.langue == "anglais" else "Ville où vous souhaitez travailler :",
                 },
                 {
                     "type": "input",
                     "name": "distance",
-                    "message": "Distance around the city"
-                    if self.langue == "anglais"
-                    else "Distance autour de la ville",
+                    "message": "Distance around the city" if self.langue == "anglais" else "Distance autour de la ville",
                 },
                 {
-                    "type": "input",
+                    "type": "list",
                     "name": "type_contrat",
-                    "message": "Fixed-term/Permanent"
-                    if self.langue == "anglais"
-                    else "CDD/CDI",
-                },
-            ]
-            answers = [prompt([q])[q["name"]] for q in questions]
-            print(answers)
-            from business.client.profil_chercheur_emploi import ProfilChercheurEmploi
-
-            profil_chercheur_emploi = ProfilChercheurEmploi(
-                nom=answers[0],
-                mots_cles=answers[1],
-                lieu=answers[2],
-                distance=answers[3],
-                type_contrat=answers[4],
-            )
-
-            pced.ajouter_profil_chercheur_emploi(profil_chercheur_emploi, self.user)
-            pce = pced.voir_profil_chercheur_emploi(self.user)[0]
-
-        else:
-            from business.client.profil_chercheur_emploi import ProfilChercheurEmploi
-
-            choix_profil = [
-                {
-                    "name": f"{element.id_profil_chercheur_emploi}. {element.nom} - {element.lieu}",
-                    "value": element,
+                    "message": "Type de contrat : CDD/CDI/Temps plein/Temps partiel"
+                    if self.langue == "français"
+                    else "Contract type: Fixed-term/Permanent/Full-time/Part-time",
+                    "choices": [
+                        {
+                            "name": "CDD" if self.langue == "français" else "Fixed-term",
+                            "value": "CDD",
+                        },
+                        {
+                            "name": "CDI" if self.langue == "français" else "Permanent",
+                            "value": "CDI",
+                        },
+                        {
+                            "name": "Temps plein" if self.langue == "français" else "Full-time",
+                            "value": "TEMPS PLEIN",
+                        },
+                        {
+                            "name": "Temps partiel" if self.langue == "français" else "Part-time",
+                            "value": "TEMPS PARTIEL",
+                        },
+                    ],
                 }
-                for element in pce
-                if isinstance(element, ProfilChercheurEmploi)
             ]
 
-            if choix_profil:
-                questions = [
-                    {
-                        "type": "list",
-                        "name": "profil",
-                        "message": (
-                            "Choose the profile to consult"
-                            if self.langue == "anglais"
-                            else "Choisissez le profil à consulter"
-                        ),
-                        "choices": choix_profil + [{"name": "Retour", "value": None}],
-                    }
-                ]
+            reponse_alerte = prompt(self.__questions)
+            from business.client.profil_chercheur_emploi import ProfilChercheurEmploi
 
-            profil_chercheur_emploi = prompt(questions)["profil"]
-            profil_dict = vars(profil_chercheur_emploi)
-            for key, value in profil_dict.items():
-                print(f"{key}: {value}")
-
-        input(
-            "Appuyez sur Entrée pour continuer"
-            if self.langue == "français"
-            else "Press Enter to continue"
-        )
-        with open(
-            "presentation/graphical_assets/banner.txt", "r", encoding="utf-8"
-        ) as asset:
-            print(asset.read())
-
-        return profil_chercheur_emploi
-
-    def make_choice(self):
-        profil_chercheur_emploi = self.display_info()
-        reponse = prompt(self.__questions)
-
-        choix_change_param = (
-            "Modify alerts" if self.langue == "anglais" else "Modifier ses alertes"
-        )
-        choix_return = "Back" if self.langue == "anglais" else "Retour"
-        choix_disconnect = (
-            "Disconnect" if self.langue == "anglais" else "Se déconnecter"
-        )
-
-        if reponse["choix"] == choix_change_param:
-            from presentation.modif_profile_view import ModifProfileView
-
-            return ModifProfileView(
-                user=self.user, pce=profil_chercheur_emploi, langue=self.langue
+            pce = ProfilChercheurEmploi(
+                nom=reponse_alerte["nom"],
+                mots_cles=reponse_alerte["mots_cles"],
+                lieu=reponse_alerte["lieu"],
+                distance=reponse_alerte["distance"],
+                type_contrat=reponse_alerte["type_contrat"],
             )
+            if pced.ajouter_profil_chercheur_emploi(pce, self.user):
+                print("Votre alerte a bien été créée")
+                return ProfileView(self.user, self.langue)
+        else :
+            print(answers[0])
+            self.__questions= [
+                {
+                    "type": "list",
+                    "name": "choix",
+                    "message": "",
+                    "choices": [
+                        "Supprimer cette alerte",
+                        "Modifier cette alerte",
+                        "Voir les résultats",
+                        "Retour"
+                    ],
+                }
+            ]
+            answers2=prompt(self.__questions)
+            if answers2["choix"]=="Supprimer cette alerte":
+                if pced.supprimer_profil_chercheur_emploi(answers[0]):
+                    print("Cette alerte a bien été supprimée")
+                    return ProfileView(self.user, self.langue)
+            elif answers2["choix"]=="Modifier cette alerte":
+                from presentation.modif_profile_view import ModifProfileView
+                return ModifProfileView(pce=answers[0],user=self.user,langue=self.langue)
+            elif answers2["choix"]=="Voir les résultats":
+                from presentation.recherche_view import RechercheView
+                return RechercheView(langue=self.langue,user=self.user,query_params=answers[0].query_params)
+            else:
+                return ProfileView(user=self.user, langue=self.langue)
 
-        elif reponse["choix"] == choix_return:
-            from presentation.user_view import UserView
-
-            return UserView(user=self.user, langue=self.langue)
-
-        elif reponse["choix"] == choix_disconnect:
-            self.user._connexion = False
-            from presentation.start_view import StartView
-
-            return StartView(langue=self.langue)
-
-        else:
-            pass

@@ -17,9 +17,7 @@ class UserView(AbstractView):
                     else f"Bonjour {self.user.nom}\n"
                 ),
                 "choices": [
-                    "Consulter ses alertes"
-                    if self.langue == "français"
-                    else "View alerts",
+                    "Alertes" if self.langue == "français" else "Alerts",
                     "Vérifier ses informations personnelles"
                     if self.langue == "français"
                     else "Check personal information",
@@ -51,9 +49,7 @@ class UserView(AbstractView):
         if reponse["choix"] == ("Quitter" if self.langue == "français" else "Quit"):
             pass
 
-        elif reponse["choix"] == (
-            "Consulter ses alertes" if self.langue == "français" else "View alerts"
-        ):
+        elif reponse["choix"] == ("Alertes" if self.langue == "français" else "Alerts"):
             from presentation.profile_view import ProfileView
 
             return ProfileView(user=self.user, langue=self.langue)
