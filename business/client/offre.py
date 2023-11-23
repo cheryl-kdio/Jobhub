@@ -28,8 +28,7 @@ class Offre:
         def format_line(label, value):
             return f"{label:<{max_label_length}}: {value}"
 
-        border = "- - - - - - - - - - - - - - - - - - - -\n"  # Remplacez ceci par l'une des options ci-dessus
-
+        border = "- - - - - - - - - - - - - - - - - - - -\n" 
         return (
             f"{border}"
             f"{format_line('Offre', self.titre)}\n"
@@ -46,7 +45,7 @@ class Offre:
             f"{border}"
             f"{format_line('Description', self.description)}\n"
             f"{border}"
-            f"{format_line('Lien', self.lien_offre)}"
+            f"{format_line('Plus de détails', self.lien_offre)} \n"
             f"{border}"
 
         )

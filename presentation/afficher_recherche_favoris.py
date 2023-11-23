@@ -73,7 +73,7 @@ class RechercheView(AbstractView):
 
             return CreateAccountView()
         
-        elif:
+        else:
             print(answers[0])
             utiliser_recherche = prompt(
                 [
