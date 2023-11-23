@@ -12,10 +12,10 @@ class StartView(AbstractView):
                 "name": "choix",
                 "message": f"Bonjour {Session().user_name}",
                 "choices": [
-                    "Se connecter",
-                    "Créer un compte",
-                    "Lancer une recherche",
-                    "Quitter",
+                    "🔐 Se connecter",
+                    "✨ Créer un compte",
+                    "🔎 Lancer une recherche",
+                    "🚪 Quitter",
                 ],
             }
         ]
@@ -28,20 +28,20 @@ class StartView(AbstractView):
 
     def make_choice(self):
         reponse = prompt(self.__questions)
-        if reponse["choix"] == "Quitter":
+        if reponse["choix"] == "🚪 Quitter":
             pass
 
-        elif reponse["choix"] == "Se connecter":
+        elif reponse["choix"] == "🔐 Se connecter":
             from presentation.connection_view import ConnexionView
 
             return ConnexionView()
 
-        elif reponse["choix"] == "Lancer une recherche":
+        elif reponse["choix"] == "🔎 Lancer une recherche":
             from presentation.recherche_view import RechercheView
 
             return RechercheView()
 
-        elif reponse["choix"] == "Créer un compte":
+        elif reponse["choix"] == "✨ Créer un compte":
             from presentation.creer_compte_view import CreateAccountView
 
             return CreateAccountView()

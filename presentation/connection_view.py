@@ -57,7 +57,8 @@ class ConnexionView(AbstractView):
                 )
                 attempts += 1
         print("Trop de tentatives infructueuses. La connexion est bloquée.")
-        return None
+        from presentation.start_view import StartView
+        return StartView()
 
     def display_info(self):
         print("Veuillez entrer les informations suivantes :")

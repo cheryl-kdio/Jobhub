@@ -13,16 +13,17 @@ class UserView(AbstractView):
                 "name": "choix",
                 "message": f"Bonjour {Session().user_name}",
                 "choices": [
-                    "Consulter ses alertes",
-                    "Vérifier ses informations personnelles",
-                    "Suivre ses candidatures",
-                    "Offres sauvegardés",
-                    "Recherches sauvegardés",
-                    "Lancer une recherche",
-                    "Quitter",
+                    "🔍 Consulter ses alertes",
+                    "📄 Vérifier ses informations personnelles",
+                    "🚀 Suivre ses candidatures",
+                    "💖 Offres favoris",
+                    "📚 Recherches sauvegardées",
+                    "🔎 Lancer une recherche",
+                    "🚪 Quitter",
                 ],
             }
         ]
+
 
     def display_info(self):
         with open(
@@ -32,34 +33,34 @@ class UserView(AbstractView):
 
     def make_choice(self):
         reponse = prompt(self.__questions)
-        if reponse["choix"] == "Quitter":
+        if reponse["choix"] == "🚪 Quitter":
             pass
 
-        elif reponse["choix"] == "Consulter ses alertes":
+        elif reponse["choix"] == "🔍 Consulter ses alertes":
             from presentation.profile_view import ProfileView
 
             return ProfileView(self.user)
 
-        elif reponse["choix"] == "Offres sauvegardés":
-            from presentation.afficher_offre_favoris import OffreView
+        elif reponse["choix"] == "💖 Offres favoris":
+            from presentation.offre_fav_view import OffreView
 
             return OffreView(self.user)
 
-        elif reponse["choix"] == "Recherches sauvegardés":
+        elif reponse["choix"] == "📚 Recherches sauvegardés":
             from presentation.afficher_recherche_favoris import RechercheView
 
             return RechercheView(self.user)
 
-        elif reponse["choix"] == "Lancer une recherche":
+        elif reponse["choix"] == "🔎 Lancer une recherche":
             from presentation.recherche_view import RechercheView
 
             return RechercheView(self.user)
 
-        elif reponse["choix"] == "Vérifier ses informations personnelles":
+        elif reponse["choix"] == "📄 Vérifier ses informations personnelles":
             from presentation.info_view import InfoView
 
             return InfoView(self.user)
         
-        elif reponse["choix"]== "Suivre ses candidatures":
+        elif reponse["choix"]== "🚀 Suivre ses candidatures":
             from presentation.suivi_candidature_view import CandidatureView
             return CandidatureView(self.user)

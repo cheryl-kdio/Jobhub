@@ -37,8 +37,8 @@ class RechercheView(AbstractView):
         r = RechercheService()
         print("Resultats obtenus :")
         choix_offres = [
-            {"name": offre.titre, "value": offre}
-            for offre in r.obtenir_resultats(recherche)
+            {"name": str(i+1) + ". " + offre.titre + "-" + offre.entreprise, "value": offre}
+            for i, offre in enumerate(r.obtenir_resultats(recherche))
         ] + [{"name": "Retour", "value": None}]
 
         question = {
