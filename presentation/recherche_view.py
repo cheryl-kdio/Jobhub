@@ -17,7 +17,7 @@ from business.dao.candidature_dao import CandidatureDao
 
 
 class RechercheView(AbstractView):
-    def __init__(self, langue, query_params, user=None):
+    def __init__(self, langue, query_params=None, user=None):
         self.langue = langue
         self.user = user
         self.results_per_page = 20
