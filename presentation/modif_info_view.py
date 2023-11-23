@@ -38,7 +38,7 @@ class ModifInfoView(AbstractView):
                 "Phone",
                 "City",
                 "Postal Code",
-                "Retour",
+                "Return",
             ]
             if self.langue == "anglais"
             else [
@@ -48,7 +48,7 @@ class ModifInfoView(AbstractView):
                 "Téléphone",
                 "Ville",
                 "Code postal",
-                "Return",
+                "Retour",
             ]
         )
 
@@ -62,6 +62,11 @@ class ModifInfoView(AbstractView):
             "choices": translated_choices,
         }
         answers = prompt([question])
+
+        if answers[0] == ("Retour" if self.langue == "français" else "Return"):
+            from presentation.info_view import InfoView
+
+            return InfoView(user=self.user, langue=self.langue)
 
         real_choice = choix_info[translated_choices.index(answers[0])]
         question = {

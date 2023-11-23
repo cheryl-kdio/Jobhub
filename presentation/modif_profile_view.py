@@ -47,7 +47,6 @@ class ModifProfileView(AbstractView):
                 "Type de contrat",
             ]
         )
-        print(self.pce)
 
         question = {
             "type": "list",
