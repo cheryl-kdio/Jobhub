@@ -15,7 +15,7 @@ class UserView(AbstractView):
                 "message": (
                     f"Hello {self.user.nom}"
                     if self.langue == "anglais"
-                    else f"Bonjour {self.user.nom}"
+                    else f"Bonjour {self.user.nom} \n"
                 ),
                 "choices": [
                     "Consulter ses alertes"
