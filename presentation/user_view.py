@@ -56,7 +56,7 @@ class UserView(AbstractView):
         elif reponse["choix"] == "Recherches sauvegardés":
             from presentation.afficher_recherche_favoris import RechercheView
 
-            return RechercheView(user=self.user, langue=self.langue)
+            return RechercheView(user=self.user)
 
         elif reponse["choix"] == "Lancer une recherche":
             from presentation.recherche_view import RechercheView
@@ -66,7 +66,7 @@ class UserView(AbstractView):
         elif reponse["choix"] == "Vérifier ses informations personnelles":
             from presentation.info_view import InfoView
 
-            return InfoView(self.user)
+            return InfoView(user=self.user,langue=self.langue)
         
         elif reponse["choix"]== "Suivre ses candidatures":
             from presentation.suivi_candidature_view import CandidatureView

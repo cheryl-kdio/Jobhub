@@ -46,7 +46,7 @@ class StartView(AbstractView):
         if reponse["choix"] == "Quitter" or reponse["choix"] == "Quit":
             pass
 
-        elif reponse["choix"] == "Se connecter":
+        elif reponse["choix"] == "Se connecter" or reponse["choix"] == "Log in":
             from presentation.connection_view import ConnexionView
 
             return ConnexionView(langue=self.langue)

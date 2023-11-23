@@ -31,11 +31,18 @@ class OffreView(AbstractView):
         ]
 
     def display_info(self):
+        pass
+    def make_choice(self):
+        
         from business.dao.offre_dao import OffreDao
 
         offredao = OffreDao()
-        pce = offredao.voir_favoris(self.user)
-        if pce == []:
+        pce = [
+            {"name": str(i+1)+"."+offre.titre + "-" + offre.entreprise, "value": offre}
+            for i,offre in enumerate(offredao.voir_favoris(self.user))
+        ] + [{"name": "Retour", "value": None}]
+
+        if len(pce) == 1:
             print(
                 "Vous n'avez pas d'offres sauvegardés"
                 if self.langue == "anglais"
@@ -64,12 +71,9 @@ class OffreView(AbstractView):
                 }
             ]
 
-            offre = prompt(questions)
+            reponse = prompt(questions)
+            if reponse[0]=
 
-        return offre, pce
-
-    def make_choice(self):
-        offre, pce = self.display_info()
         reponse = prompt(self.__questions)
         if reponse["choix"] == ("Quitter" if self.langue == "français" else "Quit"):
             pass
