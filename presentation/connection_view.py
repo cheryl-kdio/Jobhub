@@ -2,16 +2,8 @@ from InquirerPy import prompt
 from utils.countdown_timer import countdown_timer
 from presentation.abstract_view import AbstractView
 from presentation.session import Session
-from business.services.utilisateur_service import (
-    Utilisateur,
-)  # Importation de la classe Utilisateur depuis le module utilisateur_service
+from business.services.utilisateur_service import (Utilisateur) 
 from business.dao.utilisateur_dao import UtilisateurDao
-from business.client.recherche import Recherche
-from business.services.recherche_service import RechercheService
-from tabulate import tabulate
-from business.dao.profil_chercheur_emploi_dao import ProfilChercheurEmploiDao
-from business.client.profil_chercheur_emploi import ProfilChercheurEmploi
-from business.dao.recherche_dao import RechercheDao
 from business.client.compte_utilisateur import CompteUtilisateur
 
 from InquirerPy import prompt
