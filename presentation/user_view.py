@@ -29,7 +29,6 @@ class UserView(AbstractView):
             }
         ]
 
-
     def display_info(self):
         with open(
             "presentation/graphical_assets/banner.txt", "r", encoding="utf-8"
@@ -54,9 +53,9 @@ class UserView(AbstractView):
             return OffreView(user=self.user, langue=self.langue)
 
         elif reponse["choix"] == "Recherches sauvegardés":
-            from presentation.afficher_recherche_favoris import RechercheView
+            from presentation.afficher_recherche_favoris import ARechercheView
 
-            return RechercheView(user=self.user)
+            return ARechercheView(user=self.user, langue=self.langue)
 
         elif reponse["choix"] == "Lancer une recherche":
             from presentation.recherche_view import RechercheView
@@ -66,9 +65,9 @@ class UserView(AbstractView):
         elif reponse["choix"] == "Vérifier ses informations personnelles":
             from presentation.info_view import InfoView
 
-            return InfoView(user=self.user,langue=self.langue)
-        
-        elif reponse["choix"]== "Suivre ses candidatures":
+            return InfoView(user=self.user, langue=self.langue)
+
+        elif reponse["choix"] == "Suivre ses candidatures":
             from presentation.suivi_candidature_view import CandidatureView
 
             return CandidatureView(user=self.user, langue=self.langue)
