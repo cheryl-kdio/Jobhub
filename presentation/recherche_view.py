@@ -48,10 +48,29 @@ class RechercheView(AbstractView):
             "Resultats obtenus :" if self.langue == "français" else "Results obtained"
         )
 
-        choix_offres = [
-            {"name": str(i+1) + ". " + offre.titre + "-" + offre.entreprise, "value": offre}
-            for i, offre in enumerate(r.obtenir_resultats(recherche))
-        ] + [{"name": "Retour", "value": None}]
+        choix_offres = (
+            [
+                {
+                    "name": str(i + 1) + ". " + offre.titre + "-" + offre.entreprise,
+                    "value": offre,
+                }
+                for i, offre in enumerate(r.obtenir_resultats(recherche))
+            ]
+            + [
+                {
+                    "name": "Retour" if self.langue == "français" else "Return",
+                    "value": None,
+                }
+            ]
+            + [
+                {
+                    "name": "Sauvegarder la recherche ?"
+                    if self.langue == "français"
+                    else "Save the search",
+                    "value": "sauv",
+                }
+            ]
+        )
 
         question = {
             "type": "list",
@@ -64,41 +83,69 @@ class RechercheView(AbstractView):
         }
         answers = prompt([question])
 
-        if answers[0] == "retour":
-            from presentation.start_view import StartView
+        if answers[0] == "sauv":
+            if self.user:
+                RechercheDao().sauvegarder_recherche(recherche, self.user)
+                print(
+                    "Search saved successfully."
+                    if self.langue == "anglais"
+                    else "La recherche a bien été sauvegardée"
+                )
+                print(
+                    "Resultats obtenus :"
+                    if self.langue == "français"
+                    else "Results obtained"
+                )
 
-            return StartView()
-        else:
-            print(answers[0])
-            candidater = prompt(
-                [
+                choix_offres = [
                     {
-                        "type": "confirm",
-                        "name": "oui",
-                        "message": "Envoyer sa candidature"
-                        if self.langue == "français"
-                        else "Send your application",
-                        "default": False,
+                        "name": str(i + 1)
+                        + ". "
+                        + offre.titre
+                        + "-"
+                        + offre.entreprise,
+                        "value": offre,
+                    }
+                    for i, offre in enumerate(r.obtenir_resultats(recherche))
+                ] + [
+                    {
+                        "name": "Retour" if self.langue == "français" else "Return",
+                        "value": None,
                     }
                 ]
-            )
-            if candidater["oui"]:
-                if self.user:
-                    CandidatureDao().candidater(offre=answers[0], utilisateur=self.user)
-                    print(
-                        "Candidature effectuée"
-                        if self.langue == "français"
-                        else "Application submitted"
-                    )
-                else:
-                    print(
-                        "You must be logged in to access this feature."
+                question = {
+                    "type": "list",
+                    "message": (
+                        "Choose a job offer to view in detail:"
                         if self.langue == "anglais"
-                        else "Vous devez être connecté pour accéder à cette fonctionnalité"
-                    )
-                    from presentation.start_view import StartView
+                        else "Choisissez une offre à détailler :"
+                    ),
+                    "choices": choix_offres,
+                }
+                answers = prompt([question])
 
-                    return StartView()
+            else:
+                print(
+                    "You must be logged in to access this feature."
+                    if self.langue == "anglais"
+                    else "Vous devez être connecté pour accéder à cette fonctionnalité"
+                )
+                from presentation.start_view import StartView
+
+                return StartView()
+
+        if not answers[0]:
+            if not self.user:
+                from presentation.start_view import StartView
+
+                return StartView(self.langue)
+            else:
+                from presentation.user_view import UserView
+
+                return UserView(user=self.user, langue=self.langue)
+
+        else:
+            print(answers[0])
 
             favoris = prompt(
                 [
@@ -131,26 +178,25 @@ class RechercheView(AbstractView):
                     from presentation.start_view import StartView
 
                     return StartView(langue=self.langue)
-
-            sauvegarder_recherche = prompt(
+            candidater = prompt(
                 [
                     {
                         "type": "confirm",
-                        "name": "sauv",
-                        "message": "Sauvergarder la recherche ?"
+                        "name": "oui",
+                        "message": "Envoyer sa candidature"
                         if self.langue == "français"
-                        else "Save the search?",
+                        else "Send your application",
                         "default": False,
                     }
                 ]
             )
-            if sauvegarder_recherche["sauv"]:
+            if candidater["oui"]:
                 if self.user:
-                    RechercheDao().sauvegarder_recherche(recherche, self.user)
+                    CandidatureDao().candidater(offre=answers[0], utilisateur=self.user)
                     print(
-                        "Search saved successfully."
-                        if self.langue == "anglais"
-                        else "La recherche a bien été sauvegardée"
+                        "Candidature effectuée"
+                        if self.langue == "français"
+                        else "Application submitted"
                     )
                 else:
                     print(
@@ -161,6 +207,7 @@ class RechercheView(AbstractView):
                     from presentation.start_view import StartView
 
                     return StartView()
+
             autre_recherche = prompt(
                 [
                     {
