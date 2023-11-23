@@ -60,7 +60,7 @@ class CandidatureView(AbstractView):
             }
 
             answers = prompt(self.__questions)
-            if answers[0] == "retour":
+            if answers[0] == "Retour":
                 from presentation.user_view import UserView
                 return UserView(user=self.user, langue=self.langue)
             else:
@@ -80,5 +80,5 @@ class CandidatureView(AbstractView):
                     from presentation.user_view import UserView
                     return UserView(user=self.user,langue=self.langue)
                 else:
-                    from presentation.start_view import StartView
-                    return StartView(self.langue)
+                    from presentation.suivi_candidature_view import CandidatureView
+                    return CandidatureView(user=self.user,langue=self.langue)

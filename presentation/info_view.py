@@ -67,17 +67,14 @@ class InfoView(AbstractView):
 
         if reponse["choix"] == choix_quit:
             pass
-
         elif reponse["choix"] == choix_update_info:
             from presentation.modif_info_view import ModifInfoView
 
             return ModifInfoView(user=self.user, langue=self.langue)
-
         elif reponse["choix"] == choix_return:
             from presentation.user_view import UserView
 
             return UserView(user=self.user, langue=self.langue)
-
         elif reponse["choix"] == choix_disconnect:
             self.user._connexion = False
             from presentation.start_view import StartView

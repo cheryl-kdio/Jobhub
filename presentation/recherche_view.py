@@ -46,7 +46,10 @@ class RechercheView(AbstractView):
         )
 
         choix_offres = [
-            {"name": str(i+1) + ". " + offre.titre + "-" + offre.entreprise, "value": offre}
+            {
+                "name": str(i + 1) + ". " + offre.titre + "-" + offre.entreprise,
+                "value": offre,
+            }
             for i, offre in enumerate(r.obtenir_resultats(recherche))
         ] + [{"name": "Retour", "value": None}]
 
@@ -61,7 +64,7 @@ class RechercheView(AbstractView):
         }
         answers = prompt([question])
 
-        if answers[0] == "retour":
+        if answers[0] == "Retour":
             from presentation.start_view import StartView
 
             return StartView()

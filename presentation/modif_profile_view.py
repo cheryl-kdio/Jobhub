@@ -59,117 +59,110 @@ class ModifProfileView(AbstractView):
         }
         answers = prompt([question])
 
-        if answers[0] == "retour":
+        real_choice = choix_profil[translated_choices.index(answers[0])]
+        question = {
+            "type": "input",
+            "name": "nouv",
+            "message": (
+                f"New {answers[0]}:"
+                if self.langue == "anglais"
+                else f"Nouveau {answers[0]} :"
+            ),
+        }
+        from business.dao.profil_chercheur_emploi_dao import (
+            ProfilChercheurEmploiDao,
+        )
+
+        pced = ProfilChercheurEmploiDao()
+        pced.maj(
+            self.pce.id_profil_chercheur_emploi,
+            real_choice,
+            prompt(question)["nouv"],
+        )
+        utils = pced.voir_profil_chercheur_emploi(self.user)
+        for i, profil in enumerate(utils, 1):
+            print(f"Profile {i}:")
+            print(f"ID: {profil.id_profil_chercheur_emploi}")
+            print(
+                f"Name: {profil.nom}"
+                if self.langue == "anglais"
+                else f"Nom: {profil.nom}"
+            )
+            print(
+                f"Keywords: {profil.mots_cles}"
+                if self.langue == "anglais"
+                else f"Mots-clés: {profil.mots_cles}"
+            )
+            print(
+                f"Location: {profil.lieu}"
+                if self.langue == "anglais"
+                else f"Lieu: {profil.lieu}"
+            )
+            print(
+                f"Distance: {profil.distance}"
+                if self.langue == "anglais"
+                else f"Distance: {profil.distance}"
+            )
+            print(
+                f"Contract Type: {profil.type_contrat}"
+                if self.langue == "anglais"
+                else f"Type de contrat: {profil.type_contrat}"
+            )
+            print("\n")
+        input(
+            "Press Enter to continue"
+            if self.langue == "anglais"
+            else "Appuyez sur entrée pour continuer"
+        )
+        questions = [
+            {
+                "type": "list",
+                "name": "choix",
+                "message": (
+                    "Choose an option:"
+                    if self.langue == "anglais"
+                    else "Choisissez une option:"
+                ),
+                "choices": [
+                    "Modify another parameter",
+                    "Log out",
+                    "Return",
+                    "Quit",
+                ]
+                if self.langue == "anglais"
+                else [
+                    "Modifier un autre paramètre",
+                    "Se déconnecter",
+                    "Retour",
+                    "Quitter",
+                ],
+            }
+        ]
+
+        answ = prompt(questions)
+
+        choix_change_param = (
+            "Modify another parameter"
+            if self.langue == "anglais"
+            else "Modifier un autre paramètre"
+        )
+        choix_return = "Return" if self.langue == "anglais" else "Retour"
+        choix_disconnect = "Log out" if self.langue == "anglais" else "Se déconnecter"
+
+        if answ["choix"] == choix_change_param:
+            return ModifProfileView(self.pce, user=self.user, langue=self.langue)
+
+        elif answ["choix"] == choix_disconnect:
+            self.user._connexion = False
             from presentation.start_view import StartView
 
-            return StartView()
+            return StartView(langue=self.langue)
+        elif answ["choix"] == choix_return:
+            from presentation.profile_view import ProfileView
 
+            return ProfileView(user=self.user, langue=self.langue)
         else:
-            real_choice = choix_profil[translated_choices.index(answers[0])]
-            question = {
-                "type": "input",
-                "name": "nouv",
-                "message": (
-                    f"New {answers[0]}:"
-                    if self.langue == "anglais"
-                    else f"Nouveau {answers[0]} :"
-                ),
-            }
-            from business.dao.profil_chercheur_emploi_dao import (
-                ProfilChercheurEmploiDao,
-            )
-
-            pced = ProfilChercheurEmploiDao()
-            pced.maj(
-                int(self.pce["profil"].split("ID: ")[1].split(",")[0]),
-                real_choice,
-                prompt(question)["nouv"],
-            )
-
-            utils = pced.voir_profil_chercheur_emploi(self.user)
-
-            for i, profil in enumerate(utils, 1):
-                print(f"Profile {i}:")
-                print(f"ID: {profil.id_profil_chercheur_emploi}")
-                print(
-                    f"Name: {profil.nom}"
-                    if self.langue == "anglais"
-                    else f"Nom: {profil.nom}"
-                )
-                print(
-                    f"Keywords: {profil.mots_cles}"
-                    if self.langue == "anglais"
-                    else f"Mots-clés: {profil.mots_cles}"
-                )
-                print(
-                    f"Location: {profil.lieu}"
-                    if self.langue == "anglais"
-                    else f"Lieu: {profil.lieu}"
-                )
-                print(
-                    f"Distance: {profil.distance}"
-                    if self.langue == "anglais"
-                    else f"Distance: {profil.distance}"
-                )
-                print(
-                    f"Contract Type: {profil.type_contrat}"
-                    if self.langue == "anglais"
-                    else f"Type de contrat: {profil.type_contrat}"
-                )
-                print("\n")
-
-            input(
-                "Press Enter to continue"
-                if self.langue == "anglais"
-                else "Appuyez sur entrée pour continuer"
-            )
-            questions = [
-                {
-                    "type": "list",
-                    "name": "choix",
-                    "message": (
-                        "Choose an option:"
-                        if self.langue == "anglais"
-                        else "Choisissez une option:"
-                    ),
-                    "choices": [
-                        "Modify another parameter",
-                        "Log out",
-                        "Return",
-                        "Quit",
-                    ]
-                    if self.langue == "anglais"
-                    else [
-                        "Modifier un autre paramètre",
-                        "Se déconnecter",
-                        "Retour",
-                        "Quitter",
-                    ],
-                }
-            ]
-            answ = prompt(questions)
-            if (
-                answ["choix"] == "Modify another parameter"
-                if self.langue == "anglais"
-                else "Modifier un autre paramètre"
-            ):
-                return ModifProfileView(self.pce, user=self.user, langue=self.langue)
-
-            elif (
-                answ["choix"] == "Log out"
-                if self.langue == "anglais"
-                else "Se déconnecter"
-            ):
-                self.user._connexion = False
-                from presentation.start_view import StartView
-
-                return StartView(langue=self.langue)
-            elif answ["choix"] == "Return" if self.langue == "anglais" else "Retour":
-                from presentation.profile_view import ProfileView
-
-                return ProfileView(user=self.user, langue=self.langue)
-            else:
-                pass
+            pass
 
     def display_info(self):
         print(
