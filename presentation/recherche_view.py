@@ -17,10 +17,12 @@ from business.dao.candidature_dao import CandidatureDao
 
 
 class RechercheView(AbstractView):
-    def __init__(self, langue, user=None):
+    def __init__(self, langue, query_params,user=None):
         self.langue = langue
         self.user = user
         self.results_per_page = 20
+        self.query_params=query_params
+        self.query_params["results_per_page"] = self.results_per_page
         self.__questions = [
             {
                 "type": "input",
@@ -28,18 +30,19 @@ class RechercheView(AbstractView):
                 "message": (
                     "Enter the job title or keywords:"
                     if self.langue == "anglais"
-                    else "Entrez l'intitulé du poste ou des mots-clés : "
+                    else "Entrez l'intitulé du poste ou des mots-clés (séparés par des espaces) : "
                 ),
             },
         ]
 
     def make_choice(self):
-        answers = prompt(self.__questions)
-        query_params = {
-            "results_per_page": self.results_per_page,
-            "what": answers["mot_cle"],
-        }
-        recherche = Recherche(query_params=query_params)
+        if self.query_params is None:
+            answers = prompt(self.__questions)
+            self.query_params = {
+                "what": answers["mot_cle"].replace(",", " "),
+            }
+
+        recherche = Recherche(query_params=self.query_params)
         r = RechercheService()
         print(
             "Resultats obtenus :" if self.langue == "français" else "Results obtained"
