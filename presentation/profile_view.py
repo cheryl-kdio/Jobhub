@@ -124,8 +124,8 @@ class ProfileView(AbstractView):
                     }
                 ]
 
-            profil_chercheur_emploi = prompt(questions)
-            profil_dict = vars(profil_chercheur_emploi["profil"])
+            profil_chercheur_emploi = prompt(questions)["profil"]
+            profil_dict = vars(profil_chercheur_emploi)
             for key, value in profil_dict.items():
                 print(f"{key}: {value}")
 
@@ -142,29 +142,27 @@ class ProfileView(AbstractView):
         return profil_chercheur_emploi
 
     def make_choice(self):
-        profil_chercheur_emploi = self.display_info()
-        reponse = prompt(self.__questions)
-        if reponse["choix"] == ("Quit" if self.langue == "anglais" else "Quitter"):
-            pass
+        while True:
+            profil_chercheur_emploi = self.display_info()
+            reponse = prompt(self.__questions)
+            if reponse["choix"] == ("Quit" if self.langue == "anglais" else "Quitter"):
+                break
+            elif reponse["choix"] == (
+                "Modify alerts" if self.langue == "anglais" else "Modifier ses alertes"
+            ):
+                from presentation.modif_profile_view import ModifProfileView
 
-        elif reponse["choix"] == (
-            "Modify alerts" if self.langue == "anglais" else "Modifier ses alertes"
-        ):
-            from presentation.modif_profile_view import ModifProfileView
+                return ModifProfileView(
+                    user=self.user, pce=profil_chercheur_emploi, langue=self.langue
+                )
+            elif reponse["choix"] == ("Back" if self.langue == "anglais" else "Retour"):
+                from presentation.user_view import UserView
 
-            return ModifProfileView(
-                user=self.user, pce=profil_chercheur_emploi, langue=self.langue
-            )
+                return UserView(user=self.user, langue=self.langue)
+            elif reponse["choix"] == (
+                "Disconnect" if self.langue == "anglais" else "Se déconnecter"
+            ):
+                self.user._connexion = False
+                from presentation.start_view import StartView
 
-        elif reponse["choix"] == ("Back" if self.langue == "anglais" else "Retour"):
-            from presentation.user_view import UserView
-
-            return UserView(user=self.user, langue=self.langue)
-
-        elif reponse["choix"] == (
-            "Disconnect" if self.langue == "anglais" else "Se déconnecter"
-        ):
-            self.user._connexion = False
-            from presentation.start_view import StartView
-
-            return StartView(langue=self.langue)
+                return StartView(langue=self.langue)
