@@ -64,10 +64,15 @@ class RechercheView(AbstractView):
         }
         answers = prompt([question])
 
-        if answers[0] == "Retour":
-            from presentation.start_view import StartView
+        if not answers[0]:
+            if not self.user:
+                from presentation.start_view import StartView
 
-            return StartView()
+                return StartView(self.langue)
+            else:
+                from presentation.user_view import UserView
+
+                return UserView(user=self.user, langue=self.langue)
         else:
             print(answers[0])
             candidater = prompt(
