@@ -24,9 +24,11 @@ class ARechercheView(AbstractView):
         ]
 
     def display_info(self):
-        redao = RechercheDao()
-        pce = redao.voir_favoris(self.user)
+        pass
 
+    def make_choice(self):
+        pced = RechercheDao()
+        pce = pced.voir_favoris(self.user)
         if not pce:
             print(
                 "Vous n'avez pas de recherches sauvegardées"
@@ -46,105 +48,76 @@ class ARechercheView(AbstractView):
                     ),
                     "choices": [
                         "Retour",
-                        "Quitter",
                         "Lancer une recherche",
                     ],
                 }
             ]
 
-            response = prompt(
-                questions[0]
-            )  # Use indexing to access the first item in the list
-            if response["choix"] == "Retour":
-                from presentation.user_view import UserView
+            response = prompt(questions)
+            return response
 
-                return UserView(self.user)
+        else:
+            recherche = pce
 
-            elif response["choix"] == (
-                "Quitter" if self.langue == "français" else "Quit"
-            ):
-                pass
+            for item in recherche:
+                what = item.get("what", "N/A")
+                where = item.get("where", "N/A")
+                print("Intitulé:", what)  # Use what instead of item.get("what", "N/A")
+                print("Lieu:", where)  # Use where instead of item.get("where", "N/A")
+                print("===")
+        reponse = prompt(self.__questions)
 
-            else:
+        if reponse["choix"] == ("Quitter" if self.langue == "français" else "Quit"):
+            pass
+
+        elif reponse["choix"] == "Supprimer des recherches sauvegardées":
+            question = prompt(
+                [
+                    {
+                        "type": "list",
+                        "message": "Choisissez une recherche sauvegardée à supprimer :",
+                        "name": "recherche",
+                        "choices": [
+                            f"{item.get('what','N/A')} - {item.get('where', 'N/A')}"
+                            for item in recherche
+                        ],
+                    }
+                ]
+            )
+            selected_choice_str = question["recherche"]
+            selected_item = next(
+                (
+                    item
+                    for item in recherche
+                    if f"{item.get('what','N/A')} - {item.get('where', 'N/A')}"
+                    == selected_choice_str
+                ),
+                None,
+            )
+            from business.client.recherche import Recherche
+
+            t = Recherche(selected_item)
+            if RechercheDao().supprimer_recherche(t, self.user):
+                print("La recherche à bien été supprimé")
                 from presentation.afficher_recherche_favoris import ARechercheView
 
                 return ARechercheView(self.user, self.langue)
 
-        for item in pce:
-            what = item.get("what", "N/A")
-            where = item.get("where", "N/A")
-            print("Intitulé:", what)
-            print("Lieu:", where)
-            print("===")
-
-        return pce
-
-    def make_choice(self):
-        recherche, pce = self.display_info()
-        reponse = prompt(self.__questions)
-
-        if reponse == ("Quitter" if self.langue == "français" else "Quit"):
-            pass
-
-        elif reponse == (
-            "Supprimer des recherches sauvegardées"
-            if self.langue == "français"
-            else "Delete an offer"
-        ):
-            from business.dao.recherche_dao import RechercheDao
-
-            redao = RechercheDao()
-            from business.client.recherche import Recherche
-
-            question = [
-                {
-                    "type": "list",
-                    "name": "recherche",
-                    "message": (
-                        "Choisissez la recherche à supprimer"
-                        if self.langue == "français"
-                        else "Choose the search to delete:"
-                    ),
-                    "choices": [
-                        {
-                            "name": f"{item['what']} - {item['where']}",
-                            "value": item,
-                        }
-                        for item in pce
-                        if isinstance(item, dict)
-                    ],
-                }
-            ]
-
-            recherche = prompt(question)[
-                0
-            ]  # Use [0] to get the first (and only) element
-            selected_recherche_str = recherche["recherche"]
-
-            selected_recherche = None
-            for element in pce:
-                if (
-                    isinstance(element, Recherche)
-                    and f"{element['what']} - {element['where']}"
-                    == selected_recherche_str
-                ):
-                    selected_recherche = element
-                    break
-
-            with open(
-                "presentation/graphical_assets/banner.txt", "r", encoding="utf-8"
-            ) as asset:
-                print(asset.read())
-
-            redao.supprimer_recherche(selected_recherche)
-            print(
-                "L'offre a bien été supprimée"
-                if self.langue == "français"
-                else "The offer has been deleted"
-            )
-            return ARechercheView(user=self.user, langue=self.langue)
-
-        elif reponse == "Retour":
+        elif reponse["choix"] == ("Retour" if self.langue == "français" else "Return"):
             from presentation.user_view import UserView
 
-            return UserView(self.user)
+            return UserView(user=self.user, langue=self.langue)
+
+        elif recherche["choix"] == (
+            "Retour" if self.langue == "français" else "Return"
+        ):
+            from presentation.user_view import UserView
+
+            return UserView(user=self.user, langue=self.langue)
+
+        elif recherche["choix"] == (
+            "Lancer une recherche" if self.langue == "français" else "Launch a search"
+        ):
+            from presentation.recherche_view import RechercheView
+
+            return RechercheView(user=self.user, langue=self.langue)

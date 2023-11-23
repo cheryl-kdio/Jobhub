@@ -65,10 +65,10 @@ class UserView(AbstractView):
 
             return OffreView(user=self.user, langue=self.langue)
 
-        elif reponse["choix"] == "Recherches sauvegardés":
-            from presentation.afficher_recherche_favoris import RechercheView
+        elif reponse["choix"] == "Recherches sauvegardées":
+            from presentation.afficher_recherche_favoris import ARechercheView
 
-            return RechercheView(user=self.user)
+            return ARechercheView(user=self.user, langue=self.langue)
 
         elif reponse["choix"] == (
             "Lancer une recherche"
