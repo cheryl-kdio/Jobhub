@@ -6,22 +6,22 @@ from business.services.utilisateur_service import (
     Utilisateur,
 )  # Importation de la classe Utilisateur depuis le module utilisateur_service
 from business.dao.utilisateur_dao import UtilisateurDao
-from business.business_objectss_object.recherche import Recherche
+from business.business_object.recherche import Recherche
 from business.services.recherche_service import RechercheService
 from tabulate import tabulate
 from business.dao.profil_chercheur_emploi_dao import ProfilChercheurEmploiDao
-from business.business_objectss_object.profil_chercheur_emploi import ProfilChercheurEmploi
+from business.business_object.profil_chercheur_emploi import ProfilChercheurEmploi
 from business.dao.recherche_dao import RechercheDao
 
 from business.dao.candidature_dao import CandidatureDao
 
 
 class RechercheView(AbstractView):
-    def __init__(self, langue, query_params,user=None):
+    def __init__(self, langue, query_params, user=None):
         self.langue = langue
         self.user = user
         self.results_per_page = 20
-        self.query_params=query_params
+        self.query_params = query_params
         self.query_params["results_per_page"] = self.results_per_page
         self.__questions = [
             {
