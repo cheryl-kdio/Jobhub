@@ -54,10 +54,6 @@ class ConnexionView(AbstractView):
             )
 
             if compte_utilisateur:
-                if self.langue == "français":
-                    print("Connexion réussie, bienvenue ", compte_utilisateur.nom)
-                elif self.langue == "anglais":
-                    print("Succesfull connection, welcome ", compte_utilisateur.nom)
                 from presentation.user_view import UserView
 
                 return UserView(user=compte_utilisateur, langue=self.langue)
