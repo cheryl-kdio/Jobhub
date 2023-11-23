@@ -54,28 +54,31 @@ class InfoView(AbstractView):
 
     def make_choice(self):
         reponse = prompt(self.__questions)
-        if reponse["choix"] == "Quit" if self.langue == "anglais" else "Quitter":
-            pass
-
-        elif reponse["choix"] == (
+        choix_quit = "Quit" if self.langue == "anglais" else "Quitter"
+        choix_update_info = (
             "Update personal information"
             if self.langue == "anglais"
             else "Modifier ses informations personnelles"
-        ):
+        )
+        choix_return = "Return" if self.langue == "anglais" else "Retour"
+        choix_disconnect = (
+            "Disconnect" if self.langue == "anglais" else "Se déconnecter"
+        )
+
+        if reponse["choix"] == choix_quit:
+            pass
+
+        elif reponse["choix"] == choix_update_info:
             from presentation.modif_info_view import ModifInfoView
 
             return ModifInfoView(user=self.user, langue=self.langue)
 
-        elif reponse["choix"] == "Return" if self.langue == "anglais" else "Retour":
+        elif reponse["choix"] == choix_return:
             from presentation.user_view import UserView
 
             return UserView(user=self.user, langue=self.langue)
 
-        elif (
-            reponse["choix"] == "Disconnect"
-            if self.langue == "anglais"
-            else "Se déconnecter"
-        ):
+        elif reponse["choix"] == choix_disconnect:
             self.user._connexion = False
             from presentation.start_view import StartView
 
