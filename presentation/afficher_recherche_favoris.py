@@ -54,7 +54,6 @@ class ARechercheView(AbstractView):
             ]
 
             response = prompt(questions)
-            return response
 
         else:
             recherche = pce
@@ -108,14 +107,12 @@ class ARechercheView(AbstractView):
 
             return UserView(user=self.user, langue=self.langue)
 
-        elif recherche["choix"] == (
-            "Retour" if self.langue == "français" else "Return"
-        ):
+        elif response["choix"] == ("Retour" if self.langue == "français" else "Return"):
             from presentation.user_view import UserView
 
             return UserView(user=self.user, langue=self.langue)
 
-        elif recherche["choix"] == (
+        elif response["choix"] == (
             "Lancer une recherche" if self.langue == "français" else "Launch a search"
         ):
             from presentation.recherche_view import RechercheView
