@@ -17,7 +17,7 @@ from business.dao.candidature_dao import CandidatureDao
 
 
 class RechercheView(AbstractView):
-    def __init__(self, langue, query_params=None, user=None):
+    def __init__(self, langue, query_params={}, user=None):
         self.langue = langue
         self.user = user
         self.results_per_page = 20
@@ -36,11 +36,13 @@ class RechercheView(AbstractView):
         ]
 
     def make_choice(self):
-        if self.query_params is None:
+        if len(self.query_params) == 1:
             answers = prompt(self.__questions)
-            self.query_params = {
-                "what": answers["mot_cle"].replace(",", " "),
-            }
+            self.query_params = self.query_params.update(
+                {
+                    "what": answers["mot_cle"].replace(",", " "),
+                }
+            )
 
         recherche = Recherche(query_params=self.query_params)
         r = RechercheService()
@@ -234,8 +236,4 @@ class RechercheView(AbstractView):
                     return UserView(user=self.user, langue=self.langue)
 
     def display_info(self):
-        print(
-            "Veuillez entrer les informations suivantes :"
-            if self.langue == "français"
-            else "Please enter the following information:"
-        )
+        pass
