@@ -29,6 +29,28 @@ class OffreView(AbstractView):
                 if self.langue == "français"
                 else "You don't have any saved offers."
             )
+
+            self.__questions=[
+                    {
+                        "type": "confirm",
+                        "name": "oui",
+                        "message": "Souhaiter vous lancer une recherche ?"
+                        if self.langue == "français"
+                        else "Do you want to start a reasearch ? ",
+                        "default": True,
+                    }
+                ]
+
+            answers=prompt(self.__questions)
+
+            if answers['oui']:
+
+                from presentation.recherche_view import RechercheView
+                return RechercheView(langue=self.langue, user=self.user)
+            else:
+                from presentation.user_view import UserView
+                return UserView(user=self.user, langue=self.langue) 
+                
         else:
             message_fr = "Choisissez une offre à détailler : \n - - - - - - - - - - - - - - - - - - - -\n"
             message_en = "Choose a job to view in detail."
