@@ -77,8 +77,11 @@ class RechercheView(AbstractView):
 
             return UserView(self.user)
 
+            return CreateAccountView()
+
         else:
-            q = prompt(
+            print(answers[0])
+            utiliser_recherche = prompt(
                 [
                     {
                         "type": "confirm",

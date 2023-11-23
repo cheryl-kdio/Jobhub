@@ -48,6 +48,7 @@ CREATE TABLE projet2A.offre (
     description TEXT,
     utilisateur_id INT,
     date_ajout DATE DEFAULT CURRENT_DATE,
+    candidature_envoyee BOOLEAN DEFAULT FALSE,
     PRIMARY KEY (id_offre, utilisateur_id),
     FOREIGN KEY (utilisateur_id) REFERENCES projet2A.compte_utilisateur(id_compte_utilisateur)
 );

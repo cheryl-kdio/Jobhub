@@ -1,5 +1,5 @@
 from InquirerPy import prompt
-
+from utils.countdown_timer import countdown_timer
 from presentation.abstract_view import AbstractView
 from presentation.session import Session
 from business.services.utilisateur_service import (
@@ -66,20 +66,24 @@ class ConnexionView(AbstractView):
                     print(
                         "Identifiant ou mot de passe incorrect. Vous avez encore",
                         max_attempts - attempts - 1,
-                        "tentatives.",
+                        "tentatives.\n",
                     )
                 elif self.langue == "anglais":
                     print(
                         "Incorrect username or password. You have",
                         max_attempts - attempts - 1,
-                        "attempts remaining.",
+                        "attempts remaining.\n",
                     )
                 attempts += 1
+                
         if self.langue == "français":
-            print("Trop de tentatives infructueuses. La connexion est bloquée.")
+            print("\n Trop de tentatives infructueuses. La connexion est bloquée. \n Veuillez attendre 5 secondes avant de tenter de vous reconnecter!\n")
         elif self.langue == "anglais":
-            print("Too many unsuccessful attempts. Connection blocked.")
-        return None
+            print("Too many unsuccessful attempts. Connection blocked. Wait 5 seconds to reconnect !\n")
+        
+        countdown_timer(5)
+        from presentation.start_view import StartView
+        return StartView(self.langue)
 
     def display_info(self):
         if self.langue == "français":

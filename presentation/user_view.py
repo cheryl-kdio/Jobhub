@@ -13,45 +13,22 @@ class UserView(AbstractView):
                 "type": "list",
                 "name": "choix",
                 "message": (
-                    f"Hello {Session().user_name}"
+                    f"Hello {self.user.nom}"
                     if self.langue == "anglais"
-                    else f"Bonjour {Session().user_name}"
+                    else f"Bonjour {self.user.nom}"
                 ),
                 "choices": [
-                    (
-                        "View alerts"
-                        if self.langue == "anglais"
-                        else "Consulter ses alertes"
-                    ),
-                    (
-                        "Check personal information"
-                        if self.langue == "anglais"
-                        else "Vérifier ses informations personnelles"
-                    ),
-                    (
-                        "Follow applications"
-                        if self.langue == "anglais"
-                        else "Suivre ses candidatures"
-                    ),
-                    (
-                        "Saved offers"
-                        if self.langue == "anglais"
-                        else "Offres sauvegardés"
-                    ),
-                    (
-                        "Saved searches"
-                        if self.langue == "anglais"
-                        else "Recherches sauvegardés"
-                    ),
-                    (
-                        "Start a search"
-                        if self.langue == "anglais"
-                        else "Lancer une recherche"
-                    ),
-                    ("Quit" if self.langue == "anglais" else "Quitter"),
+                    "Consulter ses alertes",
+                    "Vérifier ses informations personnelles",
+                    "Suivre ses candidatures",
+                    "Offres sauvegardés",
+                    "Recherches sauvegardés",
+                    "Lancer une recherche",
+                    "Quitter",
                 ],
             }
         ]
+
 
     def display_info(self):
         with open(
@@ -61,11 +38,7 @@ class UserView(AbstractView):
 
     def make_choice(self):
         reponse = prompt(self.__questions)
-        if (
-            reponse["choix"] == "Quitter"
-            if self.langue == "français"
-            else reponse["choix"] == "Quit"
-        ):
+        if reponse["choix"] == "Quitter":
             pass
 
         elif reponse["choix"] == (
@@ -75,41 +48,27 @@ class UserView(AbstractView):
 
             return ProfileView(user=self.user, langue=self.langue)
 
-        elif reponse["choix"] == (
-            "Offres sauvegardés" if self.langue == "français" else "Saved offers"
-        ):
-            from presentation.afficher_offre_favoris import OffreView
+        elif reponse["choix"] == "Offres sauvegardés":
+            from presentation.offre_fav_view import OffreView
 
             return OffreView(user=self.user, langue=self.langue)
 
-        elif reponse["choix"] == (
-            "Recherches sauvegardés" if self.langue == "français" else "Saved searches"
-        ):
+        elif reponse["choix"] == "Recherches sauvegardés":
             from presentation.afficher_recherche_favoris import RechercheView
 
-            return RechercheView(user=self.user, langue=self.langue)
+            return RechercheView(user=self.user)
 
-        elif reponse["choix"] == (
-            "Lancer une recherche" if self.langue == "français" else "Start a search"
-        ):
+        elif reponse["choix"] == "Lancer une recherche":
             from presentation.recherche_view import RechercheView
 
             return RechercheView(user=self.user, langue=self.langue)
 
-        elif reponse["choix"] == (
-            "Vérifier ses informations personnelles"
-            if self.langue == "français"
-            else "Check personal information"
-        ):
+        elif reponse["choix"] == "Vérifier ses informations personnelles":
             from presentation.info_view import InfoView
 
-            return InfoView(user=self.user, langue=self.langue)
-
-        elif reponse["choix"] == (
-            "Suivre ses candidatures"
-            if self.langue == "français"
-            else "Follow applications"
-        ):
+            return InfoView(user=self.user,langue=self.langue)
+        
+        elif reponse["choix"]== "Suivre ses candidatures":
             from presentation.suivi_candidature_view import CandidatureView
 
             return CandidatureView(user=self.user, langue=self.langue)
