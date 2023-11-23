@@ -1,15 +1,14 @@
 from business.dao.db_connection import DBConnection
 from utils.singleton import Singleton
-from business.client.offre import Offre
-from business.client.recherche import Recherche
-from business.client.compte_utilisateur import CompteUtilisateur
+from business.business_object.offre import Offre
+from business.business_object.recherche import Recherche
+from business.business_object.compte_utilisateur import CompteUtilisateur
 from business.dao.recherche_dao import RechercheDao
 from business.services.recherche_service import RechercheService
 from business.dao.utilisateur_dao import UtilisateurDao
 
 
 class CandidatureDao(metaclass=Singleton):
-
     def deja_candidat(self, offre, utilisateur):
         with DBConnection().connection as connection:
             with connection.cursor() as cursor:

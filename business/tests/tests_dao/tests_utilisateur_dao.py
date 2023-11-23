@@ -1,6 +1,6 @@
 from business.dao.utilisateur_dao import UtilisateurDao
 from unittest import TestCase, TextTestRunner, TestLoader
-from business.client.compte_utilisateur import CompteUtilisateur
+from business.business_object.compte_utilisateur import CompteUtilisateur
 from business.services.utilisateur_service import Utilisateur
 
 

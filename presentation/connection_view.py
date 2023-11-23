@@ -2,9 +2,9 @@ from InquirerPy import prompt
 from utils.countdown_timer import countdown_timer
 from presentation.abstract_view import AbstractView
 from presentation.session import Session
-from business.services.utilisateur_service import (Utilisateur) 
+from business.services.utilisateur_service import Utilisateur
 from business.dao.utilisateur_dao import UtilisateurDao
-from business.client.compte_utilisateur import CompteUtilisateur
+from business.business_object.compte_utilisateur import CompteUtilisateur
 
 from InquirerPy import prompt
 
@@ -63,14 +63,19 @@ class ConnexionView(AbstractView):
                         "attempts remaining.\n",
                     )
                 attempts += 1
-                
+
         if self.langue == "français":
-            print("\n Trop de tentatives infructueuses. La connexion est bloquée. \n Veuillez attendre 5 secondes avant de tenter de vous reconnecter!\n")
+            print(
+                "\n Trop de tentatives infructueuses. La connexion est bloquée. \n Veuillez attendre 5 secondes avant de tenter de vous reconnecter!\n"
+            )
         elif self.langue == "anglais":
-            print("Too many unsuccessful attempts. Connection blocked. Wait 5 seconds to reconnect !\n")
-        
+            print(
+                "Too many unsuccessful attempts. Connection blocked. Wait 5 seconds to reconnect !\n"
+            )
+
         countdown_timer(5)
         from presentation.start_view import StartView
+
         return StartView(self.langue)
 
     def display_info(self):

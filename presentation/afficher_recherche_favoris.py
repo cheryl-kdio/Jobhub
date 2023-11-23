@@ -93,7 +93,7 @@ class ARechercheView(AbstractView):
                 ),
                 None,
             )
-            from business.client.recherche import Recherche
+            from business.business_object.recherche import Recherche
 
             t = Recherche(selected_item)
             if RechercheDao().supprimer_recherche(t, self.user):

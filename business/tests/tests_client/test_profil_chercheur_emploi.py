@@ -1,5 +1,5 @@
 import unittest
-from business.client.profil_chercheur_emploi import (
+from business.business_object.profil_chercheur_emploi import (
     ProfilChercheurEmploi,
 )  # Assurez-vous d'importer correctement votre classe ProfilChercheurEmploi
 

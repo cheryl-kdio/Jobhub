@@ -1,14 +1,14 @@
 from business.dao.db_connection import DBConnection
 from business.singleton import Singleton
-from business.client.compte_utilisateur import CompteUtilisateur
+from business.business_object.compte_utilisateur import CompteUtilisateur
 from business.dao.utilisateur_dao import UtilisateurDao
-from business.client.recherche import Recherche
+from business.business_object.recherche import Recherche
 from business.services.recherche_service import RechercheService
 from business.dao.recherche_dao import RechercheDao
 from business.services.utilisateur_service import Utilisateur
 from business.dao.offre_dao import OffreDao
 from business.dao.recherche_dao import RechercheDao
-from business.client.offre import Offre
+from business.business_object.offre import Offre
 
 # Pierre = Utilisateur().create_account("cheryl", "ck@gmail.com", "Patate12", "Patate12")
 pierre = Utilisateur().se_connecter("ck@gmail.com", "Patate12")

@@ -1,8 +1,8 @@
 from business.dao.db_connection import DBConnection
 from utils.singleton import Singleton
-from business.client.offre import Offre
-from business.client.recherche import Recherche
-from business.client.compte_utilisateur import CompteUtilisateur
+from business.business_object.offre import Offre
+from business.business_object.recherche import Recherche
+from business.business_object.compte_utilisateur import CompteUtilisateur
 from business.dao.recherche_dao import RechercheDao
 from business.services.recherche_service import RechercheService
 from business.dao.utilisateur_dao import UtilisateurDao
@@ -52,7 +52,7 @@ class OffreDao(metaclass=Singleton):
             return res["id_offre"]
         else:
             return None
-    
+
     def deja_favoris(self, offre, utilisateur):
         with DBConnection().connection as connection:
             with connection.cursor() as cursor:
@@ -191,9 +191,9 @@ class OffreDao(metaclass=Singleton):
                         },
                     )
                     res = cursor.rowcount
-            if res>0:
+            if res > 0:
                 created = True
-            else :
+            else:
                 return None
 
         with DBConnection().connection as connection:

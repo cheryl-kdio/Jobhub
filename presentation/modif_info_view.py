@@ -6,11 +6,11 @@ from business.services.utilisateur_service import (
     Utilisateur,
 )  # Importation de la classe Utilisateur depuis le module utilisateur_service
 from business.dao.utilisateur_dao import UtilisateurDao
-from business.client.recherche import Recherche
+from business.business_object.recherche import Recherche
 from business.services.recherche_service import RechercheService
 from tabulate import tabulate
 from business.dao.profil_chercheur_emploi_dao import ProfilChercheurEmploiDao
-from business.client.profil_chercheur_emploi import ProfilChercheurEmploi
+from business.business_object.profil_chercheur_emploi import ProfilChercheurEmploi
 from business.dao.recherche_dao import RechercheDao
 
 from InquirerPy import prompt

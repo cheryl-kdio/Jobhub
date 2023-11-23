@@ -1,6 +1,6 @@
 import unittest
 from unittest.mock import patch, Mock
-from business.client.recherche import (
+from business.business_object.recherche import (
     Recherche,
 )  # Assurez-vous d'importer correctement votre classe Recherche
 

@@ -13,21 +13,27 @@ Ce projet a pour objectif :
 - Mettre en place un système de profil pour les chercheurs d’emploi.
 
 ## Les fonctionnalités  :
+Notre application s'adresse à un individu qui souhaite faire une recherche de stage ou d'emploi dans le secteur de la tech. Elle permettra à l'utilisateur de :
+- [ ] : Créer un compte
+- [ ] : Se connecter à son compte
+- [ ] : Rechercher des offres d'emploi
+- [ ] : Sauvegarder des offres d'emploi
+- [ ] : Postuler à des offres d'emploi
+- [ ] : Suivre ses candidatures
+- [ ] : Recevoir des alertes pour les nouvelles offres correspondant à ses critères
 
-Notre application devrait permettre de 
+Toutes ces fonctionnalités seront accessibles via des vues python dans le terminal.
+A terme, nous souhaitons également développer une interface graphique pour rendre l'application plus conviviale.
 
-- [ ] : Intégrer les données de l’API Adzuna pour afficher des offres d’emploi dans divers secteurs.
-- [ ] : Permettre aux utilisateurs de rechercher des emplois en utilisant divers critères.
-- [ ] : Permettre aux utilisateurs de créer des profils de chercheurs d’emploi.
+## Technologies utilisées
+- Python
+- PostgreSQL via Dbeaver
+- API Adzuna
 
-En plus de celà, nous aimerions :
-- [ ] Fournir des fonctionnalités de suivi des candidatures et de gestion de documents(CVs, lettres
-de motivation…).
-- [ ] Envoyer des alertes aux utilisateurs pour les nouvelles offres correspondant à leurs
-compétences...
+#### Informations sur le projet
 
-#### Informations
-_Tuteur :_ Mansor GUEYE
+Cette application reste dans le cadre du projet de deuxième année du cours de compléments d'informatiques de l'ENSAI.
+Il s'agissait de mobiliser les compétences acquises en programmation orientée objet, en gestion de projet et en gestion de base de données.
 
 _Membres du groupe :_
 - Benjamin Guéraud
@@ -35,3 +41,7 @@ _Membres du groupe :_
 - Antoine Jarry
 - Cheryl Kouadio
 - Clara Serano
+
+_Tuteur :_ Mansor GUEYE
+
+
