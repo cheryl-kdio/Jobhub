@@ -26,6 +26,11 @@ class InfoView(AbstractView):
                     ("Return" if self.langue == "anglais" else "Retour"),
                     ("Disconnect" if self.langue == "anglais" else "Se déconnecter"),
                     ("Quit" if self.langue == "anglais" else "Quitter"),
+                    (
+                        "Delete your account"
+                        if self.langue == "anglais"
+                        else "Supprimer son compte"
+                    ),
                 ],
             }
         ]
@@ -64,6 +69,11 @@ class InfoView(AbstractView):
         choix_disconnect = (
             "Disconnect" if self.langue == "anglais" else "Se déconnecter"
         )
+        choix_suppr = (
+            "Delete your account"
+            if self.langue == "anglais"
+            else "Supprimer son compte"
+        )
 
         if reponse["choix"] == choix_quit:
             pass
@@ -80,3 +90,7 @@ class InfoView(AbstractView):
             from presentation.start_view import StartView
 
             return StartView(langue=self.langue)
+        elif reponse["choix"] == choix_suppr:
+            from presentation.delete_view import DeleteView
+
+            return DeleteView(user=self.user, langue=self.langue)
