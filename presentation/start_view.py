@@ -5,8 +5,9 @@ from presentation.session import Session
 
 
 class StartView(AbstractView):
-    def __init__(self, langue="français"):
+    def __init__(self, langue="français", query_params=None):
         self.langue = langue
+        self.query_params = query_params
         self.__questions = [
             {
                 "type": "list",
@@ -57,7 +58,7 @@ class StartView(AbstractView):
         ):
             from presentation.recherche_view import RechercheView
 
-            return RechercheView(langue=self.langue)
+            return RechercheView(langue=self.langue, query_params=self.query_params)
 
         elif (
             reponse["choix"] == "Créer un compte"
