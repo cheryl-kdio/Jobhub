@@ -17,12 +17,11 @@ from business.dao.candidature_dao import CandidatureDao
 
 
 class RechercheView(AbstractView):
-    def __init__(self, langue, query_params={}, user=None):
+    def __init__(self, langue, query_params=None, user=None):
         self.langue = langue
         self.user = user
-        self.results_per_page = 20
-        self.query_params = query_params
-        self.query_params["results_per_page"] = self.results_per_page
+        self.query_params = {} if query_params is None else query_params
+        self.query_params["results_per_page"] = 20
         self.__questions = [
             {
                 "type": "input",
@@ -38,11 +37,7 @@ class RechercheView(AbstractView):
     def make_choice(self):
         if len(self.query_params) == 1:
             answers = prompt(self.__questions)
-            self.query_params = self.query_params.update(
-                {
-                    "what": answers["mot_cle"].replace(",", " "),
-                }
-            )
+            self.query_params["what"] = answers["mot_cle"]
 
         recherche = Recherche(query_params=self.query_params)
         r = RechercheService()
