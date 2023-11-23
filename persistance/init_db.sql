@@ -73,7 +73,7 @@ CREATE TABLE projet2A.candidatures (
     id_offre BIGINT ,
     titre VARCHAR(255),
     domaine VARCHAR(255),
-    lieu VARCHAR(255), 
+    lieu VARCHAR(255), )
     type_contrat VARCHAR(255),
     lien_offre VARCHAR(255),
     salaire_minimum INTEGER,

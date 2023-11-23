@@ -19,37 +19,66 @@ class CandidatureView(AbstractView):
     def __init__(self, user, langue):
         self.user = user
         self.langue = langue
-        print(
-            "Voici la liste des candidatures effectuées: \n"
-            if self.langue == "français"
-            else "Here is the list of job applications made: \n"
-        )
-        c = CandidatureDao()
-        choix_offres = [
-            {"name": offre.titre + "-" + offre.entreprise, "value": offre}
-            for offre in c.voir_candidatures(self.user)
-        ] + [{"name": "Retour", "value": None}]
 
-        self.__questions = {
-            "type": "list",
-            "message": "Choisissez une candidature à détailler :"
-            if self.langue == "français"
-            else "Choose a job application to view in detail.",
-            "choices": choix_offres,
-        }
 
     def display_info(self):
-        print(
-            "Voici le détail de l'offre à laquelle vous avez candidaté :"
-            if self.langue == "français"
-            else "Here are the details of the job offer to which you have applied:"
-        )
-
+        pass
+    
     def make_choice(self):
-        answers = prompt(self.__questions)
-        if answers[0] == "retour":
-            from presentation.user_view import UserView
+        c = CandidatureDao()
+        choix_offres = [
+            {"name": str(i+1)+"."+offre.titre + "-" + offre.entreprise, "value": offre}
+            for i,offre in enumerate(c.voir_candidatures(self.user))
+        ] + [{"name": "Retour", "value": None}]
 
-            return UserView(user=self.user, langue=self.langue)
+        if len(choix_offres) == 1:
+            print("Vous n'avez pas encore de candidatures \n")
+            self.__questions=[
+                    {
+                        "type": "confirm",
+                        "name": "oui",
+                        "message": "Souhaiter vous lancer une recherche ?"
+                        if self.langue == "français"
+                        else "Do you want to start a reasearch ? ",
+                        "default": True,
+                    }
+                ]
+            answers=prompt(self.__questions)
+            if answers['oui']:
+                from presentation.recherche_view import RechercheView
+                return RechercheView(langue=self.langue, user=self.user)
+            else:
+                from presentation.user_view import UserView
+                return UserView(user=self.user, langue=self.langue) 
         else:
-            print(answers[0])
+            self.__questions = {
+                "type": "list",
+                "message": "Choisissez une candidature à détailler : \n - - - - - - - - - - - - - - - - - - - -"
+                if self.langue == "français"
+                else "Choose a job application to view in detail.",
+                "choices": choix_offres,
+            }
+
+            answers = prompt(self.__questions)
+            if answers[0] == "retour":
+                from presentation.user_view import UserView
+                return UserView(user=self.user, langue=self.langue)
+            else:
+                print(answers[0])
+                self.__questions=[
+                        {
+                            "type": "confirm",
+                            "name": "oui",
+                            "message": "Retourner à la page d'acceuil"
+                            if self.langue == "français"
+                            else "Return to homepage",
+                            "default": True,
+                        }
+                    ]
+                answers=prompt(self.__questions)
+                if answers['oui']:
+                    from presentation.user_view import UserView
+                    return UserView(user=self.user,langue=self.langue)
+                else:
+                    from presentation.start_view import StartView
+                    return StartView(self.langue)
