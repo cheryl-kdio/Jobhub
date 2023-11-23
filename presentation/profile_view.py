@@ -101,24 +101,33 @@ class ProfileView(AbstractView):
         else:
             from business.client.profil_chercheur_emploi import ProfilChercheurEmploi
 
-            questions = [
+            choix_profil = [
                 {
-                    "type": "list",
-                    "name": "profil",
-                    "message": (
-                        "Choose the profile to consult"
-                        if self.langue == "anglais"
-                        else "Choisissez le profil à consulter"
-                    ),
-                    "choices": [
-                        f"ID: {element.id_profil_chercheur_emploi}, Nom: {element.nom}, Lieu: {element.lieu}"
-                        for element in pce
-                        if isinstance(element, ProfilChercheurEmploi)
-                    ],
+                    "name": f"{element.id_profil_chercheur_emploi}. {element.nom} - {element.lieu}",
+                    "value": element,
                 }
+                for element in pce
+                if isinstance(element, ProfilChercheurEmploi)
             ]
 
+            if choix_profil:
+                questions = [
+                    {
+                        "type": "list",
+                        "name": "profil",
+                        "message": (
+                            "Choose the profile to consult"
+                            if self.langue == "anglais"
+                            else "Choisissez le profil à consulter"
+                        ),
+                        "choices": choix_profil + [{"name": "Retour", "value": None}],
+                    }
+                ]
+
             profil_chercheur_emploi = prompt(questions)
+            profil_dict = vars(profil_chercheur_emploi["profil"])
+            for key, value in profil_dict.items():
+                print(f"{key}: {value}")
 
         input(
             "Appuyez sur Entrée pour continuer"

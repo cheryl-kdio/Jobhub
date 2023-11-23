@@ -65,21 +65,23 @@ class InfoView(AbstractView):
             "Disconnect" if self.langue == "anglais" else "Se déconnecter"
         )
 
+        print(f"Choix de l'utilisateur : {reponse['choix']}")  # Débogage
+
         if reponse["choix"] == choix_quit:
             pass
-
         elif reponse["choix"] == choix_update_info:
             from presentation.modif_info_view import ModifInfoView
 
+            print("Rediriger vers ModifInfoView")  # Débogage
             return ModifInfoView(user=self.user, langue=self.langue)
-
         elif reponse["choix"] == choix_return:
             from presentation.user_view import UserView
 
+            print("Rediriger vers UserView")  # Débogage
             return UserView(user=self.user, langue=self.langue)
-
         elif reponse["choix"] == choix_disconnect:
             self.user._connexion = False
             from presentation.start_view import StartView
 
+            print("Rediriger vers StartView")  # Débogage
             return StartView(langue=self.langue)

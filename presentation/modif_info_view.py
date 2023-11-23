@@ -38,6 +38,7 @@ class ModifInfoView(AbstractView):
                 "Phone",
                 "City",
                 "Postal Code",
+                "Retour",
             ]
             if self.langue == "anglais"
             else [
@@ -47,6 +48,7 @@ class ModifInfoView(AbstractView):
                 "Téléphone",
                 "Ville",
                 "Code postal",
+                "Return",
             ]
         )
 
@@ -61,42 +63,35 @@ class ModifInfoView(AbstractView):
         }
         answers = prompt([question])
 
-        if answers[0] == "Return" if self.langue == "anglais" else "Retour":
-            from presentation.start_view import StartView
-
-            return StartView
-
-        else:
-            real_choice = choix_info[translated_choices.index(answers[0])]
-            question = {
-                "type": "input",
-                "name": "nouv",
-                "message": (
-                    f"New {answers[0]}:"
-                    if self.langue == "anglais"
-                    else f"Nouveau {answers[0]} :"
-                ),
-            }
-            from business.dao.utilisateur_dao import (
-                UtilisateurDao,
-            )
-
-            utilisateurdao = UtilisateurDao()
-            utilisateurdao.update_user_info(
-                self.user.id, real_choice, prompt(question)["nouv"]
-            )
-            utils = utilisateurdao.recuperer_utilisateur(self.user.id)
-            excluded_fields = ["id_compte_utilisateur", "mdp", "sel"]
-
-            for record in utils:
-                for i, (key, value) in enumerate(record.items()):
-                    if key not in excluded_fields:
-                        print(f"{i + 1}: {key}: {value}")
-            input(
-                "Press Enter to continue"
+        real_choice = choix_info[translated_choices.index(answers[0])]
+        question = {
+            "type": "input",
+            "name": "nouv",
+            "message": (
+                f"New {answers[0]}:"
                 if self.langue == "anglais"
-                else "Appuyez sur entrée pour continuer"
-            )
+                else f"Nouveau {answers[0]} :"
+            ),
+        }
+        from business.dao.utilisateur_dao import (
+            UtilisateurDao,
+        )
+
+        utilisateurdao = UtilisateurDao()
+        utilisateurdao.update_user_info(
+            self.user.id, real_choice, prompt(question)["nouv"]
+        )
+        utils = utilisateurdao.recuperer_utilisateur(self.user.id)
+        excluded_fields = ["id_compte_utilisateur", "mdp", "sel"]
+        for record in utils:
+            for i, (key, value) in enumerate(record.items()):
+                if key not in excluded_fields:
+                    print(f"{i + 1}: {key}: {value}")
+        input(
+            "Press Enter to continue"
+            if self.langue == "anglais"
+            else "Appuyez sur entrée pour continuer"
+        )
 
         quest = [
             {
@@ -123,22 +118,26 @@ class ModifInfoView(AbstractView):
             }
         ]
         answ = prompt(quest)
-        if (
-            answ["choix"] == "Modify another information"
+
+        choix_update_info = (
+            "Modify another information"
             if self.langue == "anglais"
-            else "Modifier une autre information"
-        ):
-            return ModifInfoView(self.user, langue=self.langue)
-        elif (
-            answ["choix"] == "Disconnect"
-            if self.langue == "anglais"
-            else "Se déconnecter"
-        ):
+            else "Modifier une autre informations personnelles"
+        )
+        choix_return = "Return" if self.langue == "anglais" else "Retour"
+        choix_disconnect = (
+            "Disconnect" if self.langue == "anglais" else "Se déconnecter"
+        )
+
+        if answ["choix"] == choix_update_info:
+            return ModifInfoView(user=self.user, langue=self.langue)
+        elif answ["choix"] == choix_disconnect:
             self.user._connexion = False
             from presentation.start_view import StartView
 
             return StartView(langue=self.langue)
-        elif answ["choix"] == "Return" if self.langue == "anglais" else "Retour":
+
+        elif answ["choix"] == choix_return:
             from presentation.info_view import InfoView
 
             return InfoView(user=self.user, langue=self.langue)

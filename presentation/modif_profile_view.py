@@ -81,7 +81,7 @@ class ModifProfileView(AbstractView):
 
             pced = ProfilChercheurEmploiDao()
             pced.maj(
-                int(self.pce["profil"].split("ID: ")[1].split(",")[0]),
+                self.pce.profil_chercheur_emploi["profil"].id_profil_chercheur_emploi,
                 real_choice,
                 prompt(question)["nouv"],
             )
