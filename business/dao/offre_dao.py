@@ -185,15 +185,13 @@ class OffreDao(metaclass=Singleton):
                 with connection.cursor() as cursor:
                     # Sauvegarder l'offre d'un utilisateur
                     cursor.execute(
-                        "UPDATE projet2A.offre"
-                        "SET candidature_recue = TRUE"
-                        "WHERE id_offre =%(id_offre)s;",
+                        "UPDATE projet2A.offre SET candidature_envoyee = TRUE WHERE id_offre = %(id_offre)s;",
                         {
                             "id_offre": offre.id_offre,
                         },
                     )
-                    res = cursor.fetchone()
-            if res:
+                    res = cursor.rowcount
+            if res>0:
                 created = True
             else :
                 return None
@@ -202,7 +200,7 @@ class OffreDao(metaclass=Singleton):
             with connection.cursor() as cursor:
                 # Sauvegarder l'offre d'un utilisateur
                 cursor.execute(
-                    "INSERT INTO projet2A.candidatures(id_offre,titre, domaine, lieu, type_contrat, lien_offre, salaire_minimum, entreprise,description, utilisateur_id,candidature_envoyee) "
+                    "INSERT INTO projet2A.offre(id_offre,titre, domaine, lieu, type_contrat, lien_offre, salaire_minimum, entreprise,description, utilisateur_id,candidature_envoyee) "
                     " VALUES (%(id_offre)s,%(titre)s, %(domaine)s, %(lieu)s, %(type_contrat)s, %(lien_offre)s, %(salaire_minimum)s, %(entreprise)s ,%(description)s, %(utilisateur_id)s,TRUE)  "
                     "RETURNING id_offre",
                     {

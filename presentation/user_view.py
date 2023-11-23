@@ -15,7 +15,7 @@ class UserView(AbstractView):
                 "message": (
                     f"Hello {self.user.nom}"
                     if self.langue == "anglais"
-                    else f"Bonjour {self.user.nom}"
+                    else f"Bonjour {self.user.nom} \n"
                 ),
                 "choices": [
                     "Consulter ses alertes",
@@ -49,7 +49,7 @@ class UserView(AbstractView):
             return ProfileView(user=self.user, langue=self.langue)
 
         elif reponse["choix"] == "Offres sauvegardés":
-            from presentation.offre_fav_view import OffreView
+            from presentation.offre_fav_view1 import OffreView
 
             return OffreView(user=self.user, langue=self.langue)
 
