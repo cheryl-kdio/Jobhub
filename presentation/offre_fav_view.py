@@ -1,140 +1,97 @@
 from InquirerPy import prompt
-
 from presentation.abstract_view import AbstractView
 from presentation.session import Session
-
+from business.dao.offre_dao import OffreDao
 
 class OffreView(AbstractView):
     def __init__(self, user, langue):
         self.user = user
         self.langue = langue
-        self.__questions = [
-            {
-                "type": "list",
-                "name": "choix",
-                "message": (
-                    f"Hello {Session().user_name}"
-                    if self.langue == "anglais"
-                    else f"Bonjour {Session().user_name}"
-                ),
-                "choices": [
-                    ("Return" if self.langue == "anglais" else "Retour"),
-                    ("Log out" if self.langue == "anglais" else "Se déconnecter"),
-                    ("Quit" if self.langue == "anglais" else "Quitter"),
-                    (
-                        "Delete an offer"
-                        if self.langue == "anglais"
-                        else "Supprimer une offre"
-                    ),
-                ],
-            }
-        ]
 
     def display_info(self):
-        from business.dao.offre_dao import OffreDao
-
-        offredao = OffreDao()
-        pce = offredao.voir_favoris(self.user)
-        if pce == []:
-            print(
-                "Vous n'avez pas d'offres sauvegardés"
-                if self.langue == "anglais"
-                else "You don't have any saved offers."
-            )
-
-        else:
-            from business.client.offre import Offre
-
-            questions = [
-                {
-                    "type": "list",
-                    "name": "offre",
-                    "message": (
-                        "Choose the offer to view:"
-                        if self.langue == "anglais"
-                        else "Choisissez l'offre à consulter :"
-                    ),
-                    "choices": [
-                        f" Title: {element.titre}, Location: {element.lieu}"
-                        if self.langue == "anglais"
-                        else f" Titre: {element.titre}, Lieu: {element.lieu}"
-                        for element in pce
-                        if isinstance(element, Offre)
-                    ],
-                }
-            ]
-
-            offre = prompt(questions)
-
-        return offre, pce
+        pass
 
     def make_choice(self):
-        offre, pce = self.display_info()
-        reponse = prompt(self.__questions)
-        if reponse["choix"] == ("Quitter" if self.langue == "français" else "Quit"):
-            pass
+        o = OffreDao()
+        choix_offres = [
+            {
+                "name": f"{str(i+1)} . Title: {offre.titre}, Location: {offre.lieu}"
+                if self.langue == "anglais"
+                else f"{str(i+1)}. Titre: {offre.titre}, Lieu: {offre.lieu}",
+                "value": offre,
+            }
+            for i, offre in enumerate(o.voir_favoris(self.user))
+        ] + [{"name": "Retour", "value": None}]
 
-        elif (
-            reponse["choix"] == "Supprimer une offre"
-            if self.langue == "français"
-            else "Delete an offer"
-        ):
-            from business.dao.offre_dao import OffreDao
-
-            offredao = OffreDao()
-            from business.client.offre import Offre
-
-            question = [
-                {
-                    "type": "list",
-                    "name": "offre",
-                    "message": (
-                        "Choisissez l'offre à consulter"
-                        if self.langue == "français"
-                        else "Choose the offer to delete:"
-                    ),
-                    "choices": [
-                        f"ID:{element.id_offre}, Title: {element.titre}, Location: {element.lieu}"
-                        if self.langue == "anglais"
-                        else f" Id:{element.id_offre}, Titre: {element.titre}, Lieu: {element.lieu}"
-                        for element in pce
-                        if isinstance(element, Offre)
-                    ],
-                }
-            ]
-            offre = prompt(question)
-            selected_offre_str = offre["offre"]
-
-            selected_offre = None
-            for element in pce:
-                if (
-                    isinstance(element, Offre)
-                    and f"ID: {element.id_offre}" in selected_offre_str
-                ):
-                    selected_offre = element
-                    break
-            with open(
-                "presentation/graphical_assets/banner.txt", "r", encoding="utf-8"
-            ) as asset:
-                print(asset.read())
-
-            offredao.supprimer_offre(selected_offre)
+        if len(choix_offres) == 1:
             print(
-                "L'offre a bien été supprimée"
+                "Vous n'avez pas d'offres sauvegardées"
                 if self.langue == "français"
-                else "The offer has been deleted"
+                else "You don't have any saved offers."
             )
-            return OffreView(user=self.user, langue=self.langue)
+        else:
+            message_fr = "Choisissez une offre à détailler : \n - - - - - - - - - - - - - - - - - - - -\n"
+            message_en = "Choose a job to view in detail."
+            message = message_fr if self.langue == "français" else message_en
 
-        elif reponse["choix"] == ("Retour" if self.langue == "français" else "Return"):
-            from presentation.user_view import UserView
+            self.__questions = {
+                "type": "list",
+                "message": message,
+                "choices": choix_offres,
+            }
 
-            return UserView(user=self.user, langue=self.langue)
+            answers = prompt(self.__questions)
+            if answers[0] in ("Retour", "Return"):
+                from presentation.user_view import UserView
+                return UserView(self.user, self.langue)
+            else:
+                print(answers[0])
+                self.__questions = [
+                    {
+                        "type": "confirm",
+                        "name": "oui",
+                        "message": "Souhaitez-vous candidater à cette offre ?"
+                        if self.langue == "français"
+                        else "Apply to this job?",
+                        "default": True,
+                    }
+                ]
+                answers2 = prompt(self.__questions)
+                if answers2['oui']:
+                    if o.deja_candidat(answers[0],self.user):
+                        print("Vous avez dejà envoyé votre candidature")
+                        return OffreView(user=self.user, langue=self.langue)
 
-        elif reponse["choix"] == (
-            "Se déconnecter" if self.langue == "français" else "Disconnect"
-        ):
-            self.user._connexion = False
-            from presentation.start_view import StartView
+                    else:
+                        o.candidater(answers[0],self.user)
+                        message_fr = "Votre candidature a bien été envoyée!"
+                        message_en = "Your submission was sent !"
+                        message = message_fr if self.langue == "français" else message_en
+                        print(message)
+                        return OffreView(user=self.user, langue=self.langue)
+                else:
+                    from presentation.user_view import UserView
+                    return UserView(user=self.user, langue=self.langue)
 
-            return StartView(langue=self.langue)
+
+                self.__questions = [
+                    {
+                        "type": "confirm",
+                        "name": "oui",
+                        "message": "Souhaitez-vous supprimer l'offre de vos favoris ?"
+                        if self.langue == "français"
+                        else "Delete the offer from your favorites?",
+                        "default": True,
+                    }
+                ]
+                answers2 = prompt(self.__questions)
+                if answers2['oui']:
+                    o.supprimer_offre(answers[0])
+                    message_deleted_fr = "L'offre a bien été supprimée"
+                    message_deleted_en = "The offer has been deleted"
+                    message_deleted = message_deleted_fr if self.langue == "français" else message_deleted_en
+                    print(message_deleted)
+                    return OffreView(user=self.user, langue=self.langue)
+                else:
+                    from presentation.user_view import UserView
+                    return UserView(user=self.user, langue=self.langue)

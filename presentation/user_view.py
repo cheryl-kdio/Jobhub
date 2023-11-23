@@ -62,7 +62,7 @@ class UserView(AbstractView):
         elif reponse["choix"] == (
             "Offres sauvegardés" if self.langue == "français" else "Saved Offers"
         ):
-            from presentation.offre_fav_view1 import OffreView
+            from presentation.offre_fav_view import OffreView
 
             return OffreView(user=self.user, langue=self.langue)
 
