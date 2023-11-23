@@ -49,7 +49,7 @@ class UserView(AbstractView):
             return ProfileView(user=self.user, langue=self.langue)
 
         elif reponse["choix"] == "Offres sauvegardés":
-            from presentation.afficher_offre_favoris import OffreView
+            from presentation.offre_fav_view import OffreView
 
             return OffreView(user=self.user, langue=self.langue)
 

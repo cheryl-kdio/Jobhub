@@ -13,7 +13,7 @@ from business.dao.profil_chercheur_emploi_dao import ProfilChercheurEmploiDao
 from business.client.profil_chercheur_emploi import ProfilChercheurEmploi
 from business.dao.recherche_dao import RechercheDao
 from business.dao.candidature_dao import CandidatureDao
-
+from business.dao.offre_dao import OffreDao
 
 class CandidatureView(AbstractView):
     def __init__(self, user, langue):
@@ -23,9 +23,9 @@ class CandidatureView(AbstractView):
 
     def display_info(self):
         pass
-    
+
     def make_choice(self):
-        c = CandidatureDao()
+        c = OffreDao()
         choix_offres = [
             {"name": str(i+1)+"."+offre.titre + "-" + offre.entreprise, "value": offre}
             for i,offre in enumerate(c.voir_candidatures(self.user))

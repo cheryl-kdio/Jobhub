@@ -16,13 +16,16 @@ VALUES
     ('{"results_per_page": 20, "what": "3d"}', 2);
 
 
-INSERT INTO projet2A.offre (id_offre,titre,domaine , lieu , type_contrat ,entreprise, utilisateur_id)
+INSERT INTO projet2A.offre (id_offre,titre,domaine , lieu , type_contrat ,entreprise, utilisateur_id,candidature_envoyee)
 VALUES 
-    (4418009682, 'Lead Dév API Python Js H/F', ' Emplois Autres/Général', 'Talence, Bordeaux ', '', 'Externatic', 1),
-    (4298646981 ,'Dev Python / react Montpellier ASAP (IT) '  ,   'Emplois Informatique' ,  'Hérault, Occitanie',' contract'  ,' WorldWide People  ',3),   
-    (4411217653,'Dév Python ' , 'Emplois Informatique '  ,'Saint-Cloud, Boulogne-Billancourt ','',' Extia' ,2),
-    (4426020939,'100% Télétravail - Senior Dev Python', 'Unknown','Paris, Ile-de-France','','SEPT LIEUES SAS',1),   
-    (4405757805, 'STAGE 2A - DEV PYTHON - Dashboarding Solution for CI Server & Team KPIs','Emplois Comptabilité et Finance','Paris, Ile-de-France','contract', 'Murex',2)  ;
+    (4418009682, 'Lead Dév API Python Js H/F', ' Emplois Autres/Général', 'Talence, Bordeaux ', '', 'Externatic', 1,TRUE),
+    (4298646981 ,'Dev Python / react Montpellier ASAP (IT) '  ,   'Emplois Informatique' ,  'Hérault, Occitanie',' contract'  ,' WorldWide People  ',3,FALSE),   
+    (4298646981 ,'Dev Python / react Montpellier ASAP (IT) '  ,   'Emplois Informatique' ,  'Hérault, Occitanie',' contract'  ,' WorldWide People  ',1,TRUE),   
+    (4411217653,'Dév Python ' , 'Emplois Informatique '  ,'Saint-Cloud, Boulogne-Billancourt ','',' Extia' ,2,TRUE),
+    (4426020939,'100% Télétravail - Senior Dev Python', 'Unknown','Paris, Ile-de-France','','SEPT LIEUES SAS',1,FALSE),   
+    (4405757805, 'STAGE 2A - DEV PYTHON - Dashboarding Solution for CI Server & Team KPIs','Emplois Comptabilité et Finance','Paris, Ile-de-France','contract', 'Murex',2,FALSE),
+    (4405757805, 'STAGE 2A - DEV PYTHON - Dashboarding Solution for CI Server & Team KPIs','Emplois Comptabilité et Finance','Paris, Ile-de-France','contract', 'Murex',3,TRUE)  ;
+
     
 
 
@@ -40,5 +43,5 @@ VALUES
 ('Alerte Ingénieur Paris', 'ingénieur, développement, agile', 'Paris', 10, 'CDI', 1),
 ('Alerte Scientifique Lyon', 'recherche, physique, chimie', 'Lyon', 15, 'CDD', 2),
 ('Alerte Artiste Marseille', 'art, peinture, créativité', 'Marseille', 20, 'TEMPS PLEIN', 3),
-('Alerte Écrivain Toulouse', 'écriture, philosophie, éducation', 'Toulouse', 5, 'TEMPS PARTIEL', 4),
-('Alerte Biologiste Nice', 'biologie, recherche, laboratoire', 'Nice', 25, 'CDD', 5);
+('Alerte Écrivain Toulouse', 'écriture, philosophie, éducation', 'Toulouse', 5, 'TEMPS PARTIEL', 2),
+('Alerte Biologiste Nice', 'biologie, recherche, laboratoire', 'Nice', 25, 'CDD', 1);

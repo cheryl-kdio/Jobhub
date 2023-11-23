@@ -31,6 +31,9 @@ class OffreView(AbstractView):
         ]
 
     def display_info(self):
+        pass
+    
+    def make_choice(self):
         from business.dao.offre_dao import OffreDao
 
         offredao = OffreDao()
@@ -66,10 +69,6 @@ class OffreView(AbstractView):
 
             offre = prompt(questions)
 
-        return offre, pce
-
-    def make_choice(self):
-        offre, pce = self.display_info()
         reponse = prompt(self.__questions)
         if reponse["choix"] == ("Quitter" if self.langue == "français" else "Quit"):
             pass
