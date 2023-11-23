@@ -139,21 +139,26 @@ class ModifProfileView(AbstractView):
                 ],
             }
         ]
+
         answ = prompt(questions)
-        if (
-            answ["choix"] == "Modify another parameter"
+
+        choix_change_param = (
+            "Modify another parameter"
             if self.langue == "anglais"
             else "Modifier un autre paramètre"
-        ):
+        )
+        choix_return = "Return" if self.langue == "anglais" else "Retour"
+        choix_disconnect = "Log out" if self.langue == "anglais" else "Se déconnecter"
+
+        if answ["choix"] == choix_change_param:
             return ModifProfileView(self.pce, user=self.user, langue=self.langue)
-        elif (
-            answ["choix"] == "Log out" if self.langue == "anglais" else "Se déconnecter"
-        ):
+
+        elif answ["choix"] == choix_disconnect:
             self.user._connexion = False
             from presentation.start_view import StartView
 
             return StartView(langue=self.langue)
-        elif answ["choix"] == "Return" if self.langue == "anglais" else "Retour":
+        elif answ["choix"] == choix_return:
             from presentation.profile_view import ProfileView
 
             return ProfileView(user=self.user, langue=self.langue)
