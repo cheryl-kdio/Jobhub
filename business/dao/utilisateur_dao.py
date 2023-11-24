@@ -174,7 +174,7 @@ class UtilisateurDao(metaclass=Singleton):
                     cursor.execute(
                         "DELETE FROM projet2A.compte_utilisateur           "
                         " WHERE id_compte_utilisateur=%(id_compte_utilisateur)s      ",
-                        {"id_compte_utilisateur": user.id_compte_utilisateur},
+                        {"id_compte_utilisateur": user.id},
                     )
                     res = cursor.rowcount
         except Exception as e:
