@@ -145,7 +145,7 @@ class OffreDao(metaclass=Singleton):
 
     def candidater(self, offre, utilisateur):
         """
-        Sauvegarde l'offre dans la base de données
+        Envoi candidature (fictif)
 
         Parameters
         ----------
@@ -215,12 +215,11 @@ class OffreDao(metaclass=Singleton):
                Utilisateur qui a candidaté l'offre
         Returns
          -------
-             True si l'offre a bien été sauvegardée
+             True
         """
 
         with DBConnection().connection as connection:
             with connection.cursor() as cursor:
-                # Sauvegarder l'offre d'un utilisateur
                 cursor.execute(
                     "SELECT * "
                     "FROM projet2A.offre "
@@ -247,6 +246,20 @@ class OffreDao(metaclass=Singleton):
         return offres
 
     def deja_candidat(self, offre, utilisateur):
+        """
+         Vérifie si un utilisateur est déjà candidat à une offre
+
+        Parameters
+        ----------
+         utilisateur : CompteUtilisateur
+               Utilisateur qui a candidaté l'offre
+        offre : Offre
+                Offre à laquelle il souhaite candidater
+        Returns
+        -------
+             True
+        """
+
         with DBConnection().connection as connection:
             with connection.cursor() as cursor:
                 query = (
