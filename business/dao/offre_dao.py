@@ -53,24 +53,6 @@ class OffreDao(metaclass=Singleton):
         else:
             return None
 
-    def deja_favoris(self, offre, utilisateur):
-        with DBConnection().connection as connection:
-            with connection.cursor() as cursor:
-                query = (
-                    "SELECT * FROM projet2A.offre o "
-                    "WHERE id_offre =%(id_offre)s AND "
-                    " o.utilisateur_id= %(utilisateur_id)s"
-                )
-                params = {
-                    "id_offre": offre.id_offre,
-                    "utilisateur_id": utilisateur.id,
-                }
-                cursor.execute(query, params)
-                res = cursor.fetchone()
-        if res is not None:
-            return res["id_offre"]
-        else:
-            return None
 
     def ajouter_offre(self, offre, utilisateur):
         """
@@ -195,33 +177,33 @@ class OffreDao(metaclass=Singleton):
                 created = True
             else:
                 return None
-
-        with DBConnection().connection as connection:
-            with connection.cursor() as cursor:
-                # Sauvegarder l'offre d'un utilisateur
-                cursor.execute(
-                    "INSERT INTO projet2A.offre(id_offre,titre, domaine, lieu, type_contrat, lien_offre, salaire_minimum, entreprise,description, utilisateur_id,candidature_envoyee) "
-                    " VALUES (%(id_offre)s,%(titre)s, %(domaine)s, %(lieu)s, %(type_contrat)s, %(lien_offre)s, %(salaire_minimum)s, %(entreprise)s ,%(description)s, %(utilisateur_id)s,TRUE)  "
-                    "RETURNING id_offre",
-                    {
-                        "id_offre": offre.id_offre,
-                        "titre": offre.titre,
-                        "domaine": offre.domaine,
-                        "lieu": offre.lieu,
-                        "type_contrat": offre.type_contrat,
-                        "lien_offre": offre.lien_offre,
-                        "salaire_minimum": offre.salaire_minimum
-                        if offre.salaire_minimum
-                        else None,
-                        "description": offre.description,
-                        "entreprise": offre.entreprise,
-                        "utilisateur_id": utilisateur.id,
-                    },
-                )
-                res = cursor.fetchone()
-        if res:
-            created = True
-        return created
+        else :
+            with DBConnection().connection as connection:
+                with connection.cursor() as cursor:
+                    # Sauvegarder l'offre d'un utilisateur
+                    cursor.execute(
+                        "INSERT INTO projet2A.offre(id_offre,titre, domaine, lieu, type_contrat, lien_offre, salaire_minimum, entreprise,description, utilisateur_id,candidature_envoyee) "
+                        " VALUES (%(id_offre)s,%(titre)s, %(domaine)s, %(lieu)s, %(type_contrat)s, %(lien_offre)s, %(salaire_minimum)s, %(entreprise)s ,%(description)s, %(utilisateur_id)s,TRUE)  "
+                        "RETURNING id_offre",
+                        {
+                            "id_offre": offre.id_offre,
+                            "titre": offre.titre,
+                            "domaine": offre.domaine,
+                            "lieu": offre.lieu,
+                            "type_contrat": offre.type_contrat,
+                            "lien_offre": offre.lien_offre,
+                            "salaire_minimum": offre.salaire_minimum
+                            if offre.salaire_minimum
+                            else None,
+                            "description": offre.description,
+                            "entreprise": offre.entreprise,
+                            "utilisateur_id": utilisateur.id,
+                        },
+                    )
+                    res = cursor.fetchone()
+            if res:
+                created = True
+            return created
 
     def voir_candidatures(self, utilisateur):
         """

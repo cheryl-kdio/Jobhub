@@ -32,17 +32,27 @@ class RechercheView(AbstractView):
                     else "Entrez l'intitulé du poste ou des mots-clés (séparés par des espaces) : "
                 ),
             },
+            {
+                "type": "input",
+                "name": "lieu",
+                "message": (
+                    "The geographic centre of your search. Place names, postal codes,:"
+                    if self.langue == "anglais"
+                    else "Entrez le lieu de travail, code postal, etc. : "
+                ),
+            },
         ]
 
     def make_choice(self):
         if len(self.query_params) == 1:
             answers = prompt(self.__questions)
             self.query_params["what"] = answers["mot_cle"]
+            self.query_params["where"] = answers["lieu"]
 
         recherche = Recherche(query_params=self.query_params)
         r = RechercheService()
         print(
-            "Resultats obtenus :" if self.langue == "français" else "Results obtained"
+            "Resultats obtenus : \n" if self.langue == "français" else "Results obtained : \n"
         )
 
         choix_offres = (
@@ -72,9 +82,9 @@ class RechercheView(AbstractView):
         question = {
             "type": "list",
             "message": (
-                "Choose a job offer to view in detail:"
+                "Choose a job offer to view in detail : \n"
                 if self.langue == "anglais"
-                else "Choisissez une offre à détailler :"
+                else "Choisissez une offre à détailler : \n"
             ),
             "choices": choix_offres,
         }
@@ -229,7 +239,8 @@ class RechercheView(AbstractView):
             )
             if candidater["oui"]:
                 if self.user:
-                    CandidatureDao().candidater(offre=answers[0], utilisateur=self.user)
+                    from business.dao.offre_dao import OffreDao
+                    OffreDao().candidater(offre=answers[0], utilisateur=self.user)
                     print(
                         "Candidature effectuée"
                         if self.langue == "français"
