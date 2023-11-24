@@ -1,17 +1,7 @@
 from InquirerPy import prompt
-
 from presentation.abstract_view import AbstractView
-from presentation.session import Session
-from business.services.utilisateur_service import (
-    Utilisateur,
-)  # Importation de la classe Utilisateur depuis le module utilisateur_service
-from business.dao.utilisateur_dao import UtilisateurDao
-from business.business_object.recherche import Recherche
-from business.services.recherche_service import RechercheService
-from tabulate import tabulate
 from business.dao.profil_chercheur_emploi_dao import ProfilChercheurEmploiDao
 from business.business_object.profil_chercheur_emploi import ProfilChercheurEmploi
-from business.dao.recherche_dao import RechercheDao
 from business.dao.offre_dao import OffreDao
 
 
@@ -31,7 +21,7 @@ class CandidatureView(AbstractView):
                 "value": offre,
             }
             for i, offre in enumerate(c.voir_candidatures(self.user))
-        ] + [{"name": "Retour", "value": None}]
+        ] + [{"name": "Retour" if self.langue=="francais" else "Return", "value": None}]
 
         if len(choix_offres) == 1:
             print("Vous n'avez pas encore de candidatures \n")

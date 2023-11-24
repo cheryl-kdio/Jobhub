@@ -41,9 +41,9 @@ class ProfileView(AbstractView):
         answers = prompt(self.__questions)
 
         if answers[0] == "retour":
-            from presentation.start_view import StartView
+            from presentation.user_view import UserView
 
-            return StartView(self.langue)
+            return UserView(langue=self.langue,user=self.user)
 
         elif answers[0] == "create_alert":
             self.__questions = [

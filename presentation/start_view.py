@@ -1,8 +1,9 @@
 from InquirerPy import prompt
-
 from presentation.abstract_view import AbstractView
 from presentation.session import Session
-
+from presentation.connection_view import ConnexionView
+from presentation.recherche_view import RechercheView
+from presentation.creer_compte_view import CreateAccountView
 
 class StartView(AbstractView):
     def __init__(self, langue="français", query_params=None):
@@ -18,95 +19,39 @@ class StartView(AbstractView):
                     else f"Hello {Session().user_name}"
                 ),
                 "choices": [
-                    [
-                        "Se connecter",
-                        "Créer un compte",
-                        "Lancer une recherche",
-                        "Change the tongue",
-                        "Quitter",
-                    ],
-                    [
-                        "Log in",
-                        "Create an account",
-                        "Start a search",
-                        "Changer la langue",
-                        "Quit",
-                    ],
-                ][self.langue == "anglais"],
+                    "Se connecter" if self.langue == "français" else "Log in",
+                    "Créer un compte" if self.langue == "français" else "Create an account",
+                    "Lancer une recherche" if self.langue == "français" else "Start a search",
+                    "Change the tongue" if self.langue == "français" else "Changer la langue",
+                    "Quitter" if self.langue == "français" else "Quit",
+                ],
             }
         ]
 
     def display_info(self):
-        with open(
-            "presentation/graphical_assets/banner.txt", "r", encoding="utf-8"
-        ) as asset:
+        with open("presentation/graphical_assets/banner.txt", "r", encoding="utf-8") as asset:
             print(asset.read())
 
     def make_choice(self):
         reponse = prompt(self.__questions)
-        if reponse["choix"] == "Quitter" or reponse["choix"] == "Quit":
+        choix = reponse["choix"]
+
+        if choix in ["Quitter", "Quit"]:
             pass
-
-        elif reponse["choix"] == "Se connecter" or reponse["choix"] == "Log in":
-            from presentation.connection_view import ConnexionView
-
+        elif choix in ["Se connecter", "Log in"]:
             return ConnexionView(langue=self.langue)
-
-        elif reponse["choix"] in("Lancer une recherche","Start a search"):
-            from presentation.recherche_view import RechercheView
-
+        elif choix in ["Lancer une recherche", "Start a search"]:
             return RechercheView(langue=self.langue, query_params=self.query_params)
-
-        elif (
-            reponse["choix"] == "Créer un compte"
-            or reponse["choix"] == "Create an account"
-        ):
-            from presentation.creer_compte_view import CreateAccountView
-
+        elif choix in ["Créer un compte", "Create an account"]:
             return CreateAccountView(langue=self.langue)
-
-        elif reponse["choix"] == "Change the tongue":
+        elif choix == "Change the tongue" or choix == "Changer la langue":
             question = [
                 {
                     "type": "list",
                     "name": "choix",
-                    "message": "Choose the tongue",
-                    "choices": [
-                        "Français",
-                        "English",
-                    ],
+                    "message": "Choose the tongue" if self.langue == "français" else "Choisissez la langue",
+                    "choices": ["Français", "English"],
                 }
             ]
             answer = prompt(question)["choix"]
-            if answer == "Français":
-                from presentation.start_view import StartView
-
-                return StartView("français")
-
-            elif answer == "English":
-                from presentation.start_view import StartView
-
-                return StartView(langue="anglais")
-
-        elif reponse["choix"] == "Changer la langue":
-            question = [
-                {
-                    "type": "list",
-                    "name": "choix",
-                    "message": "Choisissez la langue",
-                    "choices": [
-                        "Français",
-                        "English",
-                    ],
-                }
-            ]
-            answer = prompt(question)["choix"]
-            if answer == "Français":
-                from presentation.start_view import StartView
-
-                return StartView("français")
-
-            elif answer == "English":
-                from presentation.start_view import StartView
-
-                return StartView(langue="anglais")
+            return StartView("français") if answer == "Français" else StartView(langue="anglais")
