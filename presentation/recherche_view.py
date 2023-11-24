@@ -13,7 +13,6 @@ from business.dao.profil_chercheur_emploi_dao import ProfilChercheurEmploiDao
 from business.business_object.profil_chercheur_emploi import ProfilChercheurEmploi
 from business.dao.recherche_dao import RechercheDao
 
-from business.dao.candidature_dao import CandidatureDao
 
 
 class RechercheView(AbstractView):

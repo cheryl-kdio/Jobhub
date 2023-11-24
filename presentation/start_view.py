@@ -52,10 +52,7 @@ class StartView(AbstractView):
 
             return ConnexionView(langue=self.langue)
 
-        elif (
-            reponse["choix"] == "Lancer une recherche"
-            or reponse["choix"] == "Start a research"
-        ):
+        elif reponse["choix"] in("Lancer une recherche","Start a search"):
             from presentation.recherche_view import RechercheView
 
             return RechercheView(langue=self.langue, query_params=self.query_params)

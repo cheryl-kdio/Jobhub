@@ -5,7 +5,6 @@ from business.services.recherche_service import RechercheService
 from business.dao.recherche_dao import RechercheDao
 from business.services.utilisateur_service import Utilisateur
 from business.dao.offre_dao import OffreDao
-from business.dao.candidature_dao import CandidatureDao
 from tabulate import tabulate
 
 # Utilisateur().create_account("cheryl","ck@gmail.com","Patate12","Patate12")
