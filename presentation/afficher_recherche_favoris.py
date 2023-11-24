@@ -112,28 +112,23 @@ class ARechercheView(AbstractView):
                         else "Choice a search saved to delete",
                         "name": "recherche",
                         "choices": [
-                            f"Quoi: {item.get('what', 'N/A')}, Où: {item.get('where', 'N/A')}"
-                            if self.langue == "français"
-                            else f"What: {item.get('what', 'N/A')}, Where: {item.get('where', 'N/A')}"
+                            f"what: {item.get('what', 'N/A')}, where: {item.get('where', 'N/A')}"
                             for item in recherche
                         ],
                     }
                 ]
             )
             selected_choice_str = question["recherche"]
-            selected_item = next(
-                (
-                    item
-                    for item in recherche
-                    if f"Quoi: {item.get('what', 'N/A')}, Où: {item.get('where', 'N/A')}"
-                    or f"What: {item.get('what', 'N/A')}, Where: {item.get('where', 'N/A')}"
-                    == selected_choice_str
-                ),
-                None,
-            )
+
+            selected_choice_dict = {"results_per_page": 20}
+            for pair in selected_choice_str.split(", "):
+                key, value = pair.split(": ")
+                selected_choice_dict[key] = value
+
             from business.business_object.recherche import Recherche
 
-            t = Recherche(selected_item)
+            t = Recherche(selected_choice_dict)
+
             if RechercheDao().supprimer_recherche(t, self.user):
                 print(
                     "La recherche à bien été supprimé"
@@ -158,9 +153,7 @@ class ARechercheView(AbstractView):
                         else "Choice a search saved to delete",
                         "name": "recherche",
                         "choices": [
-                            f"Quoi: {item.get('what', 'N/A')}, Où: {item.get('where', 'N/A')}"
-                            if self.langue == "français"
-                            else f"What: {item.get('what', 'N/A')}, Where: {item.get('where', 'N/A')}"
+                            f"what: {item.get('what', 'N/A')}, where: {item.get('where', 'N/A')}"
                             for item in recherche
                         ],
                     }
@@ -169,19 +162,18 @@ class ARechercheView(AbstractView):
 
             selected_choice_str = question["recherche"]
 
-            selected_item = next(
-                (
-                    item
-                    for item in recherche
-                    if f"Quoi: {item.get('what', 'N/A')}, Où: {item.get('where', 'N/A')}"
-                    or f"What: {item.get('what', 'N/A')}, Where: {item.get('where', 'N/A')}"
-                    == selected_choice_str
-                ),
-                None,
-            )
+            selected_choice_dict = {"results_per_page": 20}
+            for pair in selected_choice_str.split(", "):
+                key, value = pair.split(": ")
+                selected_choice_dict[key] = value
+
+            # Remplacez les valeurs manquantes par "N/A"
+            selected_choice_dict.setdefault("where", "N/A")
+            selected_choice_dict.setdefault("what", "N/A")
+
             from business.business_object.recherche import Recherche
 
-            t = Recherche(selected_item)
+            t = Recherche(selected_choice_dict)
 
             return RechercheView(
                 langue=self.langue,
