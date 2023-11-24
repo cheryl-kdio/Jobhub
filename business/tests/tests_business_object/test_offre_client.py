@@ -1,5 +1,5 @@
 import unittest
-from business.client.offre import (
+from business.business_object.offre import (
     Offre,
 )  # Assurez-vous d'importer correctement votre classe Offre
 

@@ -26,3 +26,34 @@ class ProfilChercheurEmploi:
             "permanent":1 if self.type_contrat=="CDI" else 0,
         }
         self.query_params = {k: v for k, v in self.query_params.items() if v}
+    
+    def __str__(self):
+        labels = [
+            "Nom de l'alerte", "Mots clés", "Ville", "Distance autour de la ville",
+            "Type de contrat", "Query params"
+        ]
+
+        max_label_length = max(len(label) for label in labels)
+
+        def format_line(label, value):
+            return f"{label:<{max_label_length}}: {value}"
+
+        border = "- - - - - - - - - - - - - - - - - - - -\n"
+
+        return (
+            border +
+            format_line('Nom de l\'alerte', self.nom) + '\n' +
+            border +
+            format_line('Mots clés', self.mots_cles) + '\n' +
+            border +
+            format_line('Ville', self.lieu) + '\n' +
+            border +
+            format_line('Distance autour de la ville', self.distance) + '\n' +
+            border +
+            format_line('Type de contrat', self.type_contrat) + '\n' +
+            border
+        )
+
+
+              
+

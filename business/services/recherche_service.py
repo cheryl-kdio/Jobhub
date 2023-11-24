@@ -2,9 +2,9 @@ import requests
 from tabulate import tabulate
 import os
 import dotenv
-from business.client.offre import Offre
-from business.client.recherche import Recherche
-from business.client.compte_utilisateur import CompteUtilisateur
+from business.business_object.offre import Offre
+from business.business_object.recherche import Recherche
+from business.business_object.compte_utilisateur import CompteUtilisateur
 from business.dao.recherche_dao import RechercheDao
 
 
@@ -14,7 +14,7 @@ class RechercheService:
     ):
         RechercheDao().sauvegarder_recherche(recherche, utilisateur)
 
-    def supprimer_recherche(self, recherche: Recherche, utilisateur : CompteUtilisateur):
+    def supprimer_recherche(self, recherche: Recherche, utilisateur: CompteUtilisateur):
         RechercheDao().supprimer_recherche(recherche, utilisateur)
 
     def obtenir_resultats(self, recherche: Recherche):

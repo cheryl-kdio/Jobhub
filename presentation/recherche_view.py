@@ -6,21 +6,22 @@ from business.services.utilisateur_service import (
     Utilisateur,
 )  # Importation de la classe Utilisateur depuis le module utilisateur_service
 from business.dao.utilisateur_dao import UtilisateurDao
-from business.client.recherche import Recherche
+from business.business_object.recherche import Recherche
 from business.services.recherche_service import RechercheService
 from tabulate import tabulate
 from business.dao.profil_chercheur_emploi_dao import ProfilChercheurEmploiDao
-from business.client.profil_chercheur_emploi import ProfilChercheurEmploi
+from business.business_object.profil_chercheur_emploi import ProfilChercheurEmploi
 from business.dao.recherche_dao import RechercheDao
 
 from business.dao.candidature_dao import CandidatureDao
 
 
 class RechercheView(AbstractView):
-    def __init__(self, langue, user=None):
+    def __init__(self, langue, query_params=None, user=None):
         self.langue = langue
         self.user = user
-        self.results_per_page = 20
+        self.query_params = {} if query_params is None else query_params
+        self.query_params["results_per_page"] = 20
         self.__questions = [
             {
                 "type": "input",
@@ -28,18 +29,17 @@ class RechercheView(AbstractView):
                 "message": (
                     "Enter the job title or keywords:"
                     if self.langue == "anglais"
-                    else "Entrez l'intitulé du poste ou des mots-clés : "
+                    else "Entrez l'intitulé du poste ou des mots-clés (séparés par des espaces) : "
                 ),
             },
         ]
 
     def make_choice(self):
-        answers = prompt(self.__questions)
-        query_params = {
-            "results_per_page": self.results_per_page,
-            "what": answers["mot_cle"],
-        }
-        recherche = Recherche(query_params=query_params)
+        if len(self.query_params) == 1:
+            answers = prompt(self.__questions)
+            self.query_params["what"] = answers["mot_cle"]
+
+        recherche = Recherche(query_params=self.query_params)
         r = RechercheService()
         print(
             "Resultats obtenus :" if self.langue == "français" else "Results obtained"
@@ -82,44 +82,84 @@ class RechercheView(AbstractView):
 
         if answers[0] == "sauv":
             if self.user:
-                RechercheDao().sauvegarder_recherche(recherche, self.user)
-                print(
-                    "Search saved successfully."
-                    if self.langue == "anglais"
-                    else "La recherche a bien été sauvegardée"
-                )
-                print(
-                    "Resultats obtenus :"
-                    if self.langue == "français"
-                    else "Results obtained"
-                )
-
-                choix_offres = [
-                    {
-                        "name": str(i + 1)
-                        + ". "
-                        + offre.titre
-                        + "-"
-                        + offre.entreprise,
-                        "value": offre,
-                    }
-                    for i, offre in enumerate(r.obtenir_resultats(recherche))
-                ] + [
-                    {
-                        "name": "Retour" if self.langue == "français" else "Return",
-                        "value": None,
-                    }
-                ]
-                question = {
-                    "type": "list",
-                    "message": (
-                        "Choose a job offer to view in detail:"
+                a = RechercheDao().sauvegarder_recherche(recherche, self.user)
+                if a:
+                    print(
+                        "Search saved successfully."
                         if self.langue == "anglais"
-                        else "Choisissez une offre à détailler :"
-                    ),
-                    "choices": choix_offres,
-                }
-                answers = prompt([question])
+                        else "La recherche a bien été sauvegardée"
+                    )
+                    print(
+                        "Resultats obtenus :"
+                        if self.langue == "français"
+                        else "Results obtained"
+                    )
+
+                    choix_offres = [
+                        {
+                            "name": str(i + 1)
+                            + ". "
+                            + offre.titre
+                            + "-"
+                            + offre.entreprise,
+                            "value": offre,
+                        }
+                        for i, offre in enumerate(r.obtenir_resultats(recherche))
+                    ] + [
+                        {
+                            "name": "Retour" if self.langue == "français" else "Return",
+                            "value": None,
+                        }
+                    ]
+                    question = {
+                        "type": "list",
+                        "message": (
+                            "Choose a job offer to view in detail:"
+                            if self.langue == "anglais"
+                            else "Choisissez une offre à détailler :"
+                        ),
+                        "choices": choix_offres,
+                    }
+                    answers = prompt([question])
+
+                else:
+                    print(
+                        "La recherche est déjà sauvegardé"
+                        if self.langue == "français"
+                        else "Search is already saved"
+                    )
+                    print(
+                        "Resultats obtenus :"
+                        if self.langue == "français"
+                        else "Results obtained"
+                    )
+
+                    choix_offres = [
+                        {
+                            "name": str(i + 1)
+                            + ". "
+                            + offre.titre
+                            + "-"
+                            + offre.entreprise,
+                            "value": offre,
+                        }
+                        for i, offre in enumerate(r.obtenir_resultats(recherche))
+                    ] + [
+                        {
+                            "name": "Retour" if self.langue == "français" else "Return",
+                            "value": None,
+                        }
+                    ]
+                    question = {
+                        "type": "list",
+                        "message": (
+                            "Choose a job offer to view in detail:"
+                            if self.langue == "anglais"
+                            else "Choisissez une offre à détailler :"
+                        ),
+                        "choices": choix_offres,
+                    }
+                    answers = prompt([question])
 
             else:
                 print(
@@ -231,8 +271,4 @@ class RechercheView(AbstractView):
                     return UserView(user=self.user, langue=self.langue)
 
     def display_info(self):
-        print(
-            "Veuillez entrer les informations suivantes :"
-            if self.langue == "français"
-            else "Please enter the following information:"
-        )
+        pass

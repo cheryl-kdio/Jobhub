@@ -1,5 +1,5 @@
 from business.dao.utilisateur_dao import UtilisateurDao
-from business.client.compte_utilisateur import CompteUtilisateur
+from business.business_object.compte_utilisateur import CompteUtilisateur
 
 from getpass import getpass
 from argon2 import PasswordHasher

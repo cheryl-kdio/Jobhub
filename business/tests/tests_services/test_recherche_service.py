@@ -2,8 +2,8 @@ from unittest import TestCase, TextTestRunner, TestLoader
 from business.services.recherche_service import (
     RechercheService,
 )
-from business.client.offre import Offre
-from business.client.recherche import Recherche
+from business.business_object.offre import Offre
+from business.business_object.recherche import Recherche
 from business.services.utilisateur_service import Utilisateur
 from business.dao.recherche_dao import RechercheDao
 

@@ -40,8 +40,8 @@ VALUES
 
 INSERT INTO projet2A.profil_chercheur_emploi (nom, mots_cles, lieu, distance, type_contrat, utilisateur_id)
 VALUES 
-('Alerte Ingénieur Paris', 'ingénieur, développement, agile', 'Paris', 10, 'CDI', 1),
-('Alerte Scientifique Lyon', 'recherche, physique, chimie', 'Lyon', 15, 'CDD', 2),
-('Alerte Artiste Marseille', 'art, peinture, créativité', 'Marseille', 20, 'TEMPS PLEIN', 3),
-('Alerte Écrivain Toulouse', 'écriture, philosophie, éducation', 'Toulouse', 5, 'TEMPS PARTIEL', 2),
-('Alerte Biologiste Nice', 'biologie, recherche, laboratoire', 'Nice', 25, 'CDD', 1);
+('Alerte Ingénieur Paris', 'ingénieur développement agile', 'Paris', 10, 'CDI', 1),
+('Alerte Scientifique Lyon', 'recherche physique chimie', 'Lyon', 15, 'CDD', 2),
+('Alerte Artiste Marseille', 'art peinture créativité', 'Marseille', 20, 'TEMPS PLEIN', 3),
+('Alerte Écrivain Toulouse', 'écriture philosophie éducation', 'Toulouse', 5, 'TEMPS PARTIEL', 2),
+('Alerte Biologiste Nice', 'biologie recherche laboratoire', 'Nice', 25, 'CDD', 1);

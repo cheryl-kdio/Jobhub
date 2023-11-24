@@ -1,7 +1,7 @@
 from business.dao.db_connection import DBConnection
 from utils.singleton import Singleton
-from business.client.profil_chercheur_emploi import ProfilChercheurEmploi
-from business.client.recherche import Recherche
+from business.business_object.profil_chercheur_emploi import ProfilChercheurEmploi
+from business.business_object.recherche import Recherche
 from business.services.recherche_service import RechercheService
 
 

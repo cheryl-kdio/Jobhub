@@ -3,8 +3,8 @@ import time
 
 from unittest import TestCase, TextTestRunner, TestLoader
 from business.dao.offre_dao import OffreDao
-from business.client.compte_utilisateur import CompteUtilisateur
-from business.client.offre import Offre
+from business.business_object.compte_utilisateur import CompteUtilisateur
+from business.business_object.offre import Offre
 from business.services.utilisateur_service import Utilisateur
 
 

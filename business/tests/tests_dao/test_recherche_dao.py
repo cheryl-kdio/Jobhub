@@ -1,6 +1,6 @@
 import time
 from unittest import TestCase, TextTestRunner, TestLoader
-from business.client.recherche import Recherche
+from business.business_object.recherche import Recherche
 from business.dao.db_connection import DBConnection
 
 from business.services.recherche_service import RechercheService

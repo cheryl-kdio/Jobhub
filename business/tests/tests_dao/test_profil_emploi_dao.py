@@ -1,6 +1,6 @@
 from unittest import TestCase, TextTestRunner, TestLoader
 from business.dao.profil_chercheur_emploi_dao import ProfilChercheurEmploiDao
-from business.client.profil_chercheur_emploi import ProfilChercheurEmploi
+from business.business_object.profil_chercheur_emploi import ProfilChercheurEmploi
 from business.services.utilisateur_service import Utilisateur
 
 

@@ -1,6 +1,6 @@
 import unittest
 from unittest.mock import patch
-from business.client.compte_utilisateur import CompteUtilisateur
+from business.business_object.compte_utilisateur import CompteUtilisateur
 from business.services.utilisateur_service import Utilisateur
 
 
