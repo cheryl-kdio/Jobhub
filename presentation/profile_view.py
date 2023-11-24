@@ -8,7 +8,6 @@ from business.dao.recherche_dao import RechercheDao
 from business.services.recherche_service import RechercheService
 from business.business_object.recherche import Recherche
 
-
 class ProfileView(AbstractView):
     def __init__(self, user, langue):
         self.user = user
@@ -21,20 +20,20 @@ class ProfileView(AbstractView):
         pced = ProfilChercheurEmploiDao()
         choix_alertes = [
             {
-                "name": str(i + 1) + ". " + alerte.nom + "-" + alerte.lieu,
+                "name": f"{i + 1}. {alerte.nom}-{alerte.lieu}",
                 "value": alerte,
             }
             for i, alerte in enumerate(pced.voir_profil_chercheur_emploi(self.user))
         ] + [
-            {"name": "Creer une alerte", "value": "create_alert"},
-            {"name": "Retour", "value": "retour"},
+            {"name": "Create an alert", "value": "create_alert"},
+            {"name": "Back", "value": "retour"},
         ]
 
         self.__questions = {
             "type": "list",
-            "message": "Voir le détail d'une alerte : \n - - - - - - - - - - - - - - - - - - - -\n"
-            if self.langue == "français"
-            else "Detail an alert : \n - - - - - - - - - - - - - - - - - - - -\n",
+            "message": "Detail an alert:\n- - - - - - - - - - - - - - - - - - - -\n"
+            if self.langue == "anglais"
+            else "Voir le détail d'une alerte :\n - - - - - - - - - - - - - - - - - - - -\n",
             "choices": choix_alertes,
         }
 
@@ -42,24 +41,23 @@ class ProfileView(AbstractView):
 
         if answers[0] == "retour":
             from presentation.user_view import UserView
-
-            return UserView(langue=self.langue,user=self.user)
+            return UserView(langue=self.langue, user=self.user)
 
         elif answers[0] == "create_alert":
             self.__questions = [
                 {
                     "type": "input",
                     "name": "nom",
-                    "message": "Alert name : "
+                    "message": "Alert name:"
                     if self.langue == "anglais"
                     else "Nom de l'alerte :",
                 },
                 {
                     "type": "input",
                     "name": "mots_cles",
-                    "message": "Keywords: "
+                    "message": "Keywords:"
                     if self.langue == "anglais"
-                    else "Mots clés : ",
+                    else "Mots clés :",
                 },
                 {
                     "type": "input",
@@ -78,41 +76,19 @@ class ProfileView(AbstractView):
                 {
                     "type": "list",
                     "name": "type_contrat",
-                    "message": "Type de contrat : CDD/CDI/Temps plein/Temps partiel"
-                    if self.langue == "français"
-                    else "Contract type: Fixed-term/Permanent/Full-time/Part-time",
+                    "message": "Contract type: Fixed-term/Permanent/Full-time/Part-time"
+                    if self.langue == "anglais"
+                    else "Type de contrat : CDD/CDI/Temps plein/Temps partiel",
                     "choices": [
-                        {
-                            "name": "CDD"
-                            if self.langue == "français"
-                            else "Fixed-term",
-                            "value": "CDD",
-                        },
-                        {
-                            "name": "CDI" if self.langue == "français" else "Permanent",
-                            "value": "CDI",
-                        },
-                        {
-                            "name": "Temps plein"
-                            if self.langue == "français"
-                            else "Full-time",
-                            "value": "TEMPS PLEIN",
-                        },
-                        {
-                            "name": "Temps partiel"
-                            if self.langue == "français"
-                            else "Part-time",
-                            "value": "TEMPS PARTIEL",
-                        },
+                        {"name": "Fixed-term", "value": "CDD"},
+                        {"name": "Permanent", "value": "CDI"},
+                        {"name": "Full-time", "value": "TEMPS PLEIN"},
+                        {"name": "Part-time", "value": "TEMPS PARTIEL"},
                     ],
                 },
             ]
 
             reponse_alerte = prompt(self.__questions)
-            from business.business_object.profil_chercheur_emploi import (
-                ProfilChercheurEmploi,
-            )
-
             pce = ProfilChercheurEmploi(
                 nom=reponse_alerte["nom"],
                 mots_cles=reponse_alerte["mots_cles"],
@@ -121,35 +97,34 @@ class ProfileView(AbstractView):
                 type_contrat=reponse_alerte["type_contrat"],
             )
             if pced.ajouter_profil_chercheur_emploi(pce, self.user):
-                print("Votre alerte a bien été créée")
+                print("Your alert has been successfully created")
                 return ProfileView(self.user, self.langue)
         else:
-            print(answers[0])
             self.__questions = [
                 {
                     "type": "list",
                     "name": "choix",
                     "message": "",
                     "choices": [
-                        "Supprimer cette alerte",
-                        "Modifier cette alerte",
-                        "Voir les résultats",
-                        "Retour",
+                        "Delete this alert",
+                        "Modify this alert",
+                        "View results",
+                        "Back",
                     ],
                 }
             ]
             answers2 = prompt(self.__questions)
-            if answers2["choix"] == "Supprimer cette alerte":
+            if answers2["choix"] == "Delete this alert":
                 if pced.supprimer_profil_chercheur_emploi(answers[0]):
-                    print("Cette alerte a bien été supprimée")
+                    print("This alert has been successfully deleted")
                     return ProfileView(self.user, self.langue)
-            elif answers2["choix"] == "Modifier cette alerte":
+            elif answers2["choix"] == "Modify this alert":
                 from presentation.modif_profile_view import ModifProfileView
 
                 return ModifProfileView(
                     pce=answers[0], user=self.user, langue=self.langue
                 )
-            elif answers2["choix"] == "Voir les résultats":
+            elif answers2["choix"] == "View results":
                 from presentation.recherche_view import RechercheView
 
                 return RechercheView(
