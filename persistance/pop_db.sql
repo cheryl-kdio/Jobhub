@@ -29,15 +29,6 @@ VALUES
     
 
 
-INSERT INTO projet2A.candidatures (id_offre,titre,domaine , lieu , type_contrat ,entreprise, utilisateur_id)
-VALUES 
-    (4426020939,'100% Télétravail - Senior Dev Python', 'Unknown','Paris, Ile-de-France','','SEPT LIEUES SAS',3),   
-    (4418009682, 'Lead Dév API Python Js H/F', ' Emplois Autres/Général', 'Talence, Bordeaux ', '', 'Externatic', 1),
-    (4298646981 ,'Dev Python / react Montpellier ASAP (IT) '  ,   'Emplois Informatique' ,  'Hérault, Occitanie',' contract'  ,' WorldWide People  ',1),   
-    (4411217653,'Dév Python ' , 'Emplois Informatique '  ,'Saint-Cloud, Boulogne-Billancourt ','',' Extia' ,1),
-    (4405757805, 'STAGE 2A - DEV PYTHON - Dashboarding Solution for CI Server & Team KPIs','Emplois Comptabilité et Finance','Paris, Ile-de-France','contract', 'Murex',2)  ;
-    
-
 INSERT INTO projet2A.profil_chercheur_emploi (nom, mots_cles, lieu, distance, type_contrat, utilisateur_id)
 VALUES 
 ('Alerte Ingénieur Paris', 'ingénieur développement agile', 'Paris', 10, 'CDI', 1),
