@@ -28,7 +28,7 @@ CREATE TABLE projet2A.recherche (
     id_recherche SERIAL PRIMARY KEY,
     query_params VARCHAR(255),
     utilisateur_id INT,
-    FOREIGN KEY (utilisateur_id) REFERENCES projet2A.compte_utilisateur(id_compte_utilisateur)
+    FOREIGN KEY (utilisateur_id) REFERENCES projet2A.compte_utilisateur(id_compte_utilisateur) ON DELETE CASCADE
 );
 
 -----------------------------------------------------
@@ -50,7 +50,7 @@ CREATE TABLE projet2A.offre (
     date_ajout DATE DEFAULT CURRENT_DATE,
     candidature_envoyee BOOLEAN DEFAULT FALSE,
     PRIMARY KEY (id_offre, utilisateur_id),
-    FOREIGN KEY (utilisateur_id) REFERENCES projet2A.compte_utilisateur(id_compte_utilisateur)
+    FOREIGN KEY (utilisateur_id) REFERENCES projet2A.compte_utilisateur(id_compte_utilisateur) ON DELETE CASCADE
 );
 
 -----------------------------------------------------
@@ -66,6 +66,6 @@ CREATE TABLE projet2A.profil_chercheur_emploi (
     distance INTEGER,
     type_contrat VARCHAR(255),            
     utilisateur_id INT,
-    FOREIGN KEY (utilisateur_id) REFERENCES projet2A.compte_utilisateur(id_compte_utilisateur)
+    FOREIGN KEY (utilisateur_id) REFERENCES projet2A.compte_utilisateur(id_compte_utilisateur) ON DELETE CASCADE
 );
 
