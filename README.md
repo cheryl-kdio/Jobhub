@@ -1,62 +1,63 @@
-# JobHub : Simplifier la Recherche d’Emploi dans le Secteur de la Tech
+# JobHub: Simplifying Job Search in the Tech Sector
 
-Bienvenue dans JobHub, une application conçue pour faciliter la recherche d'emploi dans le secteur de la technologie. Pour garantir le bon fonctionnement de l'application, veuillez suivre les instructions ci-dessous.
+Welcome to JobHub, an application designed to streamline the job search process in the technology sector. To ensure the proper functioning of the application, please follow the instructions below.
 
-## Configuration de la Base de Données
+## Database Configuration
 
-Les tables SQL présentées dans notre diagramme de base de données relationnelles (BDR) ont été stockées dans une base de données intitulée "projet2A". Pour initialiser cette base de données, exécutez le module `utils/reset_database.py`. Assurez-vous également d’avoir correctement configuré vos identifiants dans le fichier `.env` pour initialiser ces tables dans vos sessions DBeaver à l’ENSAI.
+The SQL tables presented in our Relational Database Diagram (RDB) have been stored in a database named "projet2A." To initialize this database, execute the `Utils/reset_database.py` module. Also, make sure you have correctly configured your credentials in the `.env` file to initialize these tables in your DBeaver sessions at ENSAI.
 
-> **Attention :** L’hôte de notre base de données est défini comme `sgbd-eleves.domensai.ecole`. Si vous n’êtes pas sur une machine virtuelle Ensai (view7.ensai.fr), l’application ne fonctionnera pas correctement. Si vous envisagez de faire fonctionner notre application en local, assurez-vous de modifier l’hôte ainsi que les informations relatives à votre propre base de données en conséquence.
+> **Attention:** The host of our database is defined as `sgbd-eleves.domensai.ecole`. If you are not on an ENSAI virtual machine (view7.ensai.fr), the application will not function correctly. If you intend to run our application locally, make sure to modify the host and related database information accordingly.
 
-## Description du Projet
+## Project Description
 
-Ce projet vise à créer une application qui simplifie la recherche d'emploi dans le secteur de la technologie en utilisant l’API REST gratuite de [Adzuna](https://developer.adzuna.com/), qui fournit des informations sur les offres d’emploi dans divers secteurs à travers le monde. L’application permettra aux utilisateurs de rechercher des emplois, de filtrer les résultats, de suivre leur progression dans leurs candidatures et de recevoir des alertes pour les nouvelles offres correspondant à leurs compétences.
+This project aims to create an application that simplifies job searching in the technology sector using the free REST API from [Adzuna](https://developer.adzuna.com/), which provides information on job listings in various sectors worldwide. The application allows users to search for jobs, filter results, track their application progress, and receive alerts for new listings matching their skills.
 
-## Objectifs du Projet
+## Project Objectives
 
-Les principaux objectifs de ce projet sont les suivants :
+The primary objectives of this project are as follows:
 
-- Intégrer les données de l’API Adzuna dans une application conviviale.
-- Permettre aux utilisateurs de rechercher des offres d'emploi par mots-clés, localisation et catégories.
-- Fournir des fonctionnalités de suivi des candidatures, y compris la gestion de CV et de lettres de motivation.
-- Envoyer des alertes aux utilisateurs pour les nouvelles offres correspondant à leurs critères.
-- Mettre en place un système de profil pour les chercheurs d’emploi.
+- Integrate Adzuna API data into a user-friendly application.
+- Allow users to search for job listings by keywords, location, and categories.
+- Provide features for tracking applications, including managing CVs and cover letters.
+- Send alerts to users for new job listings matching their criteria.
+- Implement a user profile system for job seekers.
 
-## Fonctionnalités de l'Application
+## Application Features
 
-Notre application s'adresse à toute personne recherchant un stage ou un emploi dans le secteur de la technologie. Elle offre les fonctionnalités suivantes :
+Our application caters to individuals seeking internships or jobs in the technology sector. It offers the following features:
 
-- [ ] Créer un compte
-- [ ] Se connecter à son compte
-- [ ] Rechercher des offres d'emploi
-- [ ] Sauvegarder des offres d'emploi
-- [ ] Postuler à des offres d'emploi
-- [ ] Suivre ses candidatures
-- [ ] Recevoir des alertes pour les nouvelles offres correspondant à ses critères
+- [ ] Create an account
+- [ ] Log in to an account
+- [ ] Search for job listings
+- [ ] Save job listings
+- [ ] Apply to job listings
+- [ ] Track job applications
+- [ ] Receive alerts for new listings matching criteria
 
-Toutes ces fonctionnalités sont accessibles via des vues Python dans le terminal. Pour y accéder, veuillez lancer uniquement le fichier `presentation/main.py`. Assurez-vous également d'avoir installé tous les packages requis en utilisant la commande `pip install -r requirements.txt`.
+All these features are accessible through Python views in the terminal. To access them, please run only the `main.py` file. Also, ensure you have installed all the required packages using the `pip install -r requirements.txt` command.
 
-À terme, nous prévoyons de développer une interface graphique pour rendre l'application encore plus conviviale.
+In the future, we plan to develop a graphical user interface to make the application even more user-friendly.
 
-## Technologies Utilisées
+## Technologies Used
 
-Les technologies utilisées dans ce projet sont les suivantes :
+The technologies used in this project include:
 
 - Python
 - PostgreSQL via DBeaver
-- API Adzuna
+- Adzuna API
 
-## Informations sur le Projet
+## Project Information
 
-Ce projet fait partie du programme de deuxième année du cours de compléments d'informatiques de l'ENSAI. Il a permis de mettre en pratique les compétences en programmation orientée objet, en gestion de projet et en gestion de base de données.
+This project is part of the second-year curriculum of the Complementary Computer Science course at ENSAI. It allowed us to apply our skills in object-oriented programming, project management, and database management.
 
-**Membres du groupe :**
+**Group Members:**
 - Benjamin Guéraud
 - Beedi Goua
 - Antoine Jarry
 - Cheryl Kouadio
 - Clara Serano
 
-**Tuteur :** Mansour GUEYE
+**Supervisor:** Mansour GUEYE
 
-Restez à l'écoute pour découvrir les nouvelles fonctionnalités et améliorations à venir dans JobHub !
+Stay tuned for upcoming features and improvements in JobHub!
+
