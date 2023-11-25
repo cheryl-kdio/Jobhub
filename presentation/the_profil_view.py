@@ -37,6 +37,7 @@ class TheProfileView(AbstractView):
                     if self.langue == "français"
                     else "Saved searches",
                     "Quitter" if self.langue == "français" else "Quit",
+                    "Retour" if self.langue == "français" else "Return",
                 ],
             }
         ]
@@ -75,3 +76,8 @@ class TheProfileView(AbstractView):
             else "Check applications"
         ):
             return CandidatureView(user=self.user, langue=self.langue)
+
+        elif choix == "Retour" if self.langue == "français" else "Return":
+            from presentation.user_view import UserView
+
+            return UserView(user=self.user, langue=self.langue)
