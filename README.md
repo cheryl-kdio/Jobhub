@@ -60,4 +60,5 @@ This project is part of the second-year curriculum of the Complementary Computer
 **Supervisor:** Mansour GUEYE
 
 Stay tuned for upcoming features and improvements in JobHub!
+![](https://giphy.com/gifs/spongebob-spongebob-squarepants-episode-9-3oKHWtGyQrx7CwV8li)
 
