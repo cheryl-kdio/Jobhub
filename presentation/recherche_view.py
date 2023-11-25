@@ -14,7 +14,6 @@ from business.business_object.profil_chercheur_emploi import ProfilChercheurEmpl
 from business.dao.recherche_dao import RechercheDao
 
 
-
 class RechercheView(AbstractView):
     def __init__(self, langue, query_params=None, user=None):
         self.langue = langue
@@ -51,7 +50,9 @@ class RechercheView(AbstractView):
         recherche = Recherche(query_params=self.query_params)
         r = RechercheService()
         print(
-            "Resultats obtenus : \n" if self.langue == "français" else "Results obtained : \n"
+            "Resultats obtenus : \n"
+            if self.langue == "français"
+            else "Results obtained : \n"
         )
 
         choix_offres = (
@@ -209,12 +210,16 @@ class RechercheView(AbstractView):
                 if self.user:
                     from business.dao.offre_dao import OffreDao
 
-                    OffreDao().ajouter_offre(offre=answers[0], utilisateur=self.user)
-                    print(
-                        "L'offre a bien été mis en favoris !"
-                        if self.langue == "français"
-                        else "The offer has been successfully added to favorites!"
-                    )
+                    if OffreDao().ajouter_offre(
+                        offre=answers[0], utilisateur=self.user
+                    ):
+                        print(
+                            "L'offre a bien été mis en favoris !"
+                            if self.langue == "français"
+                            else "The offer has been successfully added to favorites!"
+                        )
+                    else:
+                        print("L'offre est déjà sauvegardé")
                 else:
                     print(
                         "Vous devez être connecté pour accéder à cette fonctionnalité"
@@ -239,6 +244,7 @@ class RechercheView(AbstractView):
             if candidater["oui"]:
                 if self.user:
                     from business.dao.offre_dao import OffreDao
+
                     OffreDao().candidater(offre=answers[0], utilisateur=self.user)
                     print(
                         "Candidature effectuée"
