@@ -25,7 +25,7 @@ class UserView(AbstractView):
                     if self.langue == "français"
                     else "Start a new search",
                     "Changer la langue"
-                    if self.langue == "français"
+                    if self.langue == "anglais"
                     else "Change the language",
                     "Quitter" if self.langue == "français" else "Quit",
                 ],
@@ -56,7 +56,7 @@ class UserView(AbstractView):
         ):
             return RechercheView(user=self.user, langue=self.langue)
         elif choix == (
-            "Changer la langue" if self.langue == "français" else "Change the language"
+            "Changer la langue" if self.langue == "anglais" else "Change the language"
         ):
             new_langue = "français" if self.langue == "anglais" else "anglais"
             return UserView(user=self.user, langue=new_langue)
