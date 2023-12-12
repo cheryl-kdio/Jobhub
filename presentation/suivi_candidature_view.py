@@ -21,7 +21,9 @@ class CandidatureView(AbstractView):
                 "value": offre,
             }
             for i, offre in enumerate(c.voir_candidatures(self.user))
-        ] + [{"name": "Retour" if self.langue=="francais" else "Return", "value": None}]
+        ] + [
+            {"name": "Retour" if self.langue == "francais" else "Return", "value": None}
+        ]
 
         if len(choix_offres) == 1:
             print("Vous n'avez pas encore de candidatures \n")
@@ -72,9 +74,9 @@ class CandidatureView(AbstractView):
                 ]
                 answers = prompt(self.__questions)
                 if answers["oui"]:
-                    from presentation.user_view import UserView
+                    from presentation.the_profil_view import TheProfileView
 
-                    return UserView(user=self.user, langue=self.langue)
+                    return TheProfileView(user=self.user, langue=self.langue)
                 else:
                     from presentation.suivi_candidature_view import CandidatureView
 

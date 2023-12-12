@@ -67,9 +67,9 @@ class ARechercheView(AbstractView):
             if response["choix"] == (
                 "Retour" if self.langue == "français" else "Return"
             ):
-                from presentation.user_view import UserView
+                from presentation.the_profil_view import TheProfileView
 
-                return UserView(user=self.user, langue=self.langue)
+                return TheProfileView(user=self.user, langue=self.langue)
 
             elif response["choix"] == (
                 "Lancer une recherche"

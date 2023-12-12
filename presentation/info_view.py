@@ -82,9 +82,9 @@ class InfoView(AbstractView):
 
             return ModifInfoView(user=self.user, langue=self.langue)
         elif reponse["choix"] == choix_return:
-            from presentation.user_view import UserView
+            from presentation.the_profil_view import TheProfileView
 
-            return UserView(user=self.user, langue=self.langue)
+            return TheProfileView(user=self.user, langue=self.langue)
         elif reponse["choix"] == choix_disconnect:
             self.user._connexion = False
             from presentation.start_view import StartView

@@ -22,7 +22,7 @@ class OffreView(AbstractView):
                 "value": offre,
             }
             for i, offre in enumerate(o.voir_favoris(self.user))
-        ] + [{"name": "Retour", "value": None}]
+        ] + [{"name": "Retour", "value": "Retour"}]
 
         if len(choix_offres) == 1:
             print(
@@ -66,11 +66,12 @@ class OffreView(AbstractView):
 
             answers = prompt(self.__questions)
             if answers[0] in ("Retour", "Return"):
-                from presentation.user_view import UserView
+                from presentation.the_profil_view import TheProfileView
 
-                return UserView(self.user, self.langue)
+                return TheProfileView(user=self.user, langue=self.langue)
             else:
                 print(answers[0])
+                print(answers)
                 self.__questions = [
                     {
                         "type": "confirm",
@@ -121,6 +122,6 @@ class OffreView(AbstractView):
                         print(message_deleted)
                         return OffreView(user=self.user, langue=self.langue)
                     else:
-                        from presentation.user_view import UserView
+                        from presentation.the_profil_view import TheProfileView
 
-                        return UserView(user=self.user, langue=self.langue)
+                        return TheProfileView(user=self.user, langue=self.langue)

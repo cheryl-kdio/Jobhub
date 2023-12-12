@@ -1,5 +1,4 @@
 from InquirerPy import prompt, inquirer
-
 from presentation.abstract_view import AbstractView
 from presentation.session import Session
 from business.dao.profil_chercheur_emploi_dao import ProfilChercheurEmploiDao
@@ -7,6 +6,7 @@ from business.business_object.profil_chercheur_emploi import ProfilChercheurEmpl
 from business.dao.recherche_dao import RechercheDao
 from business.services.recherche_service import RechercheService
 from business.business_object.recherche import Recherche
+
 
 class ProfileView(AbstractView):
     def __init__(self, user, langue):
@@ -25,8 +25,16 @@ class ProfileView(AbstractView):
             }
             for i, alerte in enumerate(pced.voir_profil_chercheur_emploi(self.user))
         ] + [
-            {"name": "Create an alert", "value": "create_alert"},
-            {"name": "Back", "value": "retour"},
+            {
+                "name": "Create an alert"
+                if self.langue == "anglais"
+                else "Créer une alerte",
+                "value": "create_alert",
+            },
+            {
+                "name": "Back" if self.langue == "anglais" else "Retour",
+                "value": "retour",
+            },
         ]
 
         self.__questions = {
@@ -40,8 +48,9 @@ class ProfileView(AbstractView):
         answers = prompt(self.__questions)
 
         if answers[0] == "retour":
-            from presentation.user_view import UserView
-            return UserView(langue=self.langue, user=self.user)
+            from presentation.the_profil_view import TheProfileView
+
+            return TheProfileView(user=self.user, langue=self.langue)
 
         elif answers[0] == "create_alert":
             self.__questions = [
@@ -80,10 +89,26 @@ class ProfileView(AbstractView):
                     if self.langue == "anglais"
                     else "Type de contrat : CDD/CDI/Temps plein/Temps partiel",
                     "choices": [
-                        {"name": "Fixed-term", "value": "CDD"},
-                        {"name": "Permanent", "value": "CDI"},
-                        {"name": "Full-time", "value": "TEMPS PLEIN"},
-                        {"name": "Part-time", "value": "TEMPS PARTIEL"},
+                        {
+                            "name": "Fixed-term" if self.langue == "anglais" else "CDD",
+                            "value": "CDD",
+                        },
+                        {
+                            "name": "Permanent" if self.langue == "anglais" else "CDI",
+                            "value": "CDI",
+                        },
+                        {
+                            "name": "Full-time"
+                            if self.langue == "anglais"
+                            else "Temps plein",
+                            "value": "TEMPS PLEIN",
+                        },
+                        {
+                            "name": "Part-time"
+                            if self.langue == "anglais"
+                            else "Temps partiel",
+                            "value": "TEMPS PARTIEL",
+                        },
                     ],
                 },
             ]
@@ -106,25 +131,31 @@ class ProfileView(AbstractView):
                     "name": "choix",
                     "message": "",
                     "choices": [
-                        "Delete this alert",
-                        "Modify this alert",
-                        "View results",
-                        "Back",
+                        "Delete this alert"
+                        if self.langue == "anglais"
+                        else "Supprimer cette alerte",
+                        "Modify this alert"
+                        if self.langue == "anglais"
+                        else "Modifier cette alerte",
+                        "View results"
+                        if self.langue == "anglais"
+                        else "Voir les résultats",
+                        "Back" if self.langue == "anglais" else "Retour",
                     ],
                 }
             ]
             answers2 = prompt(self.__questions)
-            if answers2["choix"] == "Delete this alert":
+            if answers2["choix"] in ("Delete this alert", "Supprimer cette alerte"):
                 if pced.supprimer_profil_chercheur_emploi(answers[0]):
                     print("This alert has been successfully deleted")
                     return ProfileView(self.user, self.langue)
-            elif answers2["choix"] == "Modify this alert":
+            elif answers2["choix"] in ("Modify this alert", "Modifier cette alerte"):
                 from presentation.modif_profile_view import ModifProfileView
 
                 return ModifProfileView(
                     pce=answers[0], user=self.user, langue=self.langue
                 )
-            elif answers2["choix"] == "View results":
+            elif answers2["choix"] in ("View results", "Voir les résultats"):
                 from presentation.recherche_view import RechercheView
 
                 return RechercheView(

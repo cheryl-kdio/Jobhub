@@ -18,9 +18,7 @@ class TheProfileView(AbstractView):
                 "type": "list",
                 "name": "choix",
                 "message": (
-                    f"Hello {self.user.nom}"
-                    if self.langue == "anglais"
-                    else f"Bonjour {self.user.nom}\n"
+                    f"Hello, \n" if self.langue == "anglais" else f"Bonjour, \n"
                 ),
                 "choices": [
                     "Alertes" if self.langue == "français" else "Alerts",

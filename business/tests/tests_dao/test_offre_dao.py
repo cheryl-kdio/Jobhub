@@ -105,7 +105,6 @@ class TestOffreDao(TestCase):
         result = dao.ajouter_offre(offre, pierre)
 
         # THEN
-
         self.assertFalse(result)  # Assurez-vous que la méthode retourne False
 
 
