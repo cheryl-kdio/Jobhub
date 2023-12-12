@@ -1,6 +1,5 @@
 from InquirerPy import prompt
 from presentation.abstract_view import AbstractView
-from presentation.session import Session
 from business.dao.offre_dao import OffreDao
 
 
